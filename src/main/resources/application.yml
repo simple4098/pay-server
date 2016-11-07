@@ -19,17 +19,7 @@ spring:
     max-pool-prepared-statement-per-connection-size: 20
     filters: stat,wall,log4j
     connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-  jpa:
-    hibernate:
 
-      naming:
-        strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    show-sql: true
 
 
 
@@ -41,16 +31,3 @@ logging:
     org.apache.catalina: ERROR
     com.bbd.biz.dao: DEBUG
 
-yql:
-  registerUrl: http://www.baidu.com
-  netease:
-    appKey: 1232123
-    appSercet: 12323
-    nonce: 123
-    createAccid: https://api.netease.im/nimserver/user/create.action
-    updateAccid: https://api.netease.im/nimserver/user/update.action
-  tencent:
-    appId: 11
-    secretId: 11
-    secretKey: 121j
-    bucket: image
