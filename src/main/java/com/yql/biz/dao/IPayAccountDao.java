@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IPayAccountDao  extends JpaRepository<PayAccount, Integer> {
 
+    /**
+     * 根据userCode查询payAccount 信息
+     * @param userCode
+     * @return
+     */
     PayAccount findByUserCode(String userCode);
 
 

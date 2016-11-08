@@ -19,6 +19,17 @@ spring:
     max-pool-prepared-statement-per-connection-size: 20
     filters: stat,wall,log4j
     connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
 
 
 
@@ -30,4 +41,8 @@ logging:
     org.springframeword : ERROR
     org.apache.catalina: ERROR
     com.bbd.biz.dao: DEBUG
+
+
+yql:
+  passwordMd5Str: yql-payserver-1221
 

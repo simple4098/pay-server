@@ -1,10 +1,9 @@
 package com.yql.biz.model;
 
 import com.yql.biz.enums.SamllPayMoney;
+import com.yql.biz.util.PayUtil;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -24,7 +23,7 @@ public class PayAccount extends  Domain implements Serializable {
     private String payPassword;
     //随机数
     @Column(name = "random_code")
-    private int randomCode;
+    private String randomCode  = PayUtil.randomCode(3);
     //是否默认系统支付银行卡顺序 1 默认 0 不默认
     @Column(name = "system_pay_seq")
     private boolean systemPaySeq;
@@ -33,6 +32,7 @@ public class PayAccount extends  Domain implements Serializable {
     private boolean smallPay;
     //小额支付金额 枚举 MONEY_200  MONEY_500 MONEY_800 MONEY_1000 MONEY_2000
     @Column(name = "samll_pay_money")
+    @Enumerated(value = EnumType.STRING)
     private SamllPayMoney samllPayMoney;
 
     public String getUserCode() {
@@ -51,11 +51,11 @@ public class PayAccount extends  Domain implements Serializable {
         this.payPassword = payPassword;
     }
 
-    public int getRandomCode() {
+    public String getRandomCode() {
         return randomCode;
     }
 
-    public void setRandomCode(int randomCode) {
+    public void setRandomCode(String randomCode) {
         this.randomCode = randomCode;
     }
 

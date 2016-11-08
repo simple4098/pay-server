@@ -9,7 +9,18 @@ import com.yql.biz.model.PayAccount;
  */
 public interface IPayAccountService {
 
+    /**
+     * 根据userCode查询支付账号信息
+     * @param userCode 用户code
+     */
     PayAccount findByUserCode(String userCode);
 
+    /**
+     * 保存
+     * @param payAccount 支付账号对象
+     * @return
+     */
     PayAccount savePayAccount(PayAccount payAccount);
+
+    void updatePayAccount(PayAccount payAccount);
 }

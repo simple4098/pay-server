@@ -12,17 +12,14 @@ public enum SamllPayMoney {
     MONEY_1000(1000),
     MONEY_2000(2000);
 
-    private int value;
-    SamllPayMoney(int value) {
+    private Integer value;
+    SamllPayMoney(Integer value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
 
 }
