@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "pay_bank")
-public class PayBank extends Domain implements Serializable {
+public class PayBank extends Domain  {
     @Column(name = "pay_account_id")
     private Long payAccountId;
     //银行卡

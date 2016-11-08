@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "pay_account")
-public class PayAccount extends  Domain implements Serializable {
+public class PayAccount extends  Domain  {
     //用户code
     @Column(name = "user_code")
     private String userCode;
@@ -33,7 +33,10 @@ public class PayAccount extends  Domain implements Serializable {
     //小额支付金额 枚举 MONEY_200  MONEY_500 MONEY_800 MONEY_1000 MONEY_2000
     @Column(name = "samll_pay_money")
     @Enumerated(value = EnumType.STRING)
-    private SamllPayMoney samllPayMoney;
+    private SamllPayMoney samllPayMoney = SamllPayMoney.MONEY_200;
+    //是否实名认证
+    @Column(name = "real_name_auth")
+    private boolean realNameAuth;
 
     public String getUserCode() {
         return userCode;
@@ -81,5 +84,13 @@ public class PayAccount extends  Domain implements Serializable {
 
     public void setSamllPayMoney(SamllPayMoney samllPayMoney) {
         this.samllPayMoney = samllPayMoney;
+    }
+
+    public boolean isRealNameAuth() {
+        return realNameAuth;
+    }
+
+    public void setRealNameAuth(boolean realNameAuth) {
+        this.realNameAuth = realNameAuth;
     }
 }

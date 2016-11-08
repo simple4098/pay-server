@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "pay_order_account")
-public class PayOrderAccount extends Domain implements Serializable{
+public class PayOrderAccount extends Domain {
     @Column(name = "pay_account_id")
     private Long payAccountId;
     //支付订单号

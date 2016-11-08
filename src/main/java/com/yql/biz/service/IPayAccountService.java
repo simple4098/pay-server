@@ -16,7 +16,7 @@ public interface IPayAccountService {
     PayAccount findByUserCode(String userCode);
 
     /**
-     * 保存
+     * 保存账户信息
      * @param payAccount 支付账号对象
      * @return
      */

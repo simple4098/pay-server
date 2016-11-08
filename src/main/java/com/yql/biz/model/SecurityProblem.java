@@ -12,13 +12,13 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "security_problem")
-public class SecurityProblem extends Domain implements Serializable {
+public class SecurityProblem extends Domain {
     //支付账号id
     @Column(name = "pay_account_id")
     private Long payAccountId;
     //密保问题
-    @Column(name = "problem")
-    private String problem;
+    @Column(name = "problem_id")
+    private String problemId;
     //密保问题答案
     @Column(name = "answer")
     private String answer;
@@ -31,12 +31,12 @@ public class SecurityProblem extends Domain implements Serializable {
         this.payAccountId = payAccountId;
     }
 
-    public String getProblem() {
-        return problem;
+    public String getProblemId() {
+        return problemId;
     }
 
-    public void setProblem(String problem) {
-        this.problem = problem;
+    public void setProblemId(String problemId) {
+        this.problemId = problemId;
     }
 
     public String getAnswer() {
