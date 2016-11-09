@@ -15,27 +15,27 @@ import java.io.Serializable;
 public class SecurityProblem extends Domain {
     //支付账号id
     @Column(name = "pay_account_id")
-    private Long payAccountId;
+    private Integer payAccountId;
     //密保问题
     @Column(name = "problem_id")
-    private String problemId;
+    private Integer problemId;
     //密保问题答案
     @Column(name = "answer")
     private String answer;
 
-    public Long getPayAccountId() {
+    public Integer getPayAccountId() {
         return payAccountId;
     }
 
-    public void setPayAccountId(Long payAccountId) {
+    public void setPayAccountId(Integer payAccountId) {
         this.payAccountId = payAccountId;
     }
 
-    public String getProblemId() {
+    public Integer getProblemId() {
         return problemId;
     }
 
-    public void setProblemId(String problemId) {
+    public void setProblemId(Integer problemId) {
         this.problemId = problemId;
     }
 

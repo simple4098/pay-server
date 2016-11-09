@@ -2,10 +2,12 @@ package com.yql.biz.controller;
 
 import com.yql.biz.dto.PayProblemDto;
 import com.yql.biz.model.PayAccount;
+import com.yql.biz.model.SecurityProblem;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.service.IPayProblemService;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,6 +48,16 @@ public class PayServerController {
     public ResponseModel securityProblem(){
         List<PayProblemDto> payProblemList = payProblemService.findPayProblemList();
         return ResponseModel.SUCCESS(payProblemList);
+    }
+
+    /**
+     * 支付密保问题设置
+     */
+    @RequestMapping(value = "/set/security",method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseModel paySecurity(String json){
+        List<SecurityProblem> securityProblems = payProblemService.saveySecurity(json);
+        return ResponseModel.SUCCESS(securityProblems);
     }
 
 }

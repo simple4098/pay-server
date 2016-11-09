@@ -1,6 +1,9 @@
 package com.yql.biz;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
+import com.yql.biz.dto.ProblemAnswerDto;
+import com.yql.biz.dto.SecurityProblemDto;
 import com.yql.biz.enums.SamllPayMoney;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
@@ -13,7 +16,9 @@ import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -52,4 +57,25 @@ public class PayServerApplicationTests {
         payAccountService.savePayAccount(payAccount);
     }
 
+    @Test
+    public void  testProblem(){
+        SecurityProblemDto securityProblemDto = new SecurityProblemDto();
+        securityProblemDto.setUserCode("12345678");
+
+        List<ProblemAnswerDto> list = new ArrayList<>();
+        ProblemAnswerDto problemAnswerDto = new ProblemAnswerDto();
+        problemAnswerDto.setAnswer("ni ijijij");
+        problemAnswerDto.setProblemId(null);
+        list.add(problemAnswerDto);
+        ProblemAnswerDto problemAnswerDto1 = new ProblemAnswerDto();
+        problemAnswerDto1.setAnswer(null);
+        problemAnswerDto1.setProblemId(10001);
+        list.add(problemAnswerDto1);
+        securityProblemDto.setAnswers(list);
+
+        String s = JSON.toJSONString(securityProblemDto);
+        System.out.println(s);
+
+
+    }
 }
