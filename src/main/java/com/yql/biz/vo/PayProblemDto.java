@@ -1,4 +1,4 @@
-package com.yql.biz.dto;
+package com.yql.biz.vo;
 
 /**
  * <p>PayProblemDto</p>

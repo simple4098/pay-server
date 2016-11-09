@@ -1,11 +1,11 @@
-package com.yql.biz.dto;
+package com.yql.biz.vo;
 
 /**
  * <p>密保问题答案Dto</p>
  * creator simple
  * data 2016/11/8 0008.
  */
-public class ProblemAnswerDto {
+public class ProblemAnswerVo {
 
     private Integer problemId;
     private String answer;

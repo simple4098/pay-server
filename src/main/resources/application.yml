@@ -40,7 +40,7 @@ logging:
   level:
     org.springframeword : ERROR
     org.apache.catalina: ERROR
-    com.bbd.biz.dao: DEBUG
+    com.bbd.biz: DEBUG
 
 
 yql:

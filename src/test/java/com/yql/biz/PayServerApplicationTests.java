@@ -2,8 +2,8 @@ package com.yql.biz;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
-import com.yql.biz.dto.ProblemAnswerDto;
-import com.yql.biz.dto.SecurityProblemDto;
+import com.yql.biz.vo.ProblemAnswerVo;
+import com.yql.biz.vo.SecurityVo;
 import com.yql.biz.enums.SamllPayMoney;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
@@ -59,21 +59,21 @@ public class PayServerApplicationTests {
 
     @Test
     public void  testProblem(){
-        SecurityProblemDto securityProblemDto = new SecurityProblemDto();
-        securityProblemDto.setUserCode("12345678");
+        SecurityVo securityVo = new SecurityVo();
+        securityVo.setUserCode("12345678");
 
-        List<ProblemAnswerDto> list = new ArrayList<>();
-        ProblemAnswerDto problemAnswerDto = new ProblemAnswerDto();
-        problemAnswerDto.setAnswer("ni ijijij");
-        problemAnswerDto.setProblemId(null);
-        list.add(problemAnswerDto);
-        ProblemAnswerDto problemAnswerDto1 = new ProblemAnswerDto();
-        problemAnswerDto1.setAnswer(null);
-        problemAnswerDto1.setProblemId(10001);
-        list.add(problemAnswerDto1);
-        securityProblemDto.setAnswers(list);
+        List<ProblemAnswerVo> list = new ArrayList<>();
+        ProblemAnswerVo problemAnswerVo = new ProblemAnswerVo();
+        problemAnswerVo.setAnswer("ni ijijij");
+        problemAnswerVo.setProblemId(null);
+        list.add(problemAnswerVo);
+        ProblemAnswerVo problemAnswerVo1 = new ProblemAnswerVo();
+        problemAnswerVo1.setAnswer(null);
+        problemAnswerVo1.setProblemId(10001);
+        list.add(problemAnswerVo1);
+        securityVo.setAnswers(list);
 
-        String s = JSON.toJSONString(securityProblemDto);
+        String s = JSON.toJSONString(securityVo);
         System.out.println(s);
 
 

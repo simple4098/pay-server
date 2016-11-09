@@ -1,8 +1,8 @@
 package com.yql.biz.service;
 
-import com.yql.biz.dto.PayProblemDto;
-import com.yql.biz.model.PayProblem;
+import com.yql.biz.vo.PayProblemDto;
 import com.yql.biz.model.SecurityProblem;
+import com.yql.biz.vo.SecurityProblemVo;
 
 import java.util.List;
 
@@ -24,4 +24,10 @@ public interface IPayProblemService {
      * @return
      */
     List<SecurityProblem> saveySecurity(String json);
+
+    /**
+     * 查询用户的密保问题
+     * @param userCode 用户code
+     */
+    List<SecurityProblemVo> findAccountSecurity(String userCode);
 }

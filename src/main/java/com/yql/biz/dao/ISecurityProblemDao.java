@@ -4,6 +4,8 @@ import com.yql.biz.model.SecurityProblem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>密保问题Dao</p>
  * creator simple
@@ -11,4 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ISecurityProblemDao extends JpaRepository<SecurityProblem,Integer>{
+    List<SecurityProblem> findByPayAccountId(int id);
 }

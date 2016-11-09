@@ -1,4 +1,4 @@
-package com.yql.biz.dto;
+package com.yql.biz.vo;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import java.util.List;
  * creator simple
  * data 2016/11/8 0008.
  */
-public class SecurityProblemDto {
+public class SecurityVo {
 
     private String userCode;
-    private List<ProblemAnswerDto> answers;
+    private List<ProblemAnswerVo> answers;
 
     public String getUserCode() {
         return userCode;
@@ -20,11 +20,11 @@ public class SecurityProblemDto {
         this.userCode = userCode;
     }
 
-    public List<ProblemAnswerDto> getAnswers() {
+    public List<ProblemAnswerVo> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<ProblemAnswerDto> answers) {
+    public void setAnswers(List<ProblemAnswerVo> answers) {
         this.answers = answers;
     }
 }

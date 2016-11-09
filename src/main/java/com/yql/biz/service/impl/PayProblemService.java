@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayProblemDao;
 import com.yql.biz.dao.ISecurityProblemDao;
-import com.yql.biz.dto.PayProblemDto;
-import com.yql.biz.dto.ProblemAnswerDto;
-import com.yql.biz.dto.SecurityProblemDto;
+import com.yql.biz.vo.PayProblemDto;
+import com.yql.biz.vo.ProblemAnswerVo;
+import com.yql.biz.vo.SecurityProblemVo;
+import com.yql.biz.vo.SecurityVo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayProblem;
 import com.yql.biz.model.SecurityProblem;
@@ -22,7 +23,6 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * creator simple
@@ -58,21 +58,36 @@ public class PayProblemService implements IPayProblemService {
     @Override
     public List<SecurityProblem> saveySecurity(String json) {
         logger.debug("设置密保问题 json:"+json);
-        SecurityProblemDto securityProblemDto = JSON.parseObject(json, SecurityProblemDto.class);
-        PayAccount payAccount = payAccountDao.findByUserCode(securityProblemDto.getUserCode());
+        SecurityVo securityVo = JSON.parseObject(json, SecurityVo.class);
+        PayAccount payAccount = payAccountDao.findByUserCode(securityVo.getUserCode());
         Assert.notNull(payAccount,messageSourceAccessor.getMessage("error.payserver.saveySecurity.userCode"));
-        List<ProblemAnswerDto> answers = securityProblemDto.getAnswers();
+        List<ProblemAnswerVo> answers = securityVo.getAnswers();
         List<SecurityProblem> securityProblems = new ArrayList<>();
         SecurityProblem securityProblem = null;
-        for (ProblemAnswerDto problemAnswerDto: answers){
+        for (ProblemAnswerVo problemAnswerVo : answers){
             securityProblem = new SecurityProblem();
-            securityProblem.setAnswer(problemAnswerDto.getAnswer());
-            securityProblem.setProblemId(problemAnswerDto.getProblemId());
-            Assert.notNull(problemAnswerDto.getProblemId(),messageSourceAccessor.getMessage("error.payserver.saveySecurity.problem"));
-            Assert.notNull(problemAnswerDto.getAnswer(),messageSourceAccessor.getMessage("error.payserver.saveySecurity.answer"));
+            securityProblem.setAnswer(problemAnswerVo.getAnswer());
+            securityProblem.setProblemId(problemAnswerVo.getProblemId());
+            Assert.notNull(problemAnswerVo.getProblemId(),messageSourceAccessor.getMessage("error.payserver.saveySecurity.problem"));
+            Assert.notNull(problemAnswerVo.getAnswer(),messageSourceAccessor.getMessage("error.payserver.saveySecurity.answer"));
             securityProblem.setPayAccountId(payAccount.getId());
             securityProblems.add(securityProblem);
         }
         return securityProblemDao.save(securityProblems);
+    }
+
+    @Override
+    public List<SecurityProblemVo> findAccountSecurity(String userCode) {
+        logger.debug("查询userCode的密保问题集合:"+userCode);
+        PayAccount payAccount = payAccountDao.findByUserCode(userCode);
+        Assert.notNull(payAccount,messageSourceAccessor.getMessage("error.payserver.saveySecurity.userCode"));
+        List<SecurityProblemVo> securityProblemVoList = new ArrayList<>();
+        List<SecurityProblem> list = securityProblemDao.findByPayAccountId(payAccount.getId());
+        SecurityProblemVo securityProblemVo = null;
+        for (SecurityProblem s:list) {
+            securityProblemVo = SecurityProblemVo.domainToVo(s);
+            securityProblemVoList.add(securityProblemVo);
+        }
+        return securityProblemVoList;
     }
 }
