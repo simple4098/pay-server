@@ -74,5 +74,22 @@ public class PayAccountService implements IPayAccountService {
         }
     }
 
+    @Override
+    public void updatePayAccountSamllMoney(PayAccount payAccount) {
+        Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
+        PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
+        one.setSmallPay(payAccount.isSmallPay());
+        one.setSamllPayMoney(payAccount.getSamllPayMoney());
+        payAccountDao.saveAndFlush(one);
+    }
+
+    @Override
+    public void updateRealNameAuth(PayAccount payAccount) {
+        Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
+        PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
+        one.setRealNameAuth(payAccount.isRealNameAuth());
+        payAccountDao.saveAndFlush(one);
+    }
+
 
 }

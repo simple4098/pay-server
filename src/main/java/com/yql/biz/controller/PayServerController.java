@@ -48,6 +48,21 @@ public class PayServerController {
     }
 
     /**
+     * 开关小额支付并且小额支付金额/open_close/samll_money_pay
+     * @return
+     */
+    @RequestMapping("/open_close/samll_money_pay")
+    public ResponseModel openClose(PayAccount payAccount){
+        payAccountService.updatePayAccountSamllMoney(payAccount);
+        return ResponseModel.SUCCESS();
+    }
+
+    @RequestMapping("/real_name_auth")
+    public ResponseModel realNameAuth(PayAccount payAccount){
+        payAccountService.updateRealNameAuth(payAccount);
+        return ResponseModel.SUCCESS();
+    }
+    /**
      * 支付系统问题集合
      */
     @RequestMapping("/problem_list")

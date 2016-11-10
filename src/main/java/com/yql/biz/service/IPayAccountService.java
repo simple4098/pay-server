@@ -34,4 +34,16 @@ public interface IPayAccountService {
      * @param payAccount
      */
     void validatePassword(PayAccount payAccount);
+
+    /**
+     * 小额支付开关
+     * @param payAccount
+     */
+    void updatePayAccountSamllMoney(PayAccount payAccount);
+
+    /**
+     * 更新实名认证
+     * @param payAccount
+     */
+    void updateRealNameAuth(PayAccount payAccount);
 }
