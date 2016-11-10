@@ -1,6 +1,7 @@
 package com.yql.biz.service;
 
 import com.yql.biz.model.PayAccount;
+import com.yql.biz.vo.PayAccountVo;
 
 /**
  * creator simple
@@ -22,5 +23,15 @@ public interface IPayAccountService {
      */
     PayAccount savePayAccount(PayAccount payAccount);
 
-    void updatePayAccount(PayAccount payAccount);
+    /**
+     * 更新支付密码
+     * @param payAccount
+     */
+    void updatePayPassword(PayAccountVo payAccount);
+
+    /**
+     * 验证支付密码是否正确
+     * @param payAccount
+     */
+    void validatePassword(PayAccount payAccount);
 }

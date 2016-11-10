@@ -1,44 +1,29 @@
-package com.yql.biz.model;
+package com.yql.biz.vo;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import com.alibaba.fastjson.JSON;
+import com.yql.biz.model.PayAccount;
+import com.yql.biz.model.PayBank;
+
 import java.math.BigDecimal;
 
 /**
- * <p>支付银行实体类</p>
- * @author  simple
- * @version 1.0.0
- * data 2016/11/7 0007.
+ * <p>支付银行vo</p>
+ * creator simple
+ * data 2016/11/10 0010.
  */
-@Entity
-@Table(name = "pay_bank")
-public class PayBank extends Domain  {
-    @Column(name = "pay_account_id")
+public class PayBankVo {
+    private String userCode;
     private Integer payAccountId;
-    //持卡人
-    @Column(name = "cardholder")
-    private String cardholder;
     //银行卡
-    @Column(name = "bankCard")
     private String bankCard;
     //银行卡名称
-    @Column(name = "bank_name")
     private String bankName;
+    //持卡人
+    private String cardholder;
     //快捷支付金额
-    @Column(name = "quick_payment_amount")
     private BigDecimal quickPaymentAmount;
     //排序字段
-    @Column(name = "sort")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sort;
-
-    public Integer getPayAccountId() {
-        return payAccountId;
-    }
-
-    public void setPayAccountId(Integer payAccountId) {
-        this.payAccountId = payAccountId;
-    }
 
     public String getCardholder() {
         return cardholder;
@@ -46,6 +31,22 @@ public class PayBank extends Domain  {
 
     public void setCardholder(String cardholder) {
         this.cardholder = cardholder;
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+
+    public Integer getPayAccountId() {
+        return payAccountId;
+    }
+
+    public void setPayAccountId(Integer payAccountId) {
+        this.payAccountId = payAccountId;
     }
 
     public String getBankCard() {
@@ -78,5 +79,12 @@ public class PayBank extends Domain  {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public static PayBank voToDomain(PayBankVo payBankVo,PayAccount payAccount){
+        String json = JSON.toJSONString(payBankVo);
+        PayBank payBank = JSON.parseObject(json, PayBank.class);
+        payBank.setPayAccountId(payAccount.getId());
+        return payBank;
     }
 }

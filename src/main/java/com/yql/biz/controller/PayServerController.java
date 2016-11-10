@@ -1,5 +1,8 @@
 package com.yql.biz.controller;
 
+import com.yql.biz.service.IPayBankService;
+import com.yql.biz.vo.PayAccountVo;
+import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.PayProblemDto;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.SecurityProblem;
@@ -25,6 +28,8 @@ public class PayServerController {
     private IPayAccountService payAccountService;
     @Resource
     private IPayProblemService payProblemService;
+    @Resource
+    private IPayBankService payBankService;
 
     /**
      * 初始化用户的支付信息
@@ -38,7 +43,7 @@ public class PayServerController {
             PayAccount payAccount1 = payAccountService.savePayAccount(payAccount);
             return ResponseModel.SUCCESS(payAccount1);
         }catch (Exception e){
-           return ResponseModel.ERROR(500,e.getMessage());
+           return ResponseModel.ERROR(e.getMessage());
         }
     }
 
@@ -67,4 +72,30 @@ public class PayServerController {
         return ResponseModel.SUCCESS(list);
     }
 
+
+    /**
+     * 更新支付密码
+     */
+    @RequestMapping(value = "/update/pay_password",method = RequestMethod.POST)
+    public ResponseModel updatePayPassword(PayAccountVo payAccount){
+        payAccountService.updatePayPassword(payAccount);
+        return ResponseModel.SUCCESS();
+    }
+    /**
+     * 严重支付密码是否成功
+     */
+    @RequestMapping(value = "/pay_password",method = RequestMethod.POST)
+    public ResponseModel payPassword(PayAccount payAccount){
+        payAccountService.validatePassword(payAccount);
+        return ResponseModel.SUCCESS();
+    }
+
+    /**
+     * 添加支付银行卡
+     */
+    @RequestMapping(value = "/set/bank_card" ,method = RequestMethod.POST)
+    public ResponseModel setBankCard(PayBankVo payBankVo){
+        payBankService.savePayBanke(payBankVo);
+        return ResponseModel.SUCCESS();
+    }
 }

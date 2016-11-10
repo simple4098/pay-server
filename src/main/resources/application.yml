@@ -1,7 +1,7 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.0.35:3306/pay_server?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&useNewIO=true&autoReconnectForPools=true
+    url: jdbc:mysql://192.168.0.35:3306/pay_server?characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&useNewIO=true&autoReconnectForPools=true
     username: root
     password: nidaye
     driver-class-name: com.mysql.jdbc.Driver
@@ -40,7 +40,7 @@ logging:
   level:
     org.springframeword : ERROR
     org.apache.catalina: ERROR
-    com.bbd.biz: DEBUG
+    com.yql.biz: debug
 
 
 yql:
