@@ -102,10 +102,7 @@ public class PayAccountVo {
         this.realNameAuth = realNameAuth;
     }
 
-    public static PayAccountVo domainToVo(PayAccount payAccount){
-        String jsonString = JSONObject.toJSONString(payAccount);
-        return JSON.parseObject(jsonString,PayAccountVo.class);
-    }
+
     public static PayAccount voToDomain(PayAccountVo payAccountVo,PayAccount one){
         String jsonString = JSONObject.toJSONString(payAccountVo);
         PayAccount payAccount = JSON.parseObject(jsonString, PayAccount.class);

@@ -50,7 +50,6 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         }else {
             payOrderAccount.setId(orderAccount.getId());
             payOrderAccount.setVersion(orderAccount.getVersion());
-            /*BeanUtils.copyProperties(payOrderAccount,orderAccount);*/
             result = payOrderAccountDao.save(payOrderAccount);
         }
         payOrderAccountDetail.setPayOrderAccountId(result.getId());

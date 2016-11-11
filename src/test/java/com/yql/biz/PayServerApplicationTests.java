@@ -66,8 +66,8 @@ public class PayServerApplicationTests {
     public void  testUpdateOrder(){
         PayOrderAccount byOrderNo = this.payOrderAccountDao.findByOrderNo(587965123548245466L);
         PayOrderAccount orderAccount = new PayOrderAccount();
+        BeanUtils.copyProperties(byOrderNo,orderAccount);
         orderAccount.setPayNo(123213L);
-
         this.payOrderAccountDao.save(orderAccount);
     }
 

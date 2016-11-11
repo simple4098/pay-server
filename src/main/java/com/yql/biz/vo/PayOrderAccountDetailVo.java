@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.model.PayOrderAccountDetail;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 
@@ -151,8 +152,8 @@ public class PayOrderAccountDetailVo {
     }
 
     public static PayOrderAccountDetail toDomain(PayOrderAccount payOrderAccount) {
-        String json = JSON.toJSONString(payOrderAccount);
-        PayOrderAccountDetail payOrderAccountDetail = JSON.parseObject(json, PayOrderAccountDetail.class);
+        PayOrderAccountDetail payOrderAccountDetail = new PayOrderAccountDetail();
+        BeanUtils.copyProperties(payOrderAccount,payOrderAccountDetail);
         return payOrderAccountDetail;
     }
 }
