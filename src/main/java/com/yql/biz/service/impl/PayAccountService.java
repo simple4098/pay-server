@@ -72,7 +72,7 @@ public class PayAccountService implements IPayAccountService {
         PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
         one.setSmallPay(payAccount.isSmallPay());
         one.setSamllPayMoney(payAccount.getSamllPayMoney());
-        payAccountDao.saveAndFlush(one);
+        payAccountDao.save(one);
     }
 
     @Override

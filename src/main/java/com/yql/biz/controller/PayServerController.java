@@ -45,7 +45,7 @@ public class PayServerController {
     }
 
     /**
-     * 开关小额支付并且小额支付金额/open_close/samll_money_pay
+     * 开关小额支付并且小额支付金额
      * @return
      */
     @RequestMapping("/open_close/samll_money_pay")

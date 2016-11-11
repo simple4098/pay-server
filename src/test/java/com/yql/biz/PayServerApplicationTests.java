@@ -80,10 +80,10 @@ public class PayServerApplicationTests {
         List<ProblemAnswerVo> list = new ArrayList<>();
         ProblemAnswerVo problemAnswerVo = new ProblemAnswerVo();
         problemAnswerVo.setAnswer("ni ijijij");
-        problemAnswerVo.setProblemId(null);
+        problemAnswerVo.setProblemId(5);
         list.add(problemAnswerVo);
         ProblemAnswerVo problemAnswerVo1 = new ProblemAnswerVo();
-        problemAnswerVo1.setAnswer(null);
+        problemAnswerVo1.setAnswer("5846262");
         problemAnswerVo1.setProblemId(10001);
         list.add(problemAnswerVo1);
         securityVo.setAnswers(list);
