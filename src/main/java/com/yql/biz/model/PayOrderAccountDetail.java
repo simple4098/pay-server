@@ -2,22 +2,22 @@ package com.yql.biz.model;
 
 import com.yql.biz.enums.PayType;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * <p>支付记录表</p>
+ * <p>支付订单日志记录表</p>
  * @author  simple
  * @version 1.0.0
  * data 2016/11/7 0007.
  */
 @Entity
-@Table(name = "pay_order_account")
-public class PayOrderAccount extends Domain {
+@Table(name = "pay_order_detail")
+public class PayOrderAccountDetail extends Domain {
     private Integer payAccountId;
+    //支付订单id
+    private Integer payOrderAccountId;
     //支付订单号
     private Long orderNo;
     //支付号（系统生产）
@@ -38,9 +38,16 @@ public class PayOrderAccount extends Domain {
     private boolean payStatus;
     //支付错误信息
     private String errorMsg;
-    //支付错误编码
-    private String errorCode;
 
+
+
+    public Integer getPayOrderAccountId() {
+        return payOrderAccountId;
+    }
+
+    public void setPayOrderAccountId(Integer payOrderAccountId) {
+        this.payOrderAccountId = payOrderAccountId;
+    }
 
     public Integer getPayAccountId() {
         return payAccountId;
@@ -130,11 +137,5 @@ public class PayOrderAccount extends Domain {
         this.errorMsg = errorMsg;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
 }

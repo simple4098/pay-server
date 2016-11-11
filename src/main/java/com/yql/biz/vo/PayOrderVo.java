@@ -1,23 +1,19 @@
-package com.yql.biz.model;
+package com.yql.biz.vo;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.enums.PayType;
+import com.yql.biz.model.PayOrderAccount;
+import org.springframework.beans.BeanUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * <p>支付记录表</p>
- * @author  simple
- * @version 1.0.0
- * data 2016/11/7 0007.
+ * creator simple
+ * data 2016/11/10 0010.
  */
-@Entity
-@Table(name = "pay_order_account")
-public class PayOrderAccount extends Domain {
-    private Integer payAccountId;
+public class PayOrderVo {
+    private String userCode;
+    private Long payAccountId;
     //支付订单号
     private Long orderNo;
     //支付号（系统生产）
@@ -34,19 +30,26 @@ public class PayOrderAccount extends Domain {
     private String bankCard;
     //支付总金额
     private BigDecimal totalPrice;
-    //支付是否成功
-    private boolean payStatus;
     //支付错误信息
     private String errorMsg;
     //支付错误编码
     private String errorCode;
+    //支付是否成功
+    private boolean payStatus;
 
+    public String getUserCode() {
+        return userCode;
+    }
 
-    public Integer getPayAccountId() {
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+
+    public Long getPayAccountId() {
         return payAccountId;
     }
 
-    public void setPayAccountId(Integer payAccountId) {
+    public void setPayAccountId(Long payAccountId) {
         this.payAccountId = payAccountId;
     }
 
@@ -90,14 +93,6 @@ public class PayOrderAccount extends Domain {
         this.payType = payType;
     }
 
-    public boolean isPayStatus() {
-        return payStatus;
-    }
-
-    public void setPayStatus(boolean payStatus) {
-        this.payStatus = payStatus;
-    }
-
     public String getCardholder() {
         return cardholder;
     }
@@ -136,5 +131,19 @@ public class PayOrderAccount extends Domain {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public boolean isPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(boolean payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    public static PayOrderAccount toDomain(PayOrderVo payOrderVo) {
+        PayOrderAccount payOrderAccount = new PayOrderAccount();
+        BeanUtils.copyProperties(payOrderVo,payOrderAccount);
+        return payOrderAccount;
     }
 }

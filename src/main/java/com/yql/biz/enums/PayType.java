@@ -1,14 +1,28 @@
 package com.yql.biz.enums;
 
+import com.yql.biz.support.PayServerApplicationContext;
+import com.yql.biz.support.helper.IPayOrderAccountHelper;
+
 /**
  * <p>支付类型</p>
  * creator simple
  * data 2016/11/7 0007.
  */
 public enum PayType {
-    ACCOUNT("余额支付"),
-    CARD("银行卡");
 
+    ACCOUNT("余额支付") {
+        @Override
+        public IPayOrderAccountHelper createOrder() {
+            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payAccountServiceHelper");
+        }
+    },
+    CARD("银行卡") {
+        @Override
+        public IPayOrderAccountHelper createOrder() {
+            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderCardHelper");
+        }
+    };
+    public abstract IPayOrderAccountHelper createOrder();
     private String value;
 
     PayType(String value) {

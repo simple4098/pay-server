@@ -30,11 +30,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
-
-
-
-
-
+  redis:
+      host: 192.168.0.35
+      password:
+      database: 3
+      port: 6379
+      pool:
+        max-active: 50
+        max-idle: 15
+        min-idle: 5
 
 logging:
   level:
@@ -42,7 +46,8 @@ logging:
     org.apache.catalina: ERROR
     com.yql.biz: debug
 
-
 yql:
-  passwordMd5Str: yql-payserver-1221
+  password-md5-str: yql-payserver-1221
+  order-num-key: order_center:order:number
+
 

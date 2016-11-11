@@ -1,6 +1,7 @@
 package com.yql.biz.support.helper;
 
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.util.PayUtil;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper {
     private ApplicationConf applicationConf;
 
     @Override
-    public void updatePayPassword(PayAccount payAccount) throws Exception {
+    public void updatePayPassword(PayAccount payAccount)  {
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         try{
             String md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payAccount.getPayPassword(), passwordMd5Str);
@@ -29,16 +30,16 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper {
     }
 
     @Override
-    public void validateOldPassword(String password, PayAccount payAccount) throws Exception {
+    public void validateOldPassword(String password, PayAccount payAccount)  {
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         String md5PassWord = null;
         try{
             md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), password, passwordMd5Str);
         }catch (Exception e){
-            throw new RuntimeException("error.payserver.paypassword");
+            throw new MessageRuntimeException("error.payserver.paypassword");
         }
         if (!payAccount.getPayPassword().equals(md5PassWord)){
-            throw new RuntimeException("error.payserver.validate.password");
+            throw new MessageRuntimeException("error.payserver.validate.password");
         }
     }
 }

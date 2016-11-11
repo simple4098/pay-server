@@ -2,6 +2,8 @@ package com.yql.biz;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
+import com.yql.biz.dao.IPayOrderAccountDao;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.SecurityVo;
 import com.yql.biz.enums.SamllPayMoney;
@@ -10,6 +12,7 @@ import com.yql.biz.service.IPayAccountService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
@@ -29,6 +32,8 @@ public class PayServerApplicationTests {
     private IPayAccountService payAccountService;
     @Resource
     private IPayAccountDao payAccountDao;
+    @Resource
+    private IPayOrderAccountDao payOrderAccountDao;
 
     @Test
     @Ignore
@@ -56,6 +61,16 @@ public class PayServerApplicationTests {
         payAccount.setUserCode("6543111");
         payAccountService.savePayAccount(payAccount);
     }
+
+    @Test
+    public void  testUpdateOrder(){
+        PayOrderAccount byOrderNo = this.payOrderAccountDao.findByOrderNo(587965123548245466L);
+        PayOrderAccount orderAccount = new PayOrderAccount();
+        orderAccount.setPayNo(123213L);
+
+        this.payOrderAccountDao.save(orderAccount);
+    }
+
 
     @Test
     public void  testProblem(){

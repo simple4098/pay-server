@@ -11,4 +11,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IPayOrderAccountDao  extends JpaRepository<PayOrderAccount,Integer>{
+    /**
+     * 根据订单号查询订单信息
+     * @param orderNo 订单号
+     */
+    PayOrderAccount findByOrderNo(Long orderNo);
 }

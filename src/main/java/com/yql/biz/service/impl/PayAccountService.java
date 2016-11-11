@@ -52,26 +52,18 @@ public class PayAccountService implements IPayAccountService {
     public void updatePayPassword(PayAccountVo payAccountVo) {
         logger.debug("更新密码:"+payAccountVo.getUserCode());
         PayAccount one = payAccountDao.findByUserCode(payAccountVo.getUserCode());
-        try {
-            payAccountServiceHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
-            PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
-            payAccountServiceHelper.updatePayPassword(payAccount);
-            one.setPayPassword(payAccount.getPayPassword());
-            payAccountDao.saveAndFlush(one);
-        } catch (Exception e) {
-            throw new MessageRuntimeException(e.getMessage());
-        }
+        payAccountServiceHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
+        PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
+        payAccountServiceHelper.updatePayPassword(payAccount);
+        one.setPayPassword(payAccount.getPayPassword());
+        payAccountDao.saveAndFlush(one);
     }
 
     @Override
     public void validatePassword(PayAccount payAccount) {
         logger.debug("验证密码 userCode:"+payAccount.getUserCode());
         PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
-        try {
-            payAccountServiceHelper.validateOldPassword(payAccount.getPayPassword(),one);
-        } catch (Exception e) {
-            throw new MessageRuntimeException(e.getMessage());
-        }
+        payAccountServiceHelper.validateOldPassword(payAccount.getPayPassword(),one);
     }
 
     @Override

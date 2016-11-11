@@ -19,7 +19,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/11/3 0003.
+ * <p>支付账号相关信息 控制器</p>
+ * <p>包含：密保设置   密码修改  小额支付设置 ...</p>
+ * Created simple
  */
 @RestController
 @RequestMapping("/account")
@@ -37,14 +39,9 @@ public class PayServerController {
      * @return
      */
     @RequestMapping("/init")
-    @ResponseBody
     public ResponseModel index(PayAccount payAccount){
-        try{
-            PayAccount payAccount1 = payAccountService.savePayAccount(payAccount);
-            return ResponseModel.SUCCESS(payAccount1);
-        }catch (Exception e){
-           return ResponseModel.ERROR(e.getMessage());
-        }
+         PayAccount payAccount1 = payAccountService.savePayAccount(payAccount);
+         return ResponseModel.SUCCESS(payAccount1);
     }
 
     /**
@@ -75,7 +72,6 @@ public class PayServerController {
      * 支付密保问题设置
      */
     @RequestMapping(value = "/set/security",method = RequestMethod.POST)
-    @ResponseBody
     public ResponseModel paySecurity(String json){
         List<SecurityProblem> securityProblems = payProblemService.saveySecurity(json);
         return ResponseModel.SUCCESS(securityProblems);

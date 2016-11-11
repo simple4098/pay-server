@@ -4,14 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayProblemDao;
 import com.yql.biz.dao.ISecurityProblemDao;
-import com.yql.biz.vo.PayProblemDto;
-import com.yql.biz.vo.ProblemAnswerVo;
-import com.yql.biz.vo.SecurityProblemVo;
-import com.yql.biz.vo.SecurityVo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayProblem;
 import com.yql.biz.model.SecurityProblem;
 import com.yql.biz.service.IPayProblemService;
+import com.yql.biz.vo.PayProblemDto;
+import com.yql.biz.vo.ProblemAnswerVo;
+import com.yql.biz.vo.SecurityProblemVo;
+import com.yql.biz.vo.SecurityVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -51,7 +51,6 @@ public class PayProblemService implements IPayProblemService {
             BeanUtils.copyProperties(payProblem,payProblemDto);
             list.add(payProblemDto);
         }
-
         return list;
     }
 

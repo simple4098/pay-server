@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConf {
     private String passwordMd5Str;
+    private String orderNumKey;
 
     public String getPasswordMd5Str() {
         return passwordMd5Str;
@@ -19,5 +20,13 @@ public class ApplicationConf {
 
     public void setPasswordMd5Str(String passwordMd5Str) {
         this.passwordMd5Str = passwordMd5Str;
+    }
+
+    public String getOrderNumKey() {
+        return orderNumKey;
+    }
+
+    public void setOrderNumKey(String orderNumKey) {
+        this.orderNumKey = orderNumKey;
     }
 }

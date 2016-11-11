@@ -7,9 +7,8 @@ import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.service.IPayBankService;
 import com.yql.biz.vo.PayBankVo;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -22,17 +21,19 @@ import java.util.List;
  * data 2016/11/10 0010.
  */
 @Service
+@Transactional
 public class PayBankService implements IPayBankService {
     @Resource
     private IPayBankDao payBankDao;
     @Resource
     private IPayAccountDao payAccountDao;
-    @Resource
-    private MessageSourceAccessor messageSourceAccessor;
+
 
     @Override
     public PayBank savePayBanke(PayBankVo payBankVo) {
-        Assert.notNull(payBankVo.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
+        if (StringUtils.isEmpty(payBankVo.getUserCode())){
+            throw new MessageRuntimeException("error.payserver.param.usercode");
+        }
         if (StringUtils.isEmpty(payBankVo.getBankCard())){
             throw new MessageRuntimeException("error.payserver.paybankCard.empty");
         }
