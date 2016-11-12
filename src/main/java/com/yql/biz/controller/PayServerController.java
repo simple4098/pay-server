@@ -76,6 +76,11 @@ public class PayServerController {
         List<SecurityProblem> securityProblems = payProblemService.saveySecurity(json);
         return ResponseModel.SUCCESS(securityProblems);
     }
+
+    /**
+     * 获取用户密保问题
+     * @param userCode 用户code
+     */
     @RequestMapping("/get/security")
     @ResponseBody
     public ResponseModel accountSecurity(String userCode){
@@ -93,7 +98,7 @@ public class PayServerController {
         return ResponseModel.SUCCESS();
     }
     /**
-     * 严重支付密码是否成功
+     * 验证支付密码是否成功
      */
     @RequestMapping(value = "/pay_password",method = RequestMethod.POST)
     public ResponseModel payPassword(PayAccount payAccount){
@@ -108,5 +113,13 @@ public class PayServerController {
     public ResponseModel setBankCard(PayBankVo payBankVo){
         payBankService.savePayBanke(payBankVo);
         return ResponseModel.SUCCESS();
+    }
+    /**
+     * 获取用户银行卡列表信息
+     */
+    @RequestMapping(value = "/get/bank_card" ,method = RequestMethod.POST)
+    public ResponseModel obtBankCard(String userCode){
+        List<PayBankVo> list = payBankService.findByUserCode(userCode);
+        return ResponseModel.SUCCESS(list);
     }
 }

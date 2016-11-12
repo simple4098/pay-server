@@ -31,31 +31,40 @@ public class PayBankService implements IPayBankService {
 
     @Override
     public PayBank savePayBanke(PayBankVo payBankVo) {
-        if (StringUtils.isEmpty(payBankVo.getUserCode())){
+        if (StringUtils.isEmpty(payBankVo.getUserCode())) {
             throw new MessageRuntimeException("error.payserver.param.usercode");
         }
-        if (StringUtils.isEmpty(payBankVo.getBankCard())){
+        if (StringUtils.isEmpty(payBankVo.getBankCard())) {
             throw new MessageRuntimeException("error.payserver.paybankCard.empty");
         }
-        if (StringUtils.isEmpty(payBankVo.getCardholder())){
+        if (StringUtils.isEmpty(payBankVo.getCardholder())) {
             throw new MessageRuntimeException("error.payserver.paybankCard.cardholder");
         }
         PayAccount payAccount = payAccountDao.findByUserCode(payBankVo.getUserCode());
-        if (payAccount.isRealNameAuth()){
-            PayBank payBank = payBankDao.findByPayAccountIdAndBankCard(payAccount.getId(),payBankVo.getBankCard());
-            if (payBank!=null){
+        if (null == payAccount) {
+            throw new MessageRuntimeException("error.payserver.saveySecurity.userCode");
+        }
+        if (payAccount.isRealNameAuth()) {
+            PayBank payBank = payBankDao.findByPayAccountIdAndBankCard(payAccount.getId(), payBankVo.getBankCard());
+            if (payBank != null) {
                 throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
             }
             PayBank newPayBak = PayBankVo.voToDomain(payBankVo, payAccount);
             List<PayBank> list = payBankDao.findByPayAccountIdOrderBySort(payAccount.getId());
-            if (!CollectionUtils.isEmpty(list)){
+            if (!CollectionUtils.isEmpty(list)) {
                 newPayBak.setSort(list.size());
             }
             //// TODO: 2016/11/10 0010 调用第三方借口
             return payBankDao.save(newPayBak);
-        }else {
+        } else {
             throw new MessageRuntimeException("error.payserver.isRealNameAuth");
         }
 
+    }
+
+    @Override
+    public List<PayBankVo> findByUserCode(String userCode) {
+        List<PayBank> list = payBankDao.findByUserCode(userCode);
+        return PayBankVo.domainToVoList(list);
     }
 }

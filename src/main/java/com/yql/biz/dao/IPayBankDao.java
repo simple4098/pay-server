@@ -26,4 +26,10 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
      * @return
      */
     PayBank findByPayAccountIdAndBankCard(int payAccountId, String bankCard);
+
+    /**
+     * 根据用户code查询，银行卡列表
+     * @param userCode 用户code
+     */
+    List<PayBank> findByUserCode(String userCode);
 }

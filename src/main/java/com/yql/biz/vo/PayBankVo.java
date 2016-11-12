@@ -1,10 +1,13 @@
 package com.yql.biz.vo;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>支付银行vo</p>
@@ -82,9 +85,16 @@ public class PayBankVo {
     }
 
     public static PayBank voToDomain(PayBankVo payBankVo,PayAccount payAccount){
-        String json = JSON.toJSONString(payBankVo);
-        PayBank payBank = JSON.parseObject(json, PayBank.class);
+        PayBank payBank = new PayBank();
+        BeanUtils.copyProperties(payBankVo,payBank);
         payBank.setPayAccountId(payAccount.getId());
         return payBank;
+    }
+
+    public static List<PayBankVo> domainToVoList(List<PayBank> list) {
+        String json = JSON.toJSONString(list);
+        List<PayBankVo> payBankList = JSON.parseObject(json, new TypeReference<List<PayBankVo>>() {
+        });
+        return payBankList;
     }
 }

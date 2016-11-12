@@ -13,24 +13,27 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "pay_bank")
 public class PayBank extends Domain  {
-    @Column(name = "pay_account_id")
     private Integer payAccountId;
+    private String userCode;
     //持卡人
-    @Column(name = "cardholder")
     private String cardholder;
     //银行卡
-    @Column(name = "bankCard")
     private String bankCard;
     //银行卡名称
-    @Column(name = "bank_name")
     private String bankName;
     //快捷支付金额
-    @Column(name = "quick_payment_amount")
     private BigDecimal quickPaymentAmount;
     //排序字段
-    @Column(name = "sort")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sort;
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
     public Integer getPayAccountId() {
         return payAccountId;
