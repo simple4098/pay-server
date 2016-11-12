@@ -4,6 +4,7 @@ import com.yql.biz.enums.SamllPayMoney;
 import com.yql.biz.util.PayUtil;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 public class PayAccount extends  Domain  {
     //用户code
     @Column(name = "user_code")
+    @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     //支付密码
     @Column(name = "pay_password")

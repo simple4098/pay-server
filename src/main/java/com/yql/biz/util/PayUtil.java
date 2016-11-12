@@ -1,5 +1,6 @@
 package com.yql.biz.util;
 
+import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -47,10 +48,23 @@ public class PayUtil {
         return  stringBuffer.toString();
     }
 
+    /**
+     *
+     * @param num
+     * @return
+     */
+    public static String  randomCodeNum(Integer num){
+        if (null==num){
+            throw new MessageRuntimeException("error.payserver.param.notnull");
+        }
+        return  RandomStringUtils.randomNumeric(num);
+    }
+
     public static void main(String[] args) throws Exception {
         System.out.println(md5PassWord("ssdsd","123456","2323"));
         MessageDigest md5=MessageDigest.getInstance("MD5");
         md5.update(new String("ssdsd"+"123456"+"2323").getBytes());
         System.out.println(new BigInteger(1, md5.digest()).toString(16));
+        System.out.println(RandomStringUtils.randomNumeric(0));
     }
 }

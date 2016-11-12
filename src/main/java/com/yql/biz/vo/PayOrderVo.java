@@ -5,6 +5,7 @@ import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
 import org.springframework.beans.BeanUtils;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -15,6 +16,7 @@ public class PayOrderVo {
     private String userCode;
     private Integer payAccountId;
     //支付订单号
+    @NotNull(message = "{com.yql.validation.constraints.OrderNo.message}")
     private Long orderNo;
     //支付号（系统生产）
     private Long payNo;
@@ -23,12 +25,15 @@ public class PayOrderVo {
     //对方userCode
     private String otherUserCode;
     //支付类型
+    @NotNull(message = "{com.yql.validation.constraints.PayType.message}")
     private PayType payType;
     //持卡人
     private String cardholder;
     //银行卡号
+    @NotNull(message = "{com.yql.validation.constraints.bankCard.message}")
     private String bankCard;
     //支付总金额
+    @NotNull(message = "{com.yql.validation.constraints.totalPrice.message}")
     private BigDecimal totalPrice;
     //支付错误信息
     private String errorMsg;

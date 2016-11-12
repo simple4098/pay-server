@@ -3,6 +3,7 @@ package com.yql.biz.controller;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.web.ResponseModel;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/account")
+@Validated
 public class PayOrderController {
 
     @Resource
@@ -27,7 +29,7 @@ public class PayOrderController {
      */
     @RequestMapping("/order")
     @ResponseBody
-    public ResponseModel index(PayOrderVo payOrderVo){
+    public ResponseModel index(@Validated PayOrderVo payOrderVo){
         PayOrderVo order = payOrderAccountService.order(payOrderVo);
         return ResponseModel.SUCCESS(order);
     }

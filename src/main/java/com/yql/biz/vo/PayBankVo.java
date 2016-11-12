@@ -6,6 +6,7 @@ import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import org.springframework.beans.BeanUtils;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,13 +16,16 @@ import java.util.List;
  * data 2016/11/10 0010.
  */
 public class PayBankVo {
+    @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     private Integer payAccountId;
     //银行卡
+    @NotNull(message = "{com.yql.validation.constraints.bankCard.message}")
     private String bankCard;
     //银行卡名称
     private String bankName;
     //持卡人
+    @NotNull(message = "{com.yql.validation.constraints.cardholder.message}")
     private String cardholder;
     //快捷支付金额
     private BigDecimal quickPaymentAmount;

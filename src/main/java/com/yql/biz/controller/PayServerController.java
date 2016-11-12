@@ -1,5 +1,6 @@
 package com.yql.biz.controller;
 
+import com.yql.biz.constraint.UserCode;
 import com.yql.biz.service.IPayBankService;
 import com.yql.biz.vo.PayAccountVo;
 import com.yql.biz.vo.PayBankVo;
@@ -10,6 +11,7 @@ import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.service.IPayProblemService;
 import com.yql.biz.vo.SecurityProblemVo;
 import com.yql.biz.web.ResponseModel;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/account")
+@Validated
 public class PayServerController {
     @Resource
     private IPayAccountService payAccountService;
@@ -39,7 +42,7 @@ public class PayServerController {
      * @return
      */
     @RequestMapping("/init")
-    public ResponseModel index(PayAccount payAccount){
+    public ResponseModel index(@Validated  PayAccount payAccount){
          PayAccount payAccount1 = payAccountService.savePayAccount(payAccount);
          return ResponseModel.SUCCESS(payAccount1);
     }
@@ -49,7 +52,7 @@ public class PayServerController {
      * @return
      */
     @RequestMapping("/open_close/samll_money_pay")
-    public ResponseModel openClose(PayAccount payAccount){
+    public ResponseModel openClose(@Validated  PayAccount payAccount){
         payAccountService.updatePayAccountSamllMoney(payAccount);
         return ResponseModel.SUCCESS();
     }
@@ -83,7 +86,7 @@ public class PayServerController {
      */
     @RequestMapping("/get/security")
     @ResponseBody
-    public ResponseModel accountSecurity(String userCode){
+    public ResponseModel accountSecurity(@UserCode  String userCode){
         List<SecurityProblemVo> list = payProblemService.findAccountSecurity(userCode);
         return ResponseModel.SUCCESS(list);
     }
@@ -110,7 +113,7 @@ public class PayServerController {
      * 添加支付银行卡
      */
     @RequestMapping(value = "/set/bank_card" ,method = RequestMethod.POST)
-    public ResponseModel setBankCard(PayBankVo payBankVo){
+    public ResponseModel setBankCard(@Validated PayBankVo payBankVo){
         payBankService.savePayBanke(payBankVo);
         return ResponseModel.SUCCESS();
     }
@@ -118,7 +121,7 @@ public class PayServerController {
      * 获取用户银行卡列表信息
      */
     @RequestMapping(value = "/get/bank_card" ,method = RequestMethod.POST)
-    public ResponseModel obtBankCard(String userCode){
+    public ResponseModel obtBankCard(@UserCode  String userCode){
         List<PayBankVo> list = payBankService.findByUserCode(userCode);
         return ResponseModel.SUCCESS(list);
     }

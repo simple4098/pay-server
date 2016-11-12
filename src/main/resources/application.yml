@@ -39,6 +39,8 @@ spring:
         max-active: 50
         max-idle: 15
         min-idle: 5
+  messages:
+      basename: validation_messages,errors,messages_zh
 
 logging:
   level:
