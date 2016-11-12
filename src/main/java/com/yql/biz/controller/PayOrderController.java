@@ -1,6 +1,5 @@
 package com.yql.biz.controller;
 
-import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.web.ResponseModel;
@@ -29,7 +28,7 @@ public class PayOrderController {
     @RequestMapping("/order")
     @ResponseBody
     public ResponseModel index(PayOrderVo payOrderVo){
-        PayOrderAccount order = payOrderAccountService.order(payOrderVo);
+        PayOrderVo order = payOrderAccountService.order(payOrderVo);
         return ResponseModel.SUCCESS(order);
     }
 

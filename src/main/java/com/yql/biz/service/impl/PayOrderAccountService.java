@@ -32,7 +32,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     @Resource
     private IPayOrderAccountDetailDao payOrderAccountDetailDao;
     @Override
-    public PayOrderAccount order(PayOrderVo payOrderVo) {
+    public PayOrderVo order(PayOrderVo payOrderVo) {
         PayOrderAccount result = null;
         PayAccount payAccount = payAccountDao.findByUserCode(payOrderVo.getUserCode());
         PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(payOrderVo.getOrderNo());
@@ -54,6 +54,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         }
         payOrderAccountDetail.setPayOrderAccountId(result.getId());
         payOrderAccountDetailDao.save(payOrderAccountDetail);
-        return  result;
+        PayOrderVo vo = PayOrderVo.domainToVo(result);
+        return  vo;
     }
 }

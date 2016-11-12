@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 @Component
 public class PayOrderAccountHelper implements IPayOrderAccountHelper {
     private static final Logger logger = LoggerFactory.getLogger(PayOrderAccountHelper.class);
+
     @Resource
     private OrderNoGenerator orderNoGenerator;
 

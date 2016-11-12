@@ -10,6 +10,6 @@ import com.yql.biz.vo.PayOrderVo;
  */
 public interface IPayOrderAccountService {
 
-    PayOrderAccount order(PayOrderVo payOrderVo);
+    PayOrderVo order(PayOrderVo payOrderVo);
 
 }

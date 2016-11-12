@@ -2,9 +2,7 @@ package com.yql.biz.model;
 
 import com.yql.biz.enums.PayType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -27,6 +25,7 @@ public class PayOrderAccount extends Domain {
     //对方userCode
     private String otherUserCode;
     //支付类型
+    @Enumerated(value = EnumType.STRING)
     private PayType payType;
     //持卡人
     private String cardholder;

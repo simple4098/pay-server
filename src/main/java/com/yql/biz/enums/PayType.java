@@ -13,7 +13,7 @@ public enum PayType {
     ACCOUNT("余额支付") {
         @Override
         public IPayOrderAccountHelper createOrder() {
-            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payAccountServiceHelper");
+            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderAccountHelper");
         }
     },
     CARD("银行卡") {

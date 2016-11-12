@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 public class PayOrderVo {
     private String userCode;
-    private Long payAccountId;
+    private Integer payAccountId;
     //支付订单号
     private Long orderNo;
     //支付号（系统生产）
@@ -32,8 +32,7 @@ public class PayOrderVo {
     private BigDecimal totalPrice;
     //支付错误信息
     private String errorMsg;
-    //支付错误编码
-    private String errorCode;
+
     //支付是否成功
     private boolean payStatus;
 
@@ -45,11 +44,11 @@ public class PayOrderVo {
         this.userCode = userCode;
     }
 
-    public Long getPayAccountId() {
+    public Integer getPayAccountId() {
         return payAccountId;
     }
 
-    public void setPayAccountId(Long payAccountId) {
+    public void setPayAccountId(Integer payAccountId) {
         this.payAccountId = payAccountId;
     }
 
@@ -125,13 +124,7 @@ public class PayOrderVo {
         this.errorMsg = errorMsg;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
 
     public boolean isPayStatus() {
         return payStatus;
@@ -145,5 +138,11 @@ public class PayOrderVo {
         PayOrderAccount payOrderAccount = new PayOrderAccount();
         BeanUtils.copyProperties(payOrderVo,payOrderAccount);
         return payOrderAccount;
+    }
+
+    public static PayOrderVo domainToVo(PayOrderAccount result) {
+        PayOrderVo payOrderVo = new PayOrderVo();
+        BeanUtils.copyProperties(result,payOrderVo);
+        return payOrderVo;
     }
 }
