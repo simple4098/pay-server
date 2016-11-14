@@ -14,7 +14,7 @@ public interface IPayAccountServiceHelper {
      * @param payAccount
      * @throws Exception 加密异常
      */
-    void updatePayPassword(PayAccount payAccount) ;
+    void md5PayPassword(PayAccount payAccount) ;
 
     /**
      * 验证旧密码是否正确

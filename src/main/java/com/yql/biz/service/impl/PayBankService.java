@@ -10,7 +10,6 @@ import com.yql.biz.vo.PayBankVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.List;
 @Service
 @Transactional
 public class PayBankService implements IPayBankService {
+
     @Resource
     private IPayBankDao payBankDao;
     @Resource
@@ -31,15 +31,6 @@ public class PayBankService implements IPayBankService {
 
     @Override
     public PayBank savePayBanke(PayBankVo payBankVo) {
-        if (StringUtils.isEmpty(payBankVo.getUserCode())) {
-            throw new MessageRuntimeException("error.payserver.param.usercode");
-        }
-        if (StringUtils.isEmpty(payBankVo.getBankCard())) {
-            throw new MessageRuntimeException("error.payserver.paybankCard.empty");
-        }
-        if (StringUtils.isEmpty(payBankVo.getCardholder())) {
-            throw new MessageRuntimeException("error.payserver.paybankCard.cardholder");
-        }
         PayAccount payAccount = payAccountDao.findByUserCode(payBankVo.getUserCode());
         if (null == payAccount) {
             throw new MessageRuntimeException("error.payserver.saveySecurity.userCode");

@@ -58,7 +58,7 @@ public class PayServerController {
     }
 
     @RequestMapping("/real_name_auth")
-    public ResponseModel realNameAuth(PayAccount payAccount){
+    public ResponseModel realNameAuth(@Validated PayAccount payAccount){
         payAccountService.updateRealNameAuth(payAccount);
         return ResponseModel.SUCCESS();
     }
@@ -75,7 +75,7 @@ public class PayServerController {
      * 支付密保问题设置
      */
     @RequestMapping(value = "/set/security",method = RequestMethod.POST)
-    public ResponseModel paySecurity(String json){
+    public ResponseModel paySecurity(@UserCode(message = "{com.yql.validation.constraints.json.message}") String json){
         List<SecurityProblem> securityProblems = payProblemService.saveySecurity(json);
         return ResponseModel.SUCCESS(securityProblems);
     }
@@ -96,7 +96,7 @@ public class PayServerController {
      * 更新支付密码
      */
     @RequestMapping(value = "/update/pay_password",method = RequestMethod.POST)
-    public ResponseModel updatePayPassword(PayAccountVo payAccount){
+    public ResponseModel updatePayPassword(@Validated  PayAccountVo payAccount){
         payAccountService.updatePayPassword(payAccount);
         return ResponseModel.SUCCESS();
     }
@@ -104,7 +104,7 @@ public class PayServerController {
      * 验证支付密码是否成功
      */
     @RequestMapping(value = "/pay_password",method = RequestMethod.POST)
-    public ResponseModel payPassword(PayAccount payAccount){
+    public ResponseModel payPassword(@Validated PayAccount payAccount){
         payAccountService.validatePassword(payAccount);
         return ResponseModel.SUCCESS();
     }

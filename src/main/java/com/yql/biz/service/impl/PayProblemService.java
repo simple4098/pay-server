@@ -79,7 +79,6 @@ public class PayProblemService implements IPayProblemService {
     public List<SecurityProblemVo> findAccountSecurity(String userCode) {
         logger.debug("查询userCode的密保问题集合:"+userCode);
         PayAccount payAccount = payAccountDao.findByUserCode(userCode);
-        Assert.notNull(payAccount,messageSourceAccessor.getMessage("error.payserver.saveySecurity.userCode"));
         List<SecurityProblemVo> securityProblemVoList = new ArrayList<>();
         List<SecurityProblem> list = securityProblemDao.findByPayAccountId(payAccount.getId());
         SecurityProblemVo securityProblemVo = null;

@@ -38,10 +38,9 @@ public class PayAccountService implements IPayAccountService {
     @Override
     public PayAccount savePayAccount(PayAccount payAccount) {
         logger.debug("初始化支付账户:"+payAccount.getUserCode());
-        Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
         Assert.notNull(payAccount.getPayPassword(),messageSourceAccessor.getMessage("error.payserver.param.paypassword"));
         try {
-            payAccountServiceHelper.updatePayPassword(payAccount);
+            payAccountServiceHelper.md5PayPassword(payAccount);
         } catch (Exception e) {
             throw new MessageRuntimeException("error.payserver.paypassword");
         }
@@ -54,9 +53,9 @@ public class PayAccountService implements IPayAccountService {
         PayAccount one = payAccountDao.findByUserCode(payAccountVo.getUserCode());
         payAccountServiceHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
         PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
-        payAccountServiceHelper.updatePayPassword(payAccount);
+        payAccountServiceHelper.md5PayPassword(payAccount);
         one.setPayPassword(payAccount.getPayPassword());
-        payAccountDao.saveAndFlush(one);
+        payAccountDao.save(one);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class PayAccountService implements IPayAccountService {
 
     @Override
     public void updateRealNameAuth(PayAccount payAccount) {
-        Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
+        //Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
         PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
         one.setRealNameAuth(payAccount.isRealNameAuth());
         payAccountDao.saveAndFlush(one);

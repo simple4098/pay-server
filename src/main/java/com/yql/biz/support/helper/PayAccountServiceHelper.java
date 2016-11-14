@@ -19,7 +19,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper {
     private ApplicationConf applicationConf;
 
     @Override
-    public void updatePayPassword(PayAccount payAccount)  {
+    public void md5PayPassword(PayAccount payAccount)  {
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         try{
             String md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payAccount.getPayPassword(), passwordMd5Str);

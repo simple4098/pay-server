@@ -1,11 +1,10 @@
 package com.yql.biz.vo;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.yql.biz.enums.SamllPayMoney;
 import com.yql.biz.model.PayAccount;
-import com.yql.biz.model.SecurityProblem;
 import com.yql.biz.util.PayUtil;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>支付账号vo对象</p>
@@ -14,6 +13,7 @@ import com.yql.biz.util.PayUtil;
  */
 public class PayAccountVo {
     private Integer id;
+    @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     //支付密码
     private String payPassword;
@@ -104,9 +104,11 @@ public class PayAccountVo {
 
 
     public static PayAccount voToDomain(PayAccountVo payAccountVo,PayAccount one){
-        String jsonString = JSONObject.toJSONString(payAccountVo);
-        PayAccount payAccount = JSON.parseObject(jsonString, PayAccount.class);
+       /* String jsonString = JSONObject.toJSONString(payAccountVo);
+        JSON.parseObject(jsonString, PayAccount.class);*/
+        PayAccount payAccount = new PayAccount();
         payAccount.setRandomCode(one.getRandomCode());
+        payAccount.setPayPassword(payAccountVo.getPayPassword());
         return payAccount;
     }
 }
