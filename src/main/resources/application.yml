@@ -1,3 +1,6 @@
+server:
+    port: 8081
+
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -51,5 +54,7 @@ logging:
 yql:
   password-md5-str: yql-payserver-1221
   order-num-key: order_center:order:number
-
+  kunlun:
+      host: http://localhost:8080
+      pay-uri: /test?id={id}
 

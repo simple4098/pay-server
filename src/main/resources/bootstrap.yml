@@ -1,7 +1,13 @@
-#spring:
-#  application:
-#    name: payserver
-#  cloud:
-#    config:
-#      uri: http://192.168.0.38:8888/
-#      profile: dev
+spring:
+  application:
+    name: pay-server
+  cloud:
+    config:
+      uri: http://192.168.0.221:8081/
+      enabled: true
+      serviceId: pay-server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.0.221:8081/pay-server/

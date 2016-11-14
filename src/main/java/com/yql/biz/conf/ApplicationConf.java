@@ -10,9 +10,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConfigurationProperties(prefix = "yql")
 @Configuration
-public class ApplicationConf {
+public class ApplicationConf implements ExternalApi {
     private String passwordMd5Str;
     private String orderNumKey;
+    private Kunlun kunlun;
 
     public String getPasswordMd5Str() {
         return passwordMd5Str;
@@ -28,5 +29,39 @@ public class ApplicationConf {
 
     public void setOrderNumKey(String orderNumKey) {
         this.orderNumKey = orderNumKey;
+    }
+
+    public Kunlun getKunlun() {
+        return kunlun;
+    }
+
+    public void setKunlun(Kunlun kunlun) {
+        this.kunlun = kunlun;
+    }
+
+    @Override
+    public String getPayUrl() {
+        return kunlun.getHost()+kunlun.getPayUri();
+    }
+
+    public static class Kunlun {
+        private String host; //接口host
+        private String payUri; //关联方总数
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
+        }
+
+        public String getPayUri() {
+            return payUri;
+        }
+
+        public void setPayUri(String payUri) {
+            this.payUri = payUri;
+        }
     }
 }
