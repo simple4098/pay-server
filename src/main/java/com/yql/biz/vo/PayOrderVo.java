@@ -13,6 +13,7 @@ import java.math.BigDecimal;
  * data 2016/11/10 0010.
  */
 public class PayOrderVo {
+    @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     private Integer payAccountId;
     //支付订单号

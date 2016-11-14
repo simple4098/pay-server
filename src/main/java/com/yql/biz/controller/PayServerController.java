@@ -27,7 +27,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/account")
-@Validated
 public class PayServerController {
     @Resource
     private IPayAccountService payAccountService;

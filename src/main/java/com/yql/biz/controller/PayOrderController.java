@@ -12,11 +12,11 @@ import javax.annotation.Resource;
 
 /**
  * <p>支付订单</p>
- * Created by Administrator on 2016/11/3 0003.
+ * @author  simple on 2016/11/3 0003.
  */
 @RestController
 @RequestMapping("/account")
-@Validated
+/*@Validated*/
 public class PayOrderController {
 
     @Resource
