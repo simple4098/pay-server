@@ -3,11 +3,11 @@ spring:
     name: pay-server
   cloud:
     config:
-      uri: http://192.168.0.221:8081/
+      uri: http://192.168.0.38:11111/
       enabled: true
       serviceId: pay-server
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://192.168.0.221:8081/pay-server/
+    serviceUrl:
+      defaultZone: http://192.168.0.38:11111/eureka/
