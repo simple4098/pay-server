@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author wangxiaohong
+ * 调用大金支付平台接口
+ * @author simple
  */
-@FeignClient("localhost:8080")
+@FeignClient(value = "pay-platform",url = "${pay-server.url}",fallback = PayClientHystrix.class)
 public interface PayClient {
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    String getUserCodeByAccount(@RequestParam("account") String destAccount);
+    @RequestMapping(value = "/bang_bank", method = RequestMethod.POST)
+    String bangBank(String xml,String base64);
 }

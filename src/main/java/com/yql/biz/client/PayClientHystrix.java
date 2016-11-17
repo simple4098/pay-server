@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 断路器实现类
- * @author wangxiaohong
+ * @author simple
  */
 @Component
 public class PayClientHystrix implements PayClient {
+
+
     @Override
-    public String getUserCodeByAccount(@RequestParam("account") String destAccount) {
-        return "11211211";
+    public String bangBank(String xml, String base64) {
+        return null;
     }
 }

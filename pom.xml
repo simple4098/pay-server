@@ -58,6 +58,16 @@
 			</exclusions>&ndash;&gt;
 		</dependency>-->
 		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-core</artifactId>
+			<version>9.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-jaxb</artifactId>
+			<version>8.7.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
@@ -211,28 +221,12 @@
 					<dependency>
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjtools</artifactId>
-						<version>1.8.9</version>
+						<version>${aspectj.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjrt</artifactId>
-						<version>1.8.9</version>
-					</dependency>
-					<!-- 以下几个依赖会在编译的时候用到 -->
-					<dependency>
-						<groupId>javax.cache</groupId>
-						<artifactId>cache-api</artifactId>
-						<version>1.0.0</version>
-					</dependency>
-					<dependency>
-						<groupId>javax</groupId>
-						<artifactId>javaee-api</artifactId>
-						<version>6.0</version>
-					</dependency>
-					<dependency>
-						<groupId>javax.transaction</groupId>
-						<artifactId>javax.transaction-api</artifactId>
-						<version>1.2</version>
+						<version>${aspectj.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>

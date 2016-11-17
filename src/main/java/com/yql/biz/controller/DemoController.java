@@ -3,7 +3,13 @@ package com.yql.biz.controller;
 import com.yql.biz.client.ComputeClient;
 import com.yql.biz.model.Order;
 import com.yql.biz.service.IPayService;
+import com.yql.biz.vo.pay.*;
+import com.yql.biz.vo.pay.request.BangBody;
+import com.yql.biz.vo.pay.request.Request;
+import com.yql.biz.vo.pay.request.Head;
+import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.web.ResponseModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +44,23 @@ public class DemoController {
     }
 
     @RequestMapping("/add-feign")
-    public Integer addTest(@RequestParam Integer a,@RequestParam Integer b){
-        return computeClient.add(a,b);
+    public ResponseModel addTest(){
+        Request<BangBody> request1 = new Request<>();
+        Head head = new Head() ;
+        head.setInstitutionID("sdsdsdsd111");
+        head.setTxCode("1245450");
+        request1.setHead(head);
+        BangBody bangBody = new BangBody();
+        bangBody.setAccountName("张琳");
+        request1.setBody(bangBody);
+        Param param = new Param();
+        param.setMessage(request1);
+        param.setSignature("zhanglin");
+        //ComputeClient computeClient =  Feign.builder().target(ComputeClient.class, "http://localhost:8080/");
+        Response response = computeClient.add1(param);
+        //Response response1 = computeClient.add2("hello","zhangLin");
+        System.out.println("==========="+response);
+        return ResponseModel.SUCCESS(response);
     }
 
     @RequestMapping(value = "/add" ,method = RequestMethod.GET)
