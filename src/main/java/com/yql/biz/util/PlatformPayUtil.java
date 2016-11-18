@@ -1,9 +1,8 @@
 package com.yql.biz.util;
 
-import com.yql.biz.vo.pay.request.BangBody;
+import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.DjPay;
-import com.yql.biz.vo.pay.request.Head;
-import com.yql.biz.vo.pay.request.Request;
+import com.yql.biz.vo.pay.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Encoder;
@@ -29,7 +28,7 @@ public class PlatformPayUtil<T extends DjPay> {
      * @param <T> 泛型类
      * @throws JAXBException
      */
-    public static <T> String payRequest(T t) throws Exception {
+    public static <T> Param payRequest(T t) throws Exception {
         JAXBContext context = JAXBContext.newInstance(t.getClass());
         Marshaller marshaller = context.createMarshaller();
         // 是否省略xm头声明信
@@ -42,27 +41,18 @@ public class PlatformPayUtil<T extends DjPay> {
         byte[] bytes = xml.getBytes();
         logger.debug("======xml format====="+xml);
         Signature sha1WithRSA = Signature.getInstance("SHA1WithRSA");
-
         String algorithm = sha1WithRSA.getAlgorithm();
+        String message = new BASE64Encoder().encode(bytes);
+        Param param = new Param(message,algorithm);
         logger.debug("======SHA1WithRSA 加密====="+algorithm);
-        return   new BASE64Encoder().encode(xml.getBytes());
-
+        return   param;
     }
 
-    public static void main(String[] args) {
-        try {
-            Request<BangBody> request1 = new Request<>();
-            Head head = new Head() ;
-            head.setInstitutionID("sdsdsdsd111");
-            head.setTxCode("1245450");
-            request1.setHead(head);
-            BangBody bangBody = new BangBody();
-            bangBody.setAccountName("张琳");
-            request1.setBody(bangBody);
-            String s = PlatformPayUtil.payRequest(request1);
-            System.out.println("==================="+s);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static boolean isSuccess(Response response){
+        if (response!=null && response.getHead().getCode().equals("2000")){
+            return true;
         }
+        return  false;
     }
+
 }

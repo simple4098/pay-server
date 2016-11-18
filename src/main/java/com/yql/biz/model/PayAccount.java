@@ -1,5 +1,6 @@
 package com.yql.biz.model;
 
+import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.SamllPayMoney;
 import com.yql.biz.util.PayUtil;
 
@@ -39,6 +40,37 @@ public class PayAccount extends  Domain  {
     //是否实名认证
     @Column(name = "real_name_auth")
     private boolean realNameAuth;
+    //证件类型
+    @Enumerated(value = EnumType.STRING)
+    private IdentificationType  identificationType;
+    //证件号码
+    private String identificationNumber;
+    //电话号码
+    private String phoneNumber;
+
+    public IdentificationType getIdentificationType() {
+        return identificationType;
+    }
+
+    public void setIdentificationType(IdentificationType identificationType) {
+        this.identificationType = identificationType;
+    }
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
+    }
+
+    public void setIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getUserCode() {
         return userCode;

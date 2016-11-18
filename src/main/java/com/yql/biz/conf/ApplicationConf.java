@@ -13,7 +13,17 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConf implements ExternalApi {
     private String passwordMd5Str;
     private String orderNumKey;
+    //机构代码
+    private String institutionId;
     private Kunlun kunlun;
+
+    public String getInstitutionId() {
+        return institutionId;
+    }
+
+    public void setInstitutionId(String institutionId) {
+        this.institutionId = institutionId;
+    }
 
     public String getPasswordMd5Str() {
         return passwordMd5Str;

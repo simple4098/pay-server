@@ -1,22 +1,29 @@
 package com.yql.biz.vo.pay;
 
-import com.yql.biz.vo.pay.request.Request;
-
 /**
- * <p> 描述 </p>
- *
+ * <p>  </p>
  * @auther simple
  * data 2016/11/16 0016.
  */
 public class Param {
-    private Request message;
-    private String signature;
+    //请求报文 base64编码
+    private String message;
+    //请求报文 加密后的密文
+    private String  signature;
 
-    public Request getMessage() {
+    public Param() {
+    }
+
+    public Param(String message, String signature) {
+        this.message = message;
+        this.signature = signature;
+    }
+
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Request message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

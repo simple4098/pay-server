@@ -1,6 +1,9 @@
 package com.yql.biz.support.helper;
 
 import com.yql.biz.model.PayAccount;
+import com.yql.biz.model.PayBank;
+import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.request.Request;
 
 /**
  * <p>支付账户helper</p>
@@ -22,4 +25,10 @@ public interface IPayAccountServiceHelper {
      * @param payAccount 数据库存储支付数据
      */
     void validateOldPassword(String password,PayAccount payAccount);
+
+    /**
+     * 创建绑定银行卡必要的参数：
+     * @param newPayBak
+     */
+    Param crateBangBankParam(PayBank newPayBak);
 }

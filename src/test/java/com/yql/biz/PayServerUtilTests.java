@@ -1,6 +1,7 @@
 package com.yql.biz;
 
 import com.yql.biz.util.PlatformPayUtil;
+import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.*;
 import com.yql.biz.vo.pay.response.*;
 import org.junit.Test;
@@ -35,15 +36,15 @@ public class PayServerUtilTests {
         bangBody.setValidDate(1230);
         bangBody.setcVN2(568);
         request1.setBody(bangBody);
-        String s = PlatformPayUtil.payRequest(request1);
-        logger.debug("=========request json :"+s);
+        Param s = PlatformPayUtil.payRequest(request1);
+        logger.debug("=========request json :"+s.getMessage());
         Response response = new Response();
         ResponseHead responseHead = new ResponseHead();
         responseHead.setCode("2000");
         responseHead.setMessage("成功");
         response.setHead(responseHead);
-        String s1 = PlatformPayUtil.payRequest(response);
-        logger.debug("=========response json :"+s1);
+        s = PlatformPayUtil.payRequest(response);
+        logger.debug("=========response json :"+s.getMessage());
     }
 
     //短信验证绑定
@@ -58,8 +59,8 @@ public class PayServerUtilTests {
         bangMessageValidateBody.setTxSNBinding("154545454");
         bangMessageValidateBody.setsMSValidationCode("255656");
         request.setBody(bangMessageValidateBody);
-        String s1 = PlatformPayUtil.payRequest(request);
-        logger.debug("=========request json :"+s1);
+        Param s1 = PlatformPayUtil.payRequest(request);
+        logger.debug("=========request json :"+s1.getMessage());
 
         BangMessageValidateResponse response = new BangMessageValidateResponse();
         ResponseHead responseHead = new ResponseHead();
@@ -72,8 +73,8 @@ public class PayServerUtilTests {
         body.setPayCardType("01");
         body.setBankTxTime(new Date());
         response.setBangMessageValidateResponseBody(body);
-        String s2= PlatformPayUtil.payRequest(response);
-        logger.debug("=========response json :"+s2);
+        Param s2= PlatformPayUtil.payRequest(response);
+        logger.debug("=========response json :"+s2.getMessage());
 
 
 
@@ -93,8 +94,8 @@ public class PayServerUtilTests {
         payBody.setPaymentNo("8782133336");
         payBody.setSettlementFlag("1dsds");
         request.setBody(payBody);
-        String s = PlatformPayUtil.payRequest(request);
-        logger.debug("=========request json :"+s);
+        Param s = PlatformPayUtil.payRequest(request);
+        logger.debug("=========request json :"+s.getMessage());
 
         Request<PayMessageValidateBody> request1 = new Request<>();
         request1.setHead(head);
@@ -103,7 +104,7 @@ public class PayServerUtilTests {
         payMessageValidateBody.setSMSValidationCode("ds14555");
         request1.setBody(payMessageValidateBody);
          s = PlatformPayUtil.payRequest(request1);
-        logger.debug("=========request json :"+s);
+        logger.debug("=========request json :"+s.getMessage());
 
         PayMessageValidateResponse response = new PayMessageValidateResponse();
         ResponseHead responseHead = new ResponseHead();
@@ -118,7 +119,7 @@ public class PayServerUtilTests {
         responseBody.setResponseCode("65989566");
         response.setPayMessageValidateResponseBody(responseBody);
         s = PlatformPayUtil.payRequest(response);
-        logger.debug("=========request json :"+s);
+        logger.debug("=========request json :"+s.getMessage());
     }
 
 
@@ -132,8 +133,8 @@ public class PayServerUtilTests {
         QueryBangBody queryBangBody = new QueryBangBody();
         queryBangBody.setTxSNBinding("dsds");
         request.setBody(queryBangBody);
-        String s = PlatformPayUtil.payRequest(request);
-        logger.debug("=========request json :"+s);
+        Param s = PlatformPayUtil.payRequest(request);
+        logger.debug("=========request json :"+s.getMessage());
 
         QueryBangResponse queryBangResponse = new QueryBangResponse();
         ResponseHead head1 = new ResponseHead();
@@ -148,7 +149,7 @@ public class PayServerUtilTests {
         queryBangResponseBody.setInstitutionID("55dsdsd");
         queryBangResponse.setBangResponseBody(queryBangResponseBody);
         s = PlatformPayUtil.payRequest(queryBangResponse);
-        logger.debug("=========response json :"+s);
+        logger.debug("=========response json :"+s.getMessage());
     }
 
     @Test
@@ -162,8 +163,8 @@ public class PayServerUtilTests {
         uninstallBangBody.setTxSNBinding("dsdsds");
         uninstallBangBody.setTxSNUnBinding("4554");
         request.setBody(uninstallBangBody);
-        String s = PlatformPayUtil.payRequest(request);
-        logger.info("=============="+s);
+        Param s = PlatformPayUtil.payRequest(request);
+        logger.info("=============="+s.getMessage());
 
         UninstallBangResponse uninstallBangResponse = new UninstallBangResponse();
         ResponseHead head1 = new ResponseHead();
@@ -176,7 +177,7 @@ public class PayServerUtilTests {
         uninstallBangResponseBody.setResponseCode("sdsdsds");
         uninstallBangResponse.setUninstallBangResponseBody(uninstallBangResponseBody);
          s = PlatformPayUtil.payRequest(uninstallBangResponse);
-        logger.info("=============="+s);
+        logger.info("=============="+s.getMessage());
 
 
 

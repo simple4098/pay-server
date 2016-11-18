@@ -10,7 +10,6 @@ import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.vo.PayOrderAccountDetailVo;
 import com.yql.biz.vo.PayOrderVo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +30,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private IPayAccountDao payAccountDao;
     @Resource
     private IPayOrderAccountDetailDao payOrderAccountDetailDao;
+
+
     @Override
     public PayOrderVo order(PayOrderVo payOrderVo) {
         PayOrderAccount result = null;
@@ -46,12 +47,11 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         PayOrderAccountDetail payOrderAccountDetail = PayOrderAccountDetailVo.toDomain(payOrderAccount);
         if (orderAccount==null){
             payOrderAccount.setPayNo(orderVo.getPayNo());
-            result = payOrderAccountDao.save(payOrderAccount);
         }else {
             payOrderAccount.setId(orderAccount.getId());
             payOrderAccount.setVersion(orderAccount.getVersion());
-            result = payOrderAccountDao.save(payOrderAccount);
         }
+        result = payOrderAccountDao.save(payOrderAccount);
         payOrderAccountDetail.setPayOrderAccountId(result.getId());
         payOrderAccountDetailDao.save(payOrderAccountDetail);
         PayOrderVo vo = PayOrderVo.domainToVo(result);

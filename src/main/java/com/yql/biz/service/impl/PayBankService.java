@@ -1,12 +1,17 @@
 package com.yql.biz.service.impl;
 
+import com.yql.biz.client.PayClient;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.service.IPayBankService;
+import com.yql.biz.support.helper.IPayAccountServiceHelper;
+import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayBankVo;
+import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.response.Response;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +32,10 @@ public class PayBankService implements IPayBankService {
     private IPayBankDao payBankDao;
     @Resource
     private IPayAccountDao payAccountDao;
+    @Resource
+    private IPayAccountServiceHelper payAccountServiceHelper;
+    @Resource
+    private PayClient payClient;
 
 
     @Override
@@ -46,11 +55,16 @@ public class PayBankService implements IPayBankService {
                 newPayBak.setSort(list.size());
             }
             //// TODO: 2016/11/10 0010 调用第三方借口
-            return payBankDao.save(newPayBak);
+            Param param = payAccountServiceHelper.crateBangBankParam(newPayBak);
+            Response response = payClient.bangBank(param.getMessage(), param.getSignature());
+            if (PlatformPayUtil.isSuccess(response)){
+                return payBankDao.save(newPayBak);
+            }else {
+                throw new MessageRuntimeException(response.getHead().getMessage());
+            }
         } else {
             throw new MessageRuntimeException("error.payserver.isRealNameAuth");
         }
-
     }
 
     @Override

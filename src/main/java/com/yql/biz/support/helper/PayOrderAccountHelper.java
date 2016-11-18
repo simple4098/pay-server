@@ -20,10 +20,12 @@ public class PayOrderAccountHelper implements IPayOrderAccountHelper {
     @Resource
     private OrderNoGenerator orderNoGenerator;
 
+
     @Override
     public PayOrderVo orderType(PayOrderVo payOrderVo) {
         logger.debug("余额支付...............");
         long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+        //payClient.pay("test","test");
         payOrderVo.setPayStatus(true);
         payOrderVo.setPayNo(payNo);
         payOrderVo.setPayOrder(07551236l);

@@ -1,7 +1,10 @@
 package com.yql.biz.support.helper;
 
+import com.alibaba.fastjson.JSON;
+import com.yql.biz.client.PayClient;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.pay.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,10 +21,13 @@ public class PayOrderCardHelper implements IPayOrderAccountHelper {
     private static final Logger loger = LoggerFactory.getLogger(PayOrderCardHelper.class);
     @Resource
     private OrderNoGenerator orderNoGenerator;
+    @Resource
+    private PayClient payClient;
 
     @Override
     public PayOrderVo orderType(PayOrderVo payOrderVo) {
-        loger.debug("银行卡支付............");
+        Response pay = payClient.pay("test", "test");
+        loger.debug("银行卡支付....."+ JSON.toJSONString(pay));
         long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayStatus(true);
         payOrderVo.setPayNo(payNo);
