@@ -2,6 +2,7 @@ package com.yql.biz.vo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.yql.biz.enums.CardType;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,8 @@ public class PayBankVo {
     private String cardholder;
     //快捷支付金额
     private BigDecimal quickPaymentAmount;
+    private CardType cardType;
+    private String phoneNumber;
     //排序字段
     private int sort;
 
@@ -88,7 +91,23 @@ public class PayBankVo {
         this.sort = sort;
     }
 
-    public static PayBank voToDomain(PayBankVo payBankVo,PayAccount payAccount){
+    public CardType getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public static PayBank voToDomain(PayBankVo payBankVo, PayAccount payAccount){
         PayBank payBank = new PayBank();
         BeanUtils.copyProperties(payBankVo,payBank);
         payBank.setPayAccountId(payAccount.getId());

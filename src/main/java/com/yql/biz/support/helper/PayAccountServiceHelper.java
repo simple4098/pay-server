@@ -1,8 +1,11 @@
 package com.yql.biz.support.helper;
 
+import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
+import com.yql.biz.enums.IdentificationType;
+import com.yql.biz.enums.RealNameAuthType;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
@@ -10,11 +13,15 @@ import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
+import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
+import com.yql.biz.web.ResponseModel;
 import org.springframework.stereotype.Component;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 
@@ -33,12 +40,17 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private OrderNoGenerator orderNoGenerator;
     @Resource
     private IBankInfoDao bankInfoDao;
+    @Resource
+    private IUserCenterClient userCenterClient;
 
     @Override
     public void md5PayPassword(PayAccount payAccount)  {
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         try{
-            String md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payAccount.getPayPassword(), passwordMd5Str);
+            String base64 = payAccount.getPayPassword();
+            byte[] bytes = new BASE64Decoder().decodeBuffer(base64);
+            String payPassword = new String(bytes);
+            String md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payPassword, passwordMd5Str);
             payAccount.setPayPassword(md5PassWord);
         }catch (Exception e){
             throw new RuntimeException("error.payserver.paypassword");
@@ -50,7 +62,9 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         String md5PassWord = null;
         try{
-            md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), password, passwordMd5Str);
+            byte[] bytes = new BASE64Decoder().decodeBuffer(password);
+            String payPassword = new String(bytes);
+            md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payPassword, passwordMd5Str);
         }catch (Exception e){
             throw new MessageRuntimeException("error.payserver.paypassword");
         }
@@ -91,5 +105,32 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public PayAccount findOrCratePayAccount(String userCode) {
+        PayAccount payAccount = payAccountDao.findByUserCode(userCode);
+        if (payAccount == null){
+            ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
+            if (baseUserInfo!=null && baseUserInfo.getData()!=null){
+                UserBasicInfoVo baseUserInfoData = baseUserInfo.getData();
+                payAccount = new PayAccount();
+                payAccount.setUserCode(userCode);
+                boolean weatherAuth = baseUserInfoData.getWeatherAuth() == 1;
+                payAccount.setRealNameAuth(weatherAuth);
+                if (weatherAuth){
+                    RealNameAuthType authType = baseUserInfoData.getAuthType();
+                    if (authType.equals(RealNameAuthType.MAINlAND)){
+                        payAccount.setIdentificationType(IdentificationType.ID_CARD);
+                    }else {
+                        payAccount.setIdentificationType(IdentificationType.HKMACTW);
+                    }
+                }
+                payAccount = payAccountDao.save(payAccount);
+            }else {
+                throw  new MessageRuntimeException("error.payserver.saveySecurity.userCode");
+            }
+        }
+        return payAccount;
     }
 }

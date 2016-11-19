@@ -1,5 +1,6 @@
 package com.yql.biz.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.PayClient;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
@@ -12,6 +13,8 @@ import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -27,7 +30,7 @@ import java.util.List;
 @Service
 @Transactional
 public class PayBankService implements IPayBankService {
-
+    private static final Logger logger = LoggerFactory.getLogger(PayBankService.class);
     @Resource
     private IPayBankDao payBankDao;
     @Resource
@@ -40,10 +43,8 @@ public class PayBankService implements IPayBankService {
 
     @Override
     public PayBank savePayBanke(PayBankVo payBankVo) {
-        PayAccount payAccount = payAccountDao.findByUserCode(payBankVo.getUserCode());
-        if (null == payAccount) {
-            throw new MessageRuntimeException("error.payserver.saveySecurity.userCode");
-        }
+        //PayAccount payAccount = payAccountDao.findByUserCode(payBankVo.getUserCode());
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payBankVo.getUserCode());
         if (payAccount.isRealNameAuth()) {
             PayBank payBank = payBankDao.findByPayAccountIdAndBankCard(payAccount.getId(), payBankVo.getBankCard());
             if (payBank != null) {
@@ -57,10 +58,11 @@ public class PayBankService implements IPayBankService {
             //// TODO: 2016/11/10 0010 调用第三方借口
             Param param = payAccountServiceHelper.crateBangBankParam(newPayBak);
             Response response = payClient.bangBank(param.getMessage(), param.getSignature());
+            logger.debug("设置银行卡调用支付平台接口返回:"+ JSON.toJSONString(response));
             if (PlatformPayUtil.isSuccess(response)){
                 return payBankDao.save(newPayBak);
             }else {
-                throw new MessageRuntimeException(response.getHead().getMessage());
+                throw new RuntimeException(response.getHead().getMessage());
             }
         } else {
             throw new MessageRuntimeException("error.payserver.isRealNameAuth");

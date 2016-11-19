@@ -8,6 +8,7 @@ import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayProblem;
 import com.yql.biz.model.SecurityProblem;
 import com.yql.biz.service.IPayProblemService;
+import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.vo.PayProblemDto;
 import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.SecurityProblemVo;
@@ -41,6 +42,8 @@ public class PayProblemService implements IPayProblemService {
     private ISecurityProblemDao securityProblemDao;
     @Resource
     private MessageSourceAccessor messageSourceAccessor;
+    @Resource
+    private IPayAccountServiceHelper payAccountServiceHelper;
 
     @Override
     public List<PayProblemDto> findPayProblemList() {
@@ -58,8 +61,8 @@ public class PayProblemService implements IPayProblemService {
     public List<SecurityProblem> saveySecurity(String json) {
         logger.debug("设置密保问题 json:"+json);
         SecurityVo securityVo = JSON.parseObject(json, SecurityVo.class);
-        PayAccount payAccount = payAccountDao.findByUserCode(securityVo.getUserCode());
-        Assert.notNull(payAccount,messageSourceAccessor.getMessage("error.payserver.saveySecurity.userCode"));
+        //PayAccount payAccount = payAccountDao.findByUserCode(securityVo.getUserCode());
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(securityVo.getUserCode());
         List<ProblemAnswerVo> answers = securityVo.getAnswers();
         List<SecurityProblem> securityProblems = new ArrayList<>();
         SecurityProblem securityProblem = null;
@@ -78,7 +81,8 @@ public class PayProblemService implements IPayProblemService {
     @Override
     public List<SecurityProblemVo> findAccountSecurity(String userCode) {
         logger.debug("查询userCode的密保问题集合:"+userCode);
-        PayAccount payAccount = payAccountDao.findByUserCode(userCode);
+        //PayAccount payAccount = payAccountDao.findByUserCode(userCode);
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(userCode);
         List<SecurityProblemVo> securityProblemVoList = new ArrayList<>();
         List<SecurityProblem> list = securityProblemDao.findByPayAccountId(payAccount.getId());
         SecurityProblemVo securityProblemVo = null;

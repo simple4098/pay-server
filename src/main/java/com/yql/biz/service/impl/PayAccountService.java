@@ -50,7 +50,8 @@ public class PayAccountService implements IPayAccountService {
     @Override
     public void updatePayPassword(PayAccountVo payAccountVo) {
         logger.debug("更新密码:"+payAccountVo.getUserCode());
-        PayAccount one = payAccountDao.findByUserCode(payAccountVo.getUserCode());
+        //PayAccount one = payAccountDao.findByUserCode(payAccountVo.getUserCode());
+        PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
         payAccountServiceHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
         PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
         payAccountServiceHelper.md5PayPassword(payAccount);
@@ -61,14 +62,13 @@ public class PayAccountService implements IPayAccountService {
     @Override
     public void validatePassword(PayAccount payAccount) {
         logger.debug("验证密码 userCode:"+payAccount.getUserCode());
-        PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
+        PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());
         payAccountServiceHelper.validateOldPassword(payAccount.getPayPassword(),one);
     }
 
     @Override
     public void updatePayAccountSamllMoney(PayAccount payAccount) {
-        Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
-        PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
+        PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());
         one.setSmallPay(payAccount.isSmallPay());
         one.setSamllPayMoney(payAccount.getSamllPayMoney());
         payAccountDao.save(one);
@@ -76,8 +76,7 @@ public class PayAccountService implements IPayAccountService {
 
     @Override
     public void updateRealNameAuth(PayAccount payAccount) {
-        //Assert.notNull(payAccount.getUserCode(),messageSourceAccessor.getMessage("error.payserver.param.usercode"));
-        PayAccount one = payAccountDao.findByUserCode(payAccount.getUserCode());
+        PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());
         one.setRealNameAuth(payAccount.isRealNameAuth());
         payAccountDao.saveAndFlush(one);
     }

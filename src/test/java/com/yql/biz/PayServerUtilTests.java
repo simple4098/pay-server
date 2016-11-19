@@ -7,8 +7,11 @@ import com.yql.biz.vo.pay.response.*;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.util.Date;
 
 /*@RunWith(SpringRunner.class)*/
@@ -178,8 +181,16 @@ public class PayServerUtilTests {
         uninstallBangResponse.setUninstallBangResponseBody(uninstallBangResponseBody);
          s = PlatformPayUtil.payRequest(uninstallBangResponse);
         logger.info("=============="+s.getMessage());
+    }
 
-
-
+    @Test
+    public void test4() throws IOException {
+        //MTIzNDU2111
+        String s = "1234561";
+        byte[] b = s.getBytes();
+        String encode = new BASE64Encoder().encode(b);
+        logger.debug(encode);
+        byte[] mtIzNDU2111s = new BASE64Decoder().decodeBuffer("MTIzNDU2111");
+        logger.debug(new String(mtIzNDU2111s));
     }
 }

@@ -6,7 +6,7 @@ package com.yql.biz.enums;
  * data 2016/11/18 0018.
  */
 public enum IdentificationType {
-    ID_CARD(0);
+    ID_CARD(0),HKMACTW(5);
     private Integer value;
 
     IdentificationType(Integer value) {

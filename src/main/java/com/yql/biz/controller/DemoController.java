@@ -1,15 +1,15 @@
 package com.yql.biz.controller;
 
 import com.yql.biz.client.ComputeClient;
-import com.yql.biz.model.Order;
+import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.service.IPayService;
-import com.yql.biz.vo.pay.*;
+import com.yql.biz.vo.UserBasicInfoVo;
+import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
-import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.Head;
+import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.web.ResponseModel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +36,17 @@ public class DemoController {
     private ComputeClient computeClient;
     @Autowired
     private DiscoveryClient discoveryClient;
+    @Resource
+    private IUserCenterClient userCenterClient;
 
-    @RequestMapping(value = "/message", method = RequestMethod.GET)
-    public ResponseModel pongMessage( Integer input) {
-        Order pay = payService.pay(input);
-        return ResponseModel.SUCCESS(pay);
+    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+    public ResponseModel pongMessage( String userCode) {
+        ResponseModel<UserBasicInfoVo> responseModel = userCenterClient.getBaseUserInfo(userCode);
+        responseModel.success(userBasicInfoVo -> {
+            logger.debug("======success======");
+
+        });
+        return responseModel;
     }
 
     @RequestMapping("/add-feign")
@@ -54,13 +60,15 @@ public class DemoController {
         bangBody.setAccountName("张琳");
         request1.setBody(bangBody);
         Param param = new Param();
-        param.setMessage(request1);
+        param.setMessage("lin");
         param.setSignature("zhanglin");
         //ComputeClient computeClient =  Feign.builder().target(ComputeClient.class, "http://localhost:8080/");
-        Response response = computeClient.add1(param);
-        //Response response1 = computeClient.add2("hello","zhangLin");
-        System.out.println("==========="+response);
-        return ResponseModel.SUCCESS(response);
+        //Response response = computeClient.add1(param);
+        Response response1 = computeClient.add2("hello","zhangLin");
+        System.out.println("==========="+response1);
+     /*   Integer add = computeClient.add(1, 10);
+        System.out.println("=========="+add);*/
+        return ResponseModel.SUCCESS(response1);
     }
 
     @RequestMapping(value = "/add" ,method = RequestMethod.GET)

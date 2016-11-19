@@ -31,4 +31,10 @@ public interface IPayAccountServiceHelper {
      * @param newPayBak
      */
     Param crateBangBankParam(PayBank newPayBak);
+
+    /**
+     * 根据userCode 查询payAccount。如果查询不到，就初始化一个
+     * @param userCode 用户编码
+     */
+    PayAccount findOrCratePayAccount(String userCode);
 }

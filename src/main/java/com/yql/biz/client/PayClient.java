@@ -18,7 +18,7 @@ public interface PayClient {
      * @param message 请求报文并base64编码，
      * @param signature 请求报文加密后的密文
      */
-    @RequestMapping(value = "/bang_bank", method = RequestMethod.POST,produces = "application/xml; charset=UTF-8")
+    @RequestMapping(value = "/bang_bank", method = RequestMethod.POST)
     Response bangBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);
 
     /**
@@ -26,7 +26,7 @@ public interface PayClient {
      * @param message 请求报文并base64编码，
      * @param signature 请求报文加密后的密文
      */
-    @RequestMapping(value = "/uninstall/bank", method = RequestMethod.POST,produces = "application/xml; charset=UTF-8")
+    @RequestMapping(value = "/uninstall/bank", method = RequestMethod.POST)
     Response uninstallBangBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);
     /**
      * 支付
