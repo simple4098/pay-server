@@ -32,6 +32,8 @@ public class PayBankVo {
     private BigDecimal quickPaymentAmount;
     private CardType cardType;
     private String phoneNumber;
+    //交易编码
+    private String txCode;
     //排序字段
     private int sort;
 
@@ -107,11 +109,17 @@ public class PayBankVo {
         this.phoneNumber = phoneNumber;
     }
 
-    public static PayBank voToDomain(PayBankVo payBankVo, PayAccount payAccount){
-        PayBank payBank = new PayBank();
+    public String getTxCode() {
+        return txCode;
+    }
+
+    public void setTxCode(String txCode) {
+        this.txCode = txCode;
+    }
+
+    public static void voToDomain(PayBank payBank, PayBankVo payBankVo, PayAccount payAccount){
         BeanUtils.copyProperties(payBankVo,payBank);
         payBank.setPayAccountId(payAccount.getId());
-        return payBank;
     }
 
     public static List<PayBankVo> domainToVoList(List<PayBank> list) {

@@ -30,17 +30,18 @@ public class PayOrderVo {
     private PayType payType;
     //持卡人
     private String cardholder;
-    //银行卡号
-    @NotNull(message = "{com.yql.validation.constraints.bankCard.message}")
-    private String bankCard;
+    //交易码
+    @NotNull(message = "{com.yql.validation.constraints.txCode.notnull}")
+    private String txCode;
     //支付总金额
     @NotNull(message = "{com.yql.validation.constraints.totalPrice.message}")
     private BigDecimal totalPrice;
     //支付错误信息
     private String errorMsg;
-
     //支付是否成功
     private boolean payStatus;
+    //备注
+    private String remark;
 
     public String getUserCode() {
         return userCode;
@@ -106,12 +107,12 @@ public class PayOrderVo {
         this.cardholder = cardholder;
     }
 
-    public String getBankCard() {
-        return bankCard;
+    public String getTxCode() {
+        return txCode;
     }
 
-    public void setBankCard(String bankCard) {
-        this.bankCard = bankCard;
+    public void setTxCode(String txCode) {
+        this.txCode = txCode;
     }
 
     public BigDecimal getTotalPrice() {
@@ -130,7 +131,13 @@ public class PayOrderVo {
         this.errorMsg = errorMsg;
     }
 
+    public String getRemark() {
+        return remark;
+    }
 
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public boolean isPayStatus() {
         return payStatus;

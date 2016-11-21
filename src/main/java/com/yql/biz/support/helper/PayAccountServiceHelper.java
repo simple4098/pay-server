@@ -4,6 +4,8 @@ import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
+import com.yql.biz.dao.IPayBankDao;
+import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.RealNameAuthType;
 import com.yql.biz.exception.MessageRuntimeException;
@@ -13,17 +15,22 @@ import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
+import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
+import com.yql.biz.vo.pay.request.UninstallBangBody;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import sun.dc.pr.PRError;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>payServiceHelper具体实现</p>
@@ -42,6 +49,8 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IBankInfoDao bankInfoDao;
     @Resource
     private IUserCenterClient userCenterClient;
+    @Resource
+    private IPayBankDao payBankDao;
 
     @Override
     public void md5PayPassword(PayAccount payAccount)  {
@@ -74,15 +83,27 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     }
 
     @Override
-    public Param crateBangBankParam(PayBank newPayBak) {
+    public Param crateBangBankParam(PayBankVo payBankVo,PayBank newPayBak) {
+        PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
+        if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
+        PayBankVo.voToDomain(newPayBak,payBankVo, payAccount);
+        PayBank payBank = payBankDao.findByPayAccountIdAndBankCard(payAccount.getId(), payBankVo.getBankCard());
+        if (payBank != null) {
+            throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
+        }
+        List<PayBank> list = payBankDao.findByPayAccountIdOrderBySort(payAccount.getId());
+        if (!CollectionUtils.isEmpty(list)) {
+            newPayBak.setSort(list.size());
+        }
         Request<BangBody> request = new Request<>();
         BankInfo byBankName = bankInfoDao.findByBankName(newPayBak.getBankName());
-        PayAccount payAccount = payAccountDao.findByUserCode(newPayBak.getUserCode());
-        String txSNBinding = orderNoGenerator.txSNBinding(newPayBak);
-        String txCode = orderNoGenerator.txCode(newPayBak);
+        String txSNBinding = orderNoGenerator.generateBankCode(newPayBak, BankCodeType.SN_BINDING);
+        String txCode = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.TX_CODE);
+        String settlementFlag = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.SETTLEMENTFLAG);
         newPayBak.setTxSNBinding(txSNBinding);
         newPayBak.setTxCode(txCode);
         newPayBak.setBankId(byBankName.getBankCode());
+        newPayBak.setSettlementFlag(settlementFlag);
         Head head = new Head() ;
         head.setInstitutionID(applicationConf.getInstitutionId());
         head.setTxCode(txCode);
@@ -102,9 +123,8 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         try {
             return  PlatformPayUtil.payRequest(request);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw  new MessageRuntimeException("error.payserver.payServer.DJ");
         }
-        return null;
     }
 
     @Override
@@ -125,6 +145,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
                     }else {
                         payAccount.setIdentificationType(IdentificationType.HKMACTW);
                     }
+                    payAccount.setIdentificationNumber(baseUserInfoData.getIdCard());
                 }
                 payAccount = payAccountDao.save(payAccount);
             }else {
@@ -132,5 +153,25 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
             }
         }
         return payAccount;
+    }
+
+    @Override
+    public Param crateUnBangBankParam(PayBank payBank) {
+        Request<UninstallBangBody> request = new Request<>();
+        String unBingDing = orderNoGenerator.generateBankCode(payBank, BankCodeType.TX_SN_UN_BINDING);
+        payBank.setTxSNUnBinding(unBingDing);
+        Head head = new Head() ;
+        head.setInstitutionID(applicationConf.getInstitutionId());
+        head.setTxCode(payBank.getTxCode());
+        request.setHead(head);
+        UninstallBangBody uninstallBangBody = new UninstallBangBody();
+        uninstallBangBody.setTxSNBinding(payBank.getTxSNBinding());
+        uninstallBangBody.setTxSNUnBinding(unBingDing);
+        request.setBody(uninstallBangBody);
+        try {
+            return  PlatformPayUtil.payRequest(request);
+        } catch (Exception e) {
+            throw  new MessageRuntimeException("error.payserver.payServer.DJ");
+        }
     }
 }

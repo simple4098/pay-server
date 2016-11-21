@@ -20,7 +20,7 @@ public interface IUserCenterClient {
      * @param userCode 用户编码
      */
     @RequestMapping(value = "/find-user-basic-info", method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
-    ResponseModel<UserBasicInfoVo> getBaseUserInfo(@RequestParam(name = "userCode") String userCode);
+   void getBaseUserInfo(@RequestParam(name = "userCode") String userCode);
 
 
 }

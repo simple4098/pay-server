@@ -57,6 +57,12 @@
 				</exclusion>
 			</exclusions>&ndash;&gt;
 		</dependency>-->
+		<!--消息中心-->
+		<dependency>
+			<groupId>com.yql.framework</groupId>
+			<artifactId>mq-core</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-core</artifactId>

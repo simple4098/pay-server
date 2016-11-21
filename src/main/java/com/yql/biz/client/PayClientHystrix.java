@@ -31,4 +31,10 @@ public class PayClientHystrix implements PayClient {
         logger.debug("==========================pay支付断路器==========================");
         return Response.toBean();
     }
+
+    @Override
+    public Response delBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
+        logger.debug("==========================delBank支付断路器==========================");
+        return  Response.toBean();
+    }
 }

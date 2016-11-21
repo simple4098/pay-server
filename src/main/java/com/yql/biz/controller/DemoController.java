@@ -41,7 +41,8 @@ public class DemoController {
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public ResponseModel pongMessage( String userCode) {
-        ResponseModel<UserBasicInfoVo> responseModel = userCenterClient.getBaseUserInfo(userCode);
+        userCenterClient.getBaseUserInfo(userCode);
+        ResponseModel<UserBasicInfoVo> responseModel = null;
         responseModel.success(userBasicInfoVo -> {
             logger.debug("======success======");
 

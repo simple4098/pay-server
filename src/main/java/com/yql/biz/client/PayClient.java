@@ -36,4 +36,6 @@ public interface PayClient {
     @RequestMapping(value = "/pay", method = RequestMethod.POST,produces = "application/xml; charset=UTF-8")
     Response pay(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);
 
+    @RequestMapping(value = "/del_bak", method = RequestMethod.POST,produces = "application/xml; charset=UTF-8")
+    Response delBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);
 }

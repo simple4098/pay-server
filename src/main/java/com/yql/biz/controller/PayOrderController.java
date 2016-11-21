@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/account")
-/*@Validated*/
+@Validated
 public class PayOrderController {
 
     @Resource

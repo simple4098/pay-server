@@ -33,6 +33,11 @@ public class PayBank extends Domain  {
     //绑定流水
     @Column(name = "tx_SN_binding")
     private String txSNBinding;
+    //解绑流水号
+    @Column(name = "tx_SN_un_binding")
+    private String txSNUnBinding;
+    //结算标识
+    private String settlementFlag;
     //手机号码
     private String phoneNumber;
     @Enumerated(value = EnumType.STRING)
@@ -41,6 +46,9 @@ public class PayBank extends Domain  {
     private Integer validDate;
     //信用卡背面的末 3 位数字
     private Integer cvn2;
+    //是否删除
+    private boolean deleted;
+
 
     public String getBankId() {
         return bankId;
@@ -152,5 +160,29 @@ public class PayBank extends Domain  {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public String getTxSNUnBinding() {
+        return txSNUnBinding;
+    }
+
+    public void setTxSNUnBinding(String txSNUnBinding) {
+        this.txSNUnBinding = txSNUnBinding;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getSettlementFlag() {
+        return settlementFlag;
+    }
+
+    public void setSettlementFlag(String settlementFlag) {
+        this.settlementFlag = settlementFlag;
     }
 }

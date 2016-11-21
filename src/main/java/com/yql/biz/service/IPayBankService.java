@@ -18,9 +18,16 @@ public interface IPayBankService {
     PayBank savePayBanke(PayBankVo payBankVo);
 
     /**
-     * 根据用户code查询银行卡列表
+     * 根据用户code查询没有删除的银行卡列表
      * @param userCode 用户code
      * @return 银行卡列表
      */
     List<PayBankVo> findByUserCode(String userCode);
+
+    /**
+     * 删除绑定银行卡
+     * @param txCode 交易编码
+     * @param payAccountId 支付accountId
+     */
+    void delBangBank(String txCode,Integer payAccountId);
 }

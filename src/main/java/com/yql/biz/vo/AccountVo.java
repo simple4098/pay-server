@@ -1,0 +1,40 @@
+package com.yql.biz.vo;
+
+import java.math.BigDecimal;
+
+/**
+ * <p> 账户中心 返回数据模型 </p>
+ * @auther simple
+ * data 2016/11/21 0021.
+ */
+public class AccountVo {
+    //现金余额
+    private BigDecimal cashFee;
+    //金币余额
+    private BigDecimal goldFee;
+    private BigDecimal userCode;
+
+    public BigDecimal getCashFee() {
+        return cashFee;
+    }
+
+    public void setCashFee(BigDecimal cashFee) {
+        this.cashFee = cashFee;
+    }
+
+    public BigDecimal getGoldFee() {
+        return goldFee;
+    }
+
+    public void setGoldFee(BigDecimal goldFee) {
+        this.goldFee = goldFee;
+    }
+
+    public BigDecimal getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(BigDecimal userCode) {
+        this.userCode = userCode;
+    }
+}

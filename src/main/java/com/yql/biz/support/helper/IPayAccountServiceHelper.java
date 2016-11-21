@@ -2,6 +2,7 @@ package com.yql.biz.support.helper;
 
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
+import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.Request;
 
@@ -28,13 +29,16 @@ public interface IPayAccountServiceHelper {
 
     /**
      * 创建绑定银行卡必要的参数：
-     * @param newPayBak
      */
-    Param crateBangBankParam(PayBank newPayBak);
+    Param crateBangBankParam(PayBankVo payBankVo,PayBank newPayBak);
 
     /**
      * 根据userCode 查询payAccount。如果查询不到，就初始化一个
      * @param userCode 用户编码
      */
     PayAccount findOrCratePayAccount(String userCode);
+    /**
+     * 创建解绑银行卡必要的参数：
+     */
+    Param crateUnBangBankParam(PayBank payBank);
 }

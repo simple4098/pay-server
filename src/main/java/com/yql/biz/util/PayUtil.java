@@ -4,6 +4,7 @@ import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -60,6 +61,13 @@ public class PayUtil {
         return  RandomStringUtils.randomNumeric(num);
     }
 
+    /**
+     * 金额转化成分
+     * @param totalPrice 支付金额
+     */
+    public static int multiply(BigDecimal totalPrice){
+        return totalPrice.multiply(new BigDecimal(100)).intValue();
+    }
     public static void main(String[] args) throws Exception {
         System.out.println(md5PassWord("ssdsd","123456","2323"));
         MessageDigest md5=MessageDigest.getInstance("MD5");

@@ -28,8 +28,23 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
     PayBank findByPayAccountIdAndBankCard(int payAccountId, String bankCard);
 
     /**
-     * 根据用户code查询，银行卡列表
+     * 根据用户code查询是否删除的银行卡列表
      * @param userCode 用户code
+     * @param deleted 是否删除
      */
-    List<PayBank> findByUserCode(String userCode);
+    List<PayBank> findByUserCodeAndDeleted(String userCode,boolean deleted);
+
+    /**
+     * 查询此用户绑定银行卡信息
+     * @param txCode 交易编码
+     * @param payAccountId 支付accountId
+     */
+    PayBank findByPayAccountIdAndTxCode( Integer payAccountId,String txCode);
+
+    /**
+     * 根据userCode txCode 查询绑定的银行卡信息
+     * @param userCode  用户编码
+     * @param txCode 交易码
+     */
+    PayBank findByUserCodeAndTxCode(String userCode, String txCode);
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/account")
+@Validated
 public class PayServerController {
     @Resource
     private IPayAccountService payAccountService;
@@ -114,6 +116,15 @@ public class PayServerController {
     @RequestMapping(value = "/set/bank_card" ,method = RequestMethod.POST)
     public ResponseModel setBankCard(@Validated PayBankVo payBankVo){
         payBankService.savePayBanke(payBankVo);
+        return ResponseModel.SUCCESS();
+    }
+    /**
+     * 删除支付银行卡
+     */
+    @RequestMapping(value = "/del/bank_card" ,method = RequestMethod.POST)
+    public ResponseModel delBankCard(@NotNull(message = "{com.yql.validation.constraints.txCode.notnull}") String txCode,
+                                     @NotNull(message = "{com.yql.validation.constraints.payAccountId.notnull}") Integer payAccountId){
+        payBankService.delBangBank(txCode,payAccountId);
         return ResponseModel.SUCCESS();
     }
     /**
