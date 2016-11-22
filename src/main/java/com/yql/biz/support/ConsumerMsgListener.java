@@ -1,10 +1,14 @@
 package com.yql.biz.support;
 
+import com.alibaba.fastjson.JSON;
+import com.yql.biz.support.helper.IConsumerMsgEventListener;
 import com.yql.framework.mq.listener.MessageListener;
 import com.yql.framework.mq.model.MqMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 消息监听器
@@ -14,15 +18,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConsumerMsgListener implements MessageListener {
     private static final Logger logger = LoggerFactory.getLogger(ConsumerMsgListener.class);
-
+    @Resource
+    private IConsumerMsgEventListener consumerMsgEventListener;
 
 
     @Override
     public String onMessage(MqMessage message) {
-        logger.debug("============ 消息监听器 "+message.getBodyAsText());
-        if (message.getKey().equals("user")){
-
-        }
+        logger.debug("监听:"+ JSON.toJSONString(message)+":"+message.getBodyAsText());
+        consumerMsgEventListener.eventHandling(message);
+        logger.debug("============end 消息监听器 end================：");
         return "SUCCESS";
     }
 

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "pay_bank")
+@Cacheable
 public class PayBank extends Domain  {
     private Integer payAccountId;
     private String userCode;

@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "pay_account")
+@Cacheable
 public class PayAccount extends  Domain  {
     //用户code
     @Column(name = "user_code")

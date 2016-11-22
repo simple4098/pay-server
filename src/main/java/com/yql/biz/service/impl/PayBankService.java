@@ -39,7 +39,6 @@ public class PayBankService implements IPayBankService {
     @Override
     public PayBank savePayBanke(PayBankVo payBankVo) {
         PayBank newPayBak = new PayBank();
-        // TODO: 2016/11/10 0010 调用第三方借口
         Param param = payAccountServiceHelper.crateBangBankParam(payBankVo,newPayBak);
         Response response = payClient.bangBank(param.getMessage(), param.getSignature());
         logger.debug("银行卡绑定返回:"+ JSON.toJSONString(response));
@@ -51,6 +50,7 @@ public class PayBankService implements IPayBankService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PayBankVo> findByUserCode(String userCode) {
         List<PayBank> list = payBankDao.findByUserCodeAndDeleted(userCode,false);
         return PayBankVo.domainToVoList(list);
@@ -58,7 +58,7 @@ public class PayBankService implements IPayBankService {
 
     @Override
     public void delBangBank(String txCode,Integer payAccountId) {
-        PayBank payBank = payBankDao.findByPayAccountIdAndTxCode(payAccountId,txCode );
+        PayBank payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(payAccountId,txCode ,false);
         if (payBank == null) throw new MessageRuntimeException("error.payserver.payServer.bank.isnull");
         Param param = payAccountServiceHelper.crateUnBangBankParam(payBank);
         Response response = payClient.delBank(param.getMessage(),param.getSignature());

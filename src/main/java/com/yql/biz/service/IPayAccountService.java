@@ -46,4 +46,10 @@ public interface IPayAccountService {
      * @param payAccount
      */
     void updateRealNameAuth(PayAccount payAccount);
+
+    /**
+     * 设置账号的支付密码
+     * @param payAccount
+     */
+    void setPayPassword(PayAccountVo payAccount);
 }

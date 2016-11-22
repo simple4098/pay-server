@@ -26,15 +26,15 @@ import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.UninstallBangBody;
 import com.yql.biz.web.ResponseModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import sun.dc.pr.PRError;
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -44,6 +44,7 @@ import java.util.List;
  */
 @Component
 public class PayAccountServiceHelper implements IPayAccountServiceHelper{
+    private static final Logger logger = LoggerFactory.getLogger(PayAccountServiceHelper.class);
     @Resource
     private ApplicationConf applicationConf;
     @Resource
@@ -92,10 +93,8 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
         if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
         PayBankVo.voToDomain(newPayBak,payBankVo, payAccount);
-        PayBank payBank = payBankDao.findByPayAccountIdAndBankCard(payAccount.getId(), payBankVo.getBankCard());
-        if (payBank != null) {
-            throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
-        }
+        PayBank payBank = payBankDao.findByPayAccountIdAndBankCardAndDeleted(payAccount.getId(), payBankVo.getBankCard(),false);
+        if (payBank != null)  throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         List<PayBank> list = payBankDao.findByPayAccountIdOrderBySort(payAccount.getId());
         if (!CollectionUtils.isEmpty(list)) {
             newPayBak.setSort(list.size());
@@ -105,6 +104,10 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         String txSNBinding = orderNoGenerator.generateBankCode(newPayBak, BankCodeType.SN_BINDING);
         String txCode = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.TX_CODE);
         String settlementFlag = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.SETTLEMENTFLAG);
+        payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(newPayBak.getPayAccountId(), newPayBak.getTxCode(),false);
+        payBank = payBankDao.findByPayAccountIdAndTxSNBindingAndDeleted(newPayBak.getPayAccountId(), txSNBinding,false);
+        payBank = payBankDao.findByPayAccountIdAndSettlementFlagAndDeleted(newPayBak.getPayAccountId(), settlementFlag,false);
+        if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         newPayBak.setTxSNBinding(txSNBinding);
         newPayBak.setTxCode(txCode);
         newPayBak.setBankId(byBankName.getBankCode());
@@ -136,28 +139,43 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     public PayAccount findOrCratePayAccount(String userCode) {
         PayAccount payAccount = payAccountDao.findByUserCode(userCode);
         if (payAccount == null){
+            payAccount = new PayAccount();
             ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
+            logger.debug("user-center client:"+JSON.toJSONString(baseUserInfo));
             if (baseUserInfo!=null && baseUserInfo.getData()!=null){
                 UserBasicInfoVo baseUserInfoData = baseUserInfo.getData();
-                payAccount = new PayAccount();
                 payAccount.setUserCode(userCode);
-                boolean weatherAuth = baseUserInfoData.getWeatherAuth() == 1;
-                payAccount.setRealNameAuth(weatherAuth);
-                if (weatherAuth){
-                    RealNameAuthType authType = baseUserInfoData.getAuthType();
-                    if (authType.equals(RealNameAuthType.MAINlAND)){
-                        payAccount.setIdentificationType(IdentificationType.ID_CARD);
-                    }else {
-                        payAccount.setIdentificationType(IdentificationType.HKMACTW);
-                    }
-                    payAccount.setIdentificationNumber(baseUserInfoData.getIdCard());
-                }
-                payAccount = payAccountDao.save(payAccount);
+                relNameInfo(payAccount,baseUserInfoData);
             }else {
                 throw  new MessageRuntimeException("error.payserver.saveySecurity.userCode");
             }
         }
         return payAccount;
+    }
+
+    private void  relNameInfo(PayAccount payAccount,UserBasicInfoVo data){
+        boolean weatherAuth = data.getWeatherAuth() == 1;
+        payAccount.setRealNameAuth(weatherAuth);
+        if (weatherAuth){
+            RealNameAuthType authType = data.getAuthType();
+            if (authType.equals(RealNameAuthType.MAINlAND)){
+                payAccount.setIdentificationType(IdentificationType.ID_CARD);
+            }else {
+                payAccount.setIdentificationType(IdentificationType.HKMACTW);
+            }
+            payAccount.setIdentificationNumber(data.getIdCard());
+            payAccountDao.save(payAccount);
+        }
+    }
+
+    @Override
+    public void updatePayAccountRelName(String userCode) {
+        PayAccount payAccount = payAccountDao.findByUserCode(userCode);
+        ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
+        if (baseUserInfo!=null){
+            UserBasicInfoVo data = baseUserInfo.getData();
+            relNameInfo(payAccount,data);
+        }
     }
 
     @Override

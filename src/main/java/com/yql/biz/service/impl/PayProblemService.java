@@ -48,6 +48,7 @@ public class PayProblemService implements IPayProblemService {
     private IPayAccountServiceHelper payAccountServiceHelper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<PayProblemDto> findPayProblemList() {
         List<PayProblemDto> list = new ArrayList<>();
         List<PayProblem> all = payProblemDao.findAll();

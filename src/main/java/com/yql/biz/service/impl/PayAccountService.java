@@ -31,6 +31,7 @@ public class PayAccountService implements IPayAccountService {
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
     @Override
+    @Transactional(readOnly = true)
     public PayAccount findByUserCode(String userCode) {
         return payAccountDao.findByUserCode(userCode);
     }
@@ -38,25 +39,33 @@ public class PayAccountService implements IPayAccountService {
     @Override
     public PayAccount savePayAccount(PayAccount payAccount) {
         logger.debug("初始化支付账户:"+payAccount.getUserCode());
-        Assert.notNull(payAccount.getPayPassword(),messageSourceAccessor.getMessage("error.payserver.param.paypassword"));
-        try {
-            payAccountServiceHelper.md5PayPassword(payAccount);
-        } catch (Exception e) {
-            throw new MessageRuntimeException("error.payserver.paypassword");
-        }
         return payAccountDao.saveAndFlush(payAccount);
     }
 
     @Override
     public void updatePayPassword(PayAccountVo payAccountVo) {
         logger.debug("更新密码:"+payAccountVo.getUserCode());
-        //PayAccount one = payAccountDao.findByUserCode(payAccountVo.getUserCode());
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
         payAccountServiceHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
         PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
         payAccountServiceHelper.md5PayPassword(payAccount);
         one.setPayPassword(payAccount.getPayPassword());
         payAccountDao.save(one);
+    }
+
+    @Override
+    public void setPayPassword(PayAccountVo payAccountVo) {
+        logger.debug("设置支付密码:"+payAccountVo.getUserCode());
+        Assert.notNull(payAccountVo.getPayPassword(),messageSourceAccessor.getMessage("error.payserver.param.paypassword"));
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
+        PayAccount payAccount1 = PayAccountVo.voToDomain(payAccountVo,payAccount);
+        try {
+            payAccountServiceHelper.md5PayPassword(payAccount1);
+            payAccount.setPayPassword(payAccount1.getPayPassword());
+        } catch (Exception e) {
+            throw new MessageRuntimeException("error.payserver.paypassword");
+        }
+         payAccountDao.saveAndFlush(payAccount);
     }
 
     @Override

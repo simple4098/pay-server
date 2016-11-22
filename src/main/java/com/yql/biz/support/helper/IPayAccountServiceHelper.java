@@ -40,6 +40,12 @@ public interface IPayAccountServiceHelper {
      * @param userCode 用户编码
      */
     PayAccount findOrCratePayAccount(String userCode);
+
+    /**
+     * 用户实名认证
+     * @param userCode 用户code
+     */
+    void updatePayAccountRelName(String userCode);
     /**
      * 创建解绑银行卡必要的参数：
      */

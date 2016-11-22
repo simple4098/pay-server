@@ -37,16 +37,7 @@ public class PayServerController {
     @Resource
     private IPayBankService payBankService;
 
-    /**
-     * 初始化用户的支付信息
-     * @param payAccount 账户信息  userCode ； 支付密码 payPassword
-     * @return
-     */
-    @RequestMapping("/init")
-    public ResponseModel index(@Validated  PayAccount payAccount){
-         PayAccount payAccount1 = payAccountService.savePayAccount(payAccount);
-         return ResponseModel.SUCCESS(payAccount1);
-    }
+
 
     /**
      * 开关小额支付并且小额支付金额
@@ -103,6 +94,14 @@ public class PayServerController {
         return ResponseModel.SUCCESS();
     }
 
+    /**
+     * 设置支付密码
+     */
+    @RequestMapping(value = "/set/pay_password",method = RequestMethod.POST)
+    public ResponseModel setPayPassword(@Validated  PayAccountVo payAccount){
+        payAccountService.setPayPassword(payAccount);
+        return ResponseModel.SUCCESS();
+    }
     /**
      * 更新支付密码
      */

@@ -25,7 +25,7 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
      * @param bankCard
      * @return
      */
-    PayBank findByPayAccountIdAndBankCard(int payAccountId, String bankCard);
+    //PayBank findByPayAccountIdAndBankCard(int payAccountId, String bankCard);
 
     /**
      * 根据用户code查询是否删除的银行卡列表
@@ -38,8 +38,9 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
      * 查询此用户绑定银行卡信息
      * @param txCode 交易编码
      * @param payAccountId 支付accountId
+     * @param b  是否删除 true 删除  false 没有删除
      */
-    PayBank findByPayAccountIdAndTxCode( Integer payAccountId,String txCode);
+    PayBank findByPayAccountIdAndTxCodeAndDeleted(Integer payAccountId, String txCode,boolean b);
 
     /**
      * 根据userCode txCode 查询绑定的银行卡信息
@@ -47,4 +48,27 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
      * @param txCode 交易码
      */
     PayBank findByUserCodeAndTxCode(String userCode, String txCode);
+
+    /**
+     * 查询此用户银行卡信息
+     * @param payAccountId 支付accountId
+     * @param bankCard 银行卡
+     * @param b 是否删除
+     * @return
+     */
+    PayBank findByPayAccountIdAndBankCardAndDeleted(int payAccountId, String bankCard, boolean b);
+    /**
+     * 查询此用户银行卡信息
+     * @param payAccountId 支付accountId
+     * @param txSNBinding 绑定流水号
+     * @param b 是否删除
+     */
+    PayBank findByPayAccountIdAndTxSNBindingAndDeleted(Integer payAccountId, String txSNBinding, boolean b);
+    /**
+     * 查询此用户银行卡信息
+     * @param payAccountId 支付accountId
+     * @param settlementFlag 结算标示
+     * @param b 是否删除
+     */
+    PayBank findByPayAccountIdAndSettlementFlagAndDeleted(Integer payAccountId, String settlementFlag, boolean b);
 }
