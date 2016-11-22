@@ -1,5 +1,6 @@
 package com.yql.biz.support.helper;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IBankInfoDao;
@@ -16,6 +17,8 @@ import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayBankVo;
+import com.yql.biz.vo.ProblemAnswerVo;
+import com.yql.biz.vo.SecurityVo;
 import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
@@ -24,7 +27,9 @@ import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.UninstallBangBody;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import sun.dc.pr.PRError;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -173,5 +178,24 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         } catch (Exception e) {
             throw  new MessageRuntimeException("error.payserver.payServer.DJ");
         }
+    }
+
+    @Override
+    public void validateSecurityParam(List<ProblemAnswerVo> problemAnswerVoList) {
+        for (ProblemAnswerVo problemAnswerVo:problemAnswerVoList) {
+            if (StringUtils.isEmpty(problemAnswerVo.getAnswer())){
+                throw new MessageRuntimeException("error.payserver.saveySecurity.answer");
+            }
+            if (StringUtils.isEmpty(problemAnswerVo.getProblemId())){
+                throw new MessageRuntimeException("error.payserver.saveySecurity.problem");
+            }
+        }
+    }
+
+    @Override
+    public List<ProblemAnswerVo> getProblemList(String json) {
+        if (StringUtils.isEmpty(json)) throw new MessageRuntimeException("error.payserver.param.notnull");
+        SecurityVo securityVo = JSON.parseObject(json, SecurityVo.class);
+        return securityVo.getAnswers();
     }
 }

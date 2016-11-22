@@ -1,7 +1,6 @@
 package com.yql.biz.client;
 
 import com.yql.biz.vo.UserBasicInfoVo;
-import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ public interface IUserCenterClient {
      * @param userCode 用户编码
      */
     @RequestMapping(value = "/find-user-basic-info", method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
-   void getBaseUserInfo(@RequestParam(name = "userCode") String userCode);
+    ResponseModel<UserBasicInfoVo> getBaseUserInfo(@RequestParam(name = "userCode") String userCode);
 
 
 }

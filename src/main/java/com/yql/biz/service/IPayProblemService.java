@@ -30,4 +30,10 @@ public interface IPayProblemService {
      * @param userCode 用户code
      */
     List<SecurityProblemVo> findAccountSecurity(String userCode);
+
+    /**
+     * 验证密保
+     * @param json
+     */
+    void validatesSecurity(String json);
 }

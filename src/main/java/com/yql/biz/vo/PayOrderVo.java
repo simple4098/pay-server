@@ -1,6 +1,5 @@
 package com.yql.biz.vo;
 
-import com.alibaba.fastjson.JSON;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
 import org.springframework.beans.BeanUtils;

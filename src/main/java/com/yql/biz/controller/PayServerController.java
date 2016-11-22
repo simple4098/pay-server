@@ -76,9 +76,9 @@ public class PayServerController {
      * 支付密保问题设置
      */
     @RequestMapping(value = "/set/security",method = RequestMethod.POST)
-    public ResponseModel paySecurity(@UserCode(message = "{com.yql.validation.constraints.json.message}") String json){
-        List<SecurityProblem> securityProblems = payProblemService.saveySecurity(json);
-        return ResponseModel.SUCCESS(securityProblems);
+    public ResponseModel paySecurity(@NotNull(message = "{com.yql.validation.constraints.json.message}") String json){
+        payProblemService.saveySecurity(json);
+        return ResponseModel.SUCCESS();
     }
 
     /**
@@ -92,6 +92,16 @@ public class PayServerController {
         return ResponseModel.SUCCESS(list);
     }
 
+    /**
+     * 验证用户的密保是否正确
+     * @param json json 数据字符串
+     * @return
+     */
+    @RequestMapping(value = "/validate/security",method = RequestMethod.POST)
+    public ResponseModel validate(@NotNull(message = "{com.yql.validation.constraints.json.message}") String json){
+        payProblemService.validatesSecurity(json);
+        return ResponseModel.SUCCESS();
+    }
 
     /**
      * 更新支付密码

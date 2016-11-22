@@ -2,6 +2,7 @@ package com.yql.biz.vo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yql.biz.model.SecurityProblem;
 
 /**
@@ -14,7 +15,10 @@ public class SecurityProblemVo {
     //密保问题
     private Integer problemId;
     //密保问题答案
+    @JsonIgnore
     private String answer;
+    //密保问题
+    private String problemName;
 
     public Integer getPayAccountId() {
         return payAccountId;
@@ -40,8 +44,16 @@ public class SecurityProblemVo {
         this.answer = answer;
     }
 
-    public static SecurityProblemVo domainToVo(SecurityProblem securityProblem){
+    public String getProblemName() {
+        return problemName;
+    }
+
+    public void setProblemName(String problemName) {
+        this.problemName = problemName;
+    }
+
+    /*public static SecurityProblemVo domainToVo(SecurityProblem securityProblem){
         String jsonString = JSONObject.toJSONString(securityProblem);
         return JSON.parseObject(jsonString,SecurityProblemVo.class);
-    }
+    }*/
 }

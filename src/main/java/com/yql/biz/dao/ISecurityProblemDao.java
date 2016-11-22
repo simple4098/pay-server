@@ -13,5 +13,17 @@ import java.util.List;
  */
 @Repository
 public interface ISecurityProblemDao extends JpaRepository<SecurityProblem,Integer>{
-    List<SecurityProblem> findByPayAccountId(int id);
+
+    /**
+     * 查询用户的密保集合
+     * @param payAccountId  支付id
+     */
+    List<SecurityProblem> findByPayAccountId(int payAccountId);
+
+    /**
+     * 根据payAccountId 、problemId查询密保问题
+     * @param payAccountId 账户id
+     * @param problemId 问题id
+     */
+    SecurityProblem findByPayAccountIdAndProblemId(int payAccountId, Integer problemId);
 }

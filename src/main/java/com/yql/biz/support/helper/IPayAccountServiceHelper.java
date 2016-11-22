@@ -3,8 +3,11 @@ package com.yql.biz.support.helper;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.vo.PayBankVo;
+import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.Request;
+
+import java.util.List;
 
 /**
  * <p>支付账户helper</p>
@@ -41,4 +44,16 @@ public interface IPayAccountServiceHelper {
      * 创建解绑银行卡必要的参数：
      */
     Param crateUnBangBankParam(PayBank payBank);
+
+    /**
+     * 验证密保 问题id  答案是否不为空
+     * @param problemAnswerVoList 设置的问题 答案集合
+     */
+    void validateSecurityParam(List<ProblemAnswerVo> problemAnswerVoList);
+
+    /**
+     * 根据json转化成 list集合
+     * @param json
+     */
+    List<ProblemAnswerVo> getProblemList(String json);
 }

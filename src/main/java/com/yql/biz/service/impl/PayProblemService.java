@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayProblemDao;
 import com.yql.biz.dao.ISecurityProblemDao;
+import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayProblem;
 import com.yql.biz.model.SecurityProblem;
@@ -20,6 +21,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -61,17 +63,18 @@ public class PayProblemService implements IPayProblemService {
     public List<SecurityProblem> saveySecurity(String json) {
         logger.debug("设置密保问题 json:"+json);
         SecurityVo securityVo = JSON.parseObject(json, SecurityVo.class);
-        //PayAccount payAccount = payAccountDao.findByUserCode(securityVo.getUserCode());
+        List<ProblemAnswerVo>  answers = payAccountServiceHelper.getProblemList(json);
+        payAccountServiceHelper.validateSecurityParam(answers);
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(securityVo.getUserCode());
-        List<ProblemAnswerVo> answers = securityVo.getAnswers();
         List<SecurityProblem> securityProblems = new ArrayList<>();
         SecurityProblem securityProblem = null;
         for (ProblemAnswerVo problemAnswerVo : answers){
-            securityProblem = new SecurityProblem();
+            securityProblem = securityProblemDao.findByPayAccountIdAndProblemId(payAccount.getId(),problemAnswerVo.getProblemId());
+            if (securityProblem==null){
+                securityProblem = new SecurityProblem();
+            }
             securityProblem.setAnswer(problemAnswerVo.getAnswer());
             securityProblem.setProblemId(problemAnswerVo.getProblemId());
-            Assert.notNull(problemAnswerVo.getProblemId(),messageSourceAccessor.getMessage("error.payserver.saveySecurity.problem"));
-            Assert.notNull(problemAnswerVo.getAnswer(),messageSourceAccessor.getMessage("error.payserver.saveySecurity.answer"));
             securityProblem.setPayAccountId(payAccount.getId());
             securityProblems.add(securityProblem);
         }
@@ -81,15 +84,35 @@ public class PayProblemService implements IPayProblemService {
     @Override
     public List<SecurityProblemVo> findAccountSecurity(String userCode) {
         logger.debug("查询userCode的密保问题集合:"+userCode);
-        //PayAccount payAccount = payAccountDao.findByUserCode(userCode);
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(userCode);
         List<SecurityProblemVo> securityProblemVoList = new ArrayList<>();
         List<SecurityProblem> list = securityProblemDao.findByPayAccountId(payAccount.getId());
+        if (CollectionUtils.isEmpty(list)) throw new MessageRuntimeException("error.payserver.validate.problem");
         SecurityProblemVo securityProblemVo = null;
-        for (SecurityProblem s:list) {
-            securityProblemVo = SecurityProblemVo.domainToVo(s);
+        for (SecurityProblem securityProblem:list) {
+            PayProblem payProblem = payProblemDao.getOne(securityProblem.getProblemId());
+            securityProblemVo = new SecurityProblemVo();
+            securityProblemVo.setProblemId(securityProblem.getProblemId());
+            securityProblemVo.setPayAccountId(securityProblem.getPayAccountId());
+            securityProblemVo.setProblemName(payProblem.getProblemName());
             securityProblemVoList.add(securityProblemVo);
         }
         return securityProblemVoList;
+    }
+
+    @Override
+    public void validatesSecurity(String json) {
+        SecurityVo securityVo = JSON.parseObject(json,SecurityVo.class);
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(securityVo.getUserCode());
+        List<ProblemAnswerVo>  answers = payAccountServiceHelper.getProblemList(json);
+        payAccountServiceHelper.validateSecurityParam(answers);
+        for (ProblemAnswerVo p: answers ) {
+            SecurityProblem securityProblem = securityProblemDao.findByPayAccountIdAndProblemId(payAccount.getId(), p.getProblemId());
+            if (securityProblem!=null){
+                if (!securityProblem.getAnswer().equals(p.getAnswer())) throw new MessageRuntimeException("error.payserver.validate.answer");
+            }else {
+                throw new MessageRuntimeException("error.payserver.validate.null.problem");
+            }
+        }
     }
 }
