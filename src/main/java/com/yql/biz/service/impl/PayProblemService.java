@@ -20,7 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -39,11 +38,7 @@ public class PayProblemService implements IPayProblemService {
     @Resource
     private IPayProblemDao payProblemDao;
     @Resource
-    private IPayAccountDao payAccountDao;
-    @Resource
     private ISecurityProblemDao securityProblemDao;
-    @Resource
-    private MessageSourceAccessor messageSourceAccessor;
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
 

@@ -1,6 +1,5 @@
 package com.yql.biz.service.impl;
 
-import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayOrderAccountDao;
 import com.yql.biz.dao.IPayOrderAccountDetailDao;
 import com.yql.biz.model.PayAccount;
@@ -12,7 +11,6 @@ import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.vo.PayOrderAccountDetailVo;
 import com.yql.biz.vo.PayOrderVo;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -22,7 +20,6 @@ import javax.annotation.Resource;
  * data 2016/11/10 0010.
  */
 @Service
-@Transactional
 public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Resource

@@ -34,7 +34,6 @@ import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**

@@ -1,6 +1,5 @@
 package com.yql.biz.service;
 
-import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.PayOrderVo;
 
 /**
