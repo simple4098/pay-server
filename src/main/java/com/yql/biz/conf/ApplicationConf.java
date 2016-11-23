@@ -13,6 +13,10 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConf implements ExternalApi {
     private String passwordMd5Str;
     private String orderNumKey;
+    //监听类的topic
+    private String listenerTopic;
+    //发送消息的topic
+    private String sendMsgTopic;
     //机构代码
     private String institutionId;
     private Kunlun kunlun;
@@ -47,6 +51,22 @@ public class ApplicationConf implements ExternalApi {
 
     public void setKunlun(Kunlun kunlun) {
         this.kunlun = kunlun;
+    }
+
+    public String getListenerTopic() {
+        return listenerTopic;
+    }
+
+    public void setListenerTopic(String listenerTopic) {
+        this.listenerTopic = listenerTopic;
+    }
+
+    public String getSendMsgTopic() {
+        return sendMsgTopic;
+    }
+
+    public void setSendMsgTopic(String sendMsgTopic) {
+        this.sendMsgTopic = sendMsgTopic;
     }
 
     @Override

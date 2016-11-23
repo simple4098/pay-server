@@ -20,4 +20,13 @@ public class PayMessageValidateResponse extends Response{
     public void setPayMessageValidateResponseBody(PayMessageValidateResponseBody payMessageValidateResponseBody) {
         this.payMessageValidateResponseBody = payMessageValidateResponseBody;
     }
+
+    public static PayMessageValidateResponse toBean(){
+        PayMessageValidateResponse response = new PayMessageValidateResponse();
+        ResponseHead responseHead = new ResponseHead();
+        responseHead.setMessage("支付连接超时");
+        responseHead.setCode("2000");
+        response.setHead(responseHead);
+        return  response;
+    }
 }

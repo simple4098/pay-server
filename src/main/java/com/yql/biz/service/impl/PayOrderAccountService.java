@@ -39,7 +39,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         // TODO: 2016/11/10 0010 调用第三方支付
         IPayOrderAccountHelper order = payOrderVo.getPayType().createOrder();
         PayOrderVo orderVo = order.orderType(payOrderVo);
-        payOrderAccount.setPayStatus(orderVo.isPayStatus());
+        payOrderAccount.setPayStatus(orderVo.getPayStatus());
         payOrderAccount.setPayOrder(orderVo.getPayOrder());
         PayOrderAccountDetail payOrderAccountDetail = PayOrderAccountDetailVo.toDomain(payOrderAccount);
         if (orderAccount==null){

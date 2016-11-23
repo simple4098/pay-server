@@ -2,8 +2,6 @@ package com.yql.biz.controller;
 
 import com.yql.biz.client.ComputeClient;
 import com.yql.biz.client.IUserCenterClient;
-import com.yql.biz.enums.EventTypeKey;
-import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayService;
 import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
@@ -13,7 +11,6 @@ import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.web.ResponseModel;
 import com.yql.framework.mq.MessagePublisher;
-import com.yql.framework.mq.model.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +84,7 @@ public class DemoController {
     @RequestMapping(value = "/send" ,method = RequestMethod.GET)
     public Integer send() {
         String userCode = "jOFrRhYa";
-        messagePublisher.send(new TextMessage("TEST_USER_REGISTER", "PAY-SERVER-TAG", EventTypeKey.USER_REAL_NAME_AUTH.name(), userCode));
+       // messagePublisher.send(new TextMessage("TEST_USER_REGISTER", "PAY-SERVER-TAG", EventTypeKey.USER_REAL_NAME_AUTH.name(), userCode));
         return 0;
     }
 }

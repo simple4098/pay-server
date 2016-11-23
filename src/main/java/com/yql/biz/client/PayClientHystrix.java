@@ -1,5 +1,6 @@
 package com.yql.biz.client;
 
+import com.yql.biz.vo.pay.response.PayMessageValidateResponse;
 import com.yql.biz.vo.pay.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,9 @@ public class PayClientHystrix implements PayClient {
     }
 
     @Override
-    public Response pay(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
+    public PayMessageValidateResponse pay(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
         logger.debug("==========================pay支付断路器==========================");
-        return Response.toBean();
+        return PayMessageValidateResponse.toBean();
     }
 
     @Override

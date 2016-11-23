@@ -1,5 +1,6 @@
 package com.yql.biz.client;
 
+import com.yql.biz.vo.pay.response.PayMessageValidateResponse;
 import com.yql.biz.vo.pay.response.Response;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public interface PayClient {
      * @param signature 请求报文加密后的密文
      */
     @RequestMapping(value = "/pay", method = RequestMethod.POST,produces = "application/xml; charset=UTF-8")
-    Response pay(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);
+    PayMessageValidateResponse pay(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);
 
     @RequestMapping(value = "/del_bak", method = RequestMethod.POST,produces = "application/xml; charset=UTF-8")
     Response delBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature);

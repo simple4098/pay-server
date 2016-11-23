@@ -21,7 +21,7 @@ public class PayOrderAccount extends Domain {
     //支付号（系统生产）
     private Long payNo;
     //第三方支付返回的订单号
-    private Long payOrder;
+    private String payOrder;
     //对方userCode
     private String otherUserCode;
     //支付类型
@@ -33,8 +33,8 @@ public class PayOrderAccount extends Domain {
     private String bankCard;
     //支付总金额
     private BigDecimal totalPrice;
-    //支付是否成功
-    private boolean payStatus;
+    //交易状态 10=处理中 20=支付成功 30=支付失败
+    private Integer payStatus;
     //支付错误信息
     private String errorMsg;
     //支付错误编码
@@ -65,11 +65,11 @@ public class PayOrderAccount extends Domain {
         this.payNo = payNo;
     }
 
-    public Long getPayOrder() {
+    public String getPayOrder() {
         return payOrder;
     }
 
-    public void setPayOrder(Long payOrder) {
+    public void setPayOrder(String payOrder) {
         this.payOrder = payOrder;
     }
 
@@ -89,11 +89,11 @@ public class PayOrderAccount extends Domain {
         this.payType = payType;
     }
 
-    public boolean isPayStatus() {
+    public Integer getPayStatus() {
         return payStatus;
     }
 
-    public void setPayStatus(boolean payStatus) {
+    public void setPayStatus(Integer payStatus) {
         this.payStatus = payStatus;
     }
 

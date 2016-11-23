@@ -1,10 +1,13 @@
 package com.yql.biz.support.helper;
 
-import com.yql.biz.enums.EventTypeKey;
+import com.yql.biz.enums.ListenerTagType;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.framework.mq.model.MqMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -15,16 +18,18 @@ import javax.annotation.Resource;
  */
 @Component
 public class ConsumerMsgEventListener implements IConsumerMsgEventListener {
-
+    private static final Logger logger = LoggerFactory.getLogger(ConsumerMsgEventListener.class);
     @Resource
     private IPayAccountService payAccountService;
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
 
     @Override
+    @Transactional
     public void eventHandling(MqMessage message) {
         //用户注册
-        if (EventTypeKey.USER_REGISTER.name().equals(message.getKey())){
+        if (message.getTag().equals(ListenerTagType.USER_CENTER_USER_REGISTER.name())){
+            logger.debug("用户注册userCode:"+message.getBodyAsText());
             PayAccount payAccount = payAccountService.findByUserCode(message.getBodyAsText());
             if (payAccount==null){
                 payAccount = new PayAccount();
@@ -32,7 +37,8 @@ public class ConsumerMsgEventListener implements IConsumerMsgEventListener {
             payAccount.setUserCode(message.getBodyAsText());
             payAccountService.savePayAccount(payAccount);
         //用户实名认证
-        }else if (EventTypeKey.USER_REAL_NAME_AUTH.name().equals(message.getKey())){
+        }else if (message.getTag().equals(ListenerTagType.USER_CENTER_USER_REAL_NAME_AUTH.name())){
+            logger.debug("用户实名认证userCode:"+message.getBodyAsText());
             payAccountServiceHelper.updatePayAccountRelName(message.getBodyAsText());
         }
     }

@@ -1,6 +1,10 @@
 package com.yql.biz.support.helper;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IAccountClient;
+import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.enums.SendMsgTag;
+import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.vo.AccountVo;
@@ -30,23 +34,32 @@ public class PayOrderAccountHelper implements IPayOrderAccountHelper {
     private IAccountClient accountClient;
     @Resource
     private MessagePublisher messagePublisher;
+    @Resource
+    private ApplicationConf applicationConf;
 
 
     @Override
     public PayOrderVo orderType(PayOrderVo payOrderVo) {
+        String json = JSON.toJSONString(payOrderVo);
+        logger.debug("余额支付:"+ JSON.toJSONString(payOrderVo));
         ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
         AccountVo data = account.getData();
         if (data!=null ){
             BigDecimal cashFee = data.getCashFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
-            if (cashFee!=null && cashFee.subtract(totalPrice).doubleValue()<0) throw new MessageRuntimeException("error.payserver.account.balance");
-            messagePublisher.send(new TextMessage("TEST_USER_REGISTER","PAY-SERVER-TAG","pay-key-123","余额支付 PayOrderCardHelper test 支付系统"));
-            logger.debug("余额支付...............");
+            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_BALANCE_UNSUCCESS.name(), payOrderVo.getOrderNo().toString(),json.getBytes());
+            if (cashFee!=null && cashFee.subtract(totalPrice).doubleValue()<0){
+                payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
+                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_BALANCE_SUCCESS.name(), payOrderVo.getOrderNo().toString(),"");
+                messagePublisher.send(textMessage);
+                logger.debug("余额成功:"+ payOrderVo.getOrderNo());
+            }else {
+                messagePublisher.send(textMessage);
+                logger.debug("余额失败:"+ payOrderVo.getOrderNo());
+                throw new MessageRuntimeException("error.payserver.account.balance");
+            }
             long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
-            //payClient.pay("test","test");
-            payOrderVo.setPayStatus(true);
             payOrderVo.setPayNo(payNo);
-            payOrderVo.setPayOrder(07551236l);
             return payOrderVo;
         }else {
             throw new MessageRuntimeException("error.payserver.paypassword");

@@ -1,6 +1,8 @@
 package com.yql.biz.support;
 
 import com.alibaba.fastjson.JSON;
+import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.enums.ListenerTagType;
 import com.yql.biz.support.helper.IConsumerMsgEventListener;
 import com.yql.framework.mq.listener.MessageListener;
 import com.yql.framework.mq.model.MqMessage;
@@ -19,12 +21,13 @@ import javax.annotation.Resource;
 public class ConsumerMsgListener implements MessageListener {
     private static final Logger logger = LoggerFactory.getLogger(ConsumerMsgListener.class);
     @Resource
+    private ApplicationConf applicationConf;
+    @Resource
     private IConsumerMsgEventListener consumerMsgEventListener;
 
 
     @Override
     public String onMessage(MqMessage message) {
-        logger.debug("监听:"+ JSON.toJSONString(message)+":"+message.getBodyAsText());
         consumerMsgEventListener.eventHandling(message);
         logger.debug("============end 消息监听器 end================：");
         return "SUCCESS";
@@ -32,11 +35,11 @@ public class ConsumerMsgListener implements MessageListener {
 
     @Override
     public String getTopic() {
-        return "TEST_USER_REGISTER";
+        return applicationConf.getListenerTopic();
     }
 
     @Override
     public String getTag() {
-        return "*";
+        return ListenerTagType.USER_CENTER_USER_REAL_NAME_AUTH.name()+"||"+ListenerTagType.USER_CENTER_USER_REGISTER.name();
     }
 }

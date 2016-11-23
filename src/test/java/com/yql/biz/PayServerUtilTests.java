@@ -186,7 +186,7 @@ public class PayServerUtilTests {
     @Test
     public void test4() throws IOException {
         //MTIzNDU2111
-        String s = "1234561";
+        String s = "123456";
         byte[] b = s.getBytes();
         String encode = new BASE64Encoder().encode(b);
         logger.debug(encode);
