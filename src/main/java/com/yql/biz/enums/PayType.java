@@ -16,7 +16,7 @@ public enum PayType {
             return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderAccountHelper");
         }
     },
-    CARD("银行卡快捷支付") {
+    QUICK_PAYMENT("银行卡快捷支付") {
         @Override
         public IPayOrderAccountHelper createOrder() {
             return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderCardHelper");
