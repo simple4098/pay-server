@@ -63,6 +63,7 @@ public class PayServerApplicationTests {
     }
 
     @Test
+    @Ignore
     public void  testUpdateOrder(){
         PayOrderAccount byOrderNo = this.payOrderAccountDao.findByOrderNo(587965123548245466L);
         PayOrderAccount orderAccount = new PayOrderAccount();
@@ -73,6 +74,7 @@ public class PayServerApplicationTests {
 
 
     @Test
+    @Ignore
     public void  testProblem(){
         SecurityVo securityVo = new SecurityVo();
         securityVo.setUserCode("12345678");
@@ -95,6 +97,7 @@ public class PayServerApplicationTests {
     }
 
     @Test
+    @Ignore
     public void test1(){
         System.out.println(Integer.MAX_VALUE);
         System.out.println(Integer.MIN_VALUE);

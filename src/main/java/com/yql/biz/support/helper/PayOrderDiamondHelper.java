@@ -20,13 +20,14 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**
- * <p>余额支付</p>
- * creator simple
- * data 2016/11/11 0011.
+ * <p> 钻石支付 </p>
+ * @auther simple
+ * data 2016/11/23 0023.
  */
 @Component
-public class PayOrderAccountHelper implements IPayOrderAccountHelper {
-    private static final Logger logger = LoggerFactory.getLogger(PayOrderAccountHelper.class);
+public class PayOrderDiamondHelper implements IPayOrderAccountHelper{
+
+    private static final Logger logger = LoggerFactory.getLogger(PayOrderDiamondHelper.class);
 
     @Resource
     private OrderNoGenerator orderNoGenerator;
@@ -41,22 +42,22 @@ public class PayOrderAccountHelper implements IPayOrderAccountHelper {
     @Override
     public PayOrderVo orderType(PayOrderVo payOrderVo) {
         String json = JSON.toJSONString(payOrderVo);
-        logger.debug("余额支付:"+ JSON.toJSONString(payOrderVo));
+        logger.debug("钻石支付:"+ JSON.toJSONString(payOrderVo));
         ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
         AccountVo data = account.getData();
         if (data!=null ){
-            BigDecimal cashFee = data.getCashFee();
+            BigDecimal cashFee = data.getDiamondFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
-            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_BALANCE_UNSUCCESS.name(), payOrderVo.getOrderNo().toString(),json.getBytes());
+            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_DIAMOND_UNSUCCESS.name(), payOrderVo.getOrderNo().toString(),json.getBytes());
             if (cashFee!=null && cashFee.subtract(totalPrice).doubleValue()<0){
                 payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
-                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_BALANCE_SUCCESS.name(), payOrderVo.getOrderNo().toString(),"");
+                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_DIAMOND_SUCCESS.name(), payOrderVo.getOrderNo().toString(),"");
                 messagePublisher.send(textMessage);
-                logger.debug("余额成功:"+ payOrderVo.getOrderNo());
+                logger.debug("钻石支付成功:"+ payOrderVo.getOrderNo());
             }else {
                 messagePublisher.send(textMessage);
-                logger.debug("余额失败:"+ payOrderVo.getOrderNo());
-                throw new MessageRuntimeException("error.payserver.account.balance");
+                logger.debug("钻石支付失败:"+ payOrderVo.getOrderNo());
+                throw new MessageRuntimeException("error.payserver.account.diamond");
             }
             long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
             payOrderVo.setPayNo(payNo);

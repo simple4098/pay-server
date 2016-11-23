@@ -16,10 +16,16 @@ public enum PayType {
             return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderAccountHelper");
         }
     },
-    CARD("银行卡") {
+    CARD("银行卡快捷支付") {
         @Override
         public IPayOrderAccountHelper createOrder() {
             return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderCardHelper");
+        }
+    },
+    DIAMOND("钻石支付"){
+        @Override
+        public IPayOrderAccountHelper createOrder() {
+            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderDiamondHelper");
         }
     };
     public abstract IPayOrderAccountHelper createOrder();

@@ -171,14 +171,13 @@
 
 	<build>
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+			</plugin>-->
 			<!--
              使用aspectj-maven-plugin 插件编译springboot 可能会出现下面的错误
              java.lang.IllegalStateException: Failed to write metadata at org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor.writeMetaData(ConfigurationMetadataAnnotationProcessor.java:394)
-
              较简单的处理方式是在maven-compiler-plugin插件中配置<proc>none</proc>
             -->
 			<plugin>
@@ -227,12 +226,12 @@
 					<dependency>
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjtools</artifactId>
-						<version>${aspectj.version}</version>
+						<version>1.8.9</version>
 					</dependency>
 					<dependency>
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjrt</artifactId>
-						<version>${aspectj.version}</version>
+						<version>1.8.9</version>
 					</dependency>
 				</dependencies>
 			</plugin>

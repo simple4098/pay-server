@@ -4,6 +4,7 @@ import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.*;
 import com.yql.biz.vo.pay.response.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class PayServerUtilTests {
 
     //绑定银行卡(发生验证短信)
     @Test
+    @Ignore
     public void  testUtil() throws Exception {
         Request<BangBody> request1 = new Request<>();
         Head head = new Head() ;
@@ -52,6 +54,7 @@ public class PayServerUtilTests {
 
     //短信验证绑定
     @Test
+    @Ignore
     public void  testMessageBang() throws Exception {
         Request<BangMessageValidateBody> request = new Request<>();
         Head head = new Head() ;
@@ -85,6 +88,7 @@ public class PayServerUtilTests {
     }
     //快捷支付
     @Test
+    @Ignore
     public void test1() throws Exception {
         Request<PayBody> request = new Request<>();
         Head head = new Head();
@@ -127,6 +131,7 @@ public class PayServerUtilTests {
 
 
     @Test
+    @Ignore
     public void test2() throws Exception {
         Request<QueryBangBody> request = new Request<>();
         Head head = new Head();
@@ -156,6 +161,7 @@ public class PayServerUtilTests {
     }
 
     @Test
+    @Ignore
     public void test3() throws Exception {
         Request<UninstallBangBody> request = new Request<>();
         Head head = new Head();
@@ -184,6 +190,7 @@ public class PayServerUtilTests {
     }
 
     @Test
+    @Ignore
     public void test4() throws IOException {
         //MTIzNDU2111
         String s = "123456";
