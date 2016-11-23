@@ -6,7 +6,6 @@ import com.yql.biz.vo.PayAccountVo;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.PayProblemDto;
 import com.yql.biz.model.PayAccount;
-import com.yql.biz.model.SecurityProblem;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.service.IPayProblemService;
 import com.yql.biz.vo.SecurityProblemVo;
@@ -124,7 +123,7 @@ public class PayServerController {
      */
     @RequestMapping(value = "/set/bank_card" ,method = RequestMethod.POST)
     public ResponseModel setBankCard(@Validated PayBankVo payBankVo){
-        payBankService.savePayBanke(payBankVo);
+        payBankService.savePayBank(payBankVo);
         return ResponseModel.SUCCESS();
     }
     /**

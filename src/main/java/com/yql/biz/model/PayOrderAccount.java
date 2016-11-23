@@ -5,6 +5,7 @@ import com.yql.biz.enums.PayType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>支付记录表</p>
@@ -39,7 +40,8 @@ public class PayOrderAccount extends Domain {
     private String errorMsg;
     //支付错误编码
     private String errorCode;
-
+    //银行处理时间
+    private Date bankTxTime;
 
     public Integer getPayAccountId() {
         return payAccountId;
@@ -135,5 +137,13 @@ public class PayOrderAccount extends Domain {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public Date getBankTxTime() {
+        return bankTxTime;
+    }
+
+    public void setBankTxTime(Date bankTxTime) {
+        this.bankTxTime = bankTxTime;
     }
 }

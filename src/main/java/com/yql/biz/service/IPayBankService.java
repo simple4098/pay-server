@@ -15,7 +15,7 @@ public interface IPayBankService {
      * @param payBankVo
      * @return
      */
-    PayBank savePayBanke(PayBankVo payBankVo);
+    PayBank savePayBank(PayBankVo payBankVo);
 
     /**
      * 根据用户code查询没有删除的银行卡列表

@@ -20,12 +20,12 @@ public class Response {
     public void setHead(ResponseHead head) {
         this.head = head;
     }
-    public static Response toBean(){
+    /*public static Response toBean(){
         Response response = new Response();
         ResponseHead responseHead = new ResponseHead();
         responseHead.setMessage("支付连接超时");
         responseHead.setCode("2000");
         response.setHead(responseHead);
         return  response;
-    }
+    }*/
 }

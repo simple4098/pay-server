@@ -2,11 +2,11 @@ package com.yql.biz.controller;
 
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,7 +30,7 @@ public class PayOrderController {
      */
     @RequestMapping("/order")
     public ResponseModel index(@Validated PayOrderVo payOrderVo){
-        PayOrderVo order = payOrderAccountService.order(payOrderVo);
+        ResultPayOrder order = payOrderAccountService.order(payOrderVo);
         return ResponseModel.SUCCESS(order);
     }
 

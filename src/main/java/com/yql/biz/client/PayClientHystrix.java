@@ -1,7 +1,6 @@
 package com.yql.biz.client;
 
-import com.yql.biz.vo.pay.response.PayMessageValidateResponse;
-import com.yql.biz.vo.pay.response.Response;
+import com.yql.biz.vo.pay.response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,15 +15,15 @@ public class PayClientHystrix implements PayClient {
     private static  final Logger logger = LoggerFactory.getLogger(PayClientHystrix.class);
 
     @Override
-    public Response bangBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
+    public BangResponse bangBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
         logger.debug("==========================bangBank支付断路器==========================");
-        return Response.toBean();
+        return null;
     }
 
     @Override
-    public Response uninstallBangBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
+    public UninstallBangResponse uninstallBangBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
         logger.debug("==========================uninstallBangBank支付断路器==========================");
-        return Response.toBean();
+        return null;
     }
 
     @Override
@@ -33,9 +32,4 @@ public class PayClientHystrix implements PayClient {
         return PayMessageValidateResponse.toBean();
     }
 
-    @Override
-    public Response delBank(@RequestParam(name = "message") String message, @RequestParam("signature") String signature) {
-        logger.debug("==========================delBank支付断路器==========================");
-        return  Response.toBean();
-    }
 }

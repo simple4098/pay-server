@@ -10,7 +10,7 @@ import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.pay.Param;
-import com.yql.biz.vo.pay.response.Response;
+import com.yql.biz.vo.pay.response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,12 +37,15 @@ public class PayBankService implements IPayBankService {
 
 
     @Override
-    public PayBank savePayBanke(PayBankVo payBankVo) {
+    public PayBank savePayBank(PayBankVo payBankVo) {
         PayBank newPayBak = new PayBank();
         Param param = payAccountServiceHelper.crateBangBankParam(payBankVo,newPayBak);
-        Response response = payClient.bangBank(param.getMessage(), param.getSignature());
-        logger.debug("银行卡绑定返回:"+ JSON.toJSONString(response));
+        BangResponse response = payClient.bangBank(param.getMessage(), param.getSignature());
         if (PlatformPayUtil.isSuccess(response)){
+            BangResponseBody bangResponseBody = response.getBangResponseBody();
+            logger.debug("银行卡绑定返回:"+ JSON.toJSONString(response));
+            newPayBak.setBangStatus(bangResponseBody.getStatus());
+            newPayBak.setBankTxTime(bangResponseBody.getBankTxTime());
             return payBankDao.save(newPayBak);
         }else {
             throw new RuntimeException(response.getHead().getMessage());
@@ -61,10 +64,13 @@ public class PayBankService implements IPayBankService {
         PayBank payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(payAccountId,txCode ,false);
         if (payBank == null) throw new MessageRuntimeException("error.payserver.payServer.bank.isnull");
         Param param = payAccountServiceHelper.crateUnBangBankParam(payBank);
-        Response response = payClient.delBank(param.getMessage(),param.getSignature());
-        logger.debug("解银行卡绑定返回:"+ JSON.toJSONString(response));
+        UninstallBangResponse response = payClient.uninstallBangBank(param.getMessage(),param.getSignature());
         if (PlatformPayUtil.isSuccess(response)){
+            UninstallBangResponseBody responseBody = response.getUninstallBangResponseBody();
+            logger.debug("解银行卡绑定返回:"+ JSON.toJSONString(response));
             payBank.setDeleted(true);
+            payBank.setBangStatus(responseBody.getStatus());
+            payBank.setBankTxTime(responseBody.getBankTxTime());
             payBankDao.save(payBank);
         }else {
             throw new RuntimeException(response.getHead().getMessage());

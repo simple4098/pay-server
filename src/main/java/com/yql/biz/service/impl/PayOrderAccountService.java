@@ -10,6 +10,7 @@ import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.vo.PayOrderAccountDetailVo;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.ResultPayOrder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,7 +32,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private IPayAccountServiceHelper payAccountServiceHelper;
 
     @Override
-    public PayOrderVo order(PayOrderVo payOrderVo) {
+    public ResultPayOrder order(PayOrderVo payOrderVo) {
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payOrderVo.getUserCode());
         PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(payOrderVo.getOrderNo());
         PayOrderAccount payOrderAccount = PayOrderVo.toDomain(payOrderVo);
@@ -51,7 +52,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         PayOrderAccount result = payOrderAccountDao.save(payOrderAccount);
         payOrderAccountDetail.setPayOrderAccountId(result.getId());
         payOrderAccountDetailDao.save(payOrderAccountDetail);
-        PayOrderVo vo = PayOrderVo.domainToVo(result);
-        return  vo;
+        ResultPayOrder payOrder = PayOrderVo.toResultOrder(result);
+        return  payOrder;
     }
 }

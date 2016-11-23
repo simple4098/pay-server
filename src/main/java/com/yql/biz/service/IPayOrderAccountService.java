@@ -1,6 +1,7 @@
 package com.yql.biz.service;
 
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.ResultPayOrder;
 
 /**
  * <p>支付账单</p>
@@ -9,6 +10,10 @@ import com.yql.biz.vo.PayOrderVo;
  */
 public interface IPayOrderAccountService {
 
-    PayOrderVo order(PayOrderVo payOrderVo);
+    /**
+     * 订单支付接口
+     * @param payOrderVo 提交订单类型
+     */
+    ResultPayOrder order(PayOrderVo payOrderVo);
 
 }

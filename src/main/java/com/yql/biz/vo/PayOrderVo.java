@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * creator simple
@@ -39,6 +40,8 @@ public class PayOrderVo {
     private String errorMsg;
     //交易状态 10=处理中 20=支付成功 30=支付失败
     private Integer payStatus;
+    //应该处理时间
+    private Date bankTxTime;
     //备注
     private String remark;
 
@@ -146,6 +149,14 @@ public class PayOrderVo {
         this.payStatus = payStatus;
     }
 
+    public Date getBankTxTime() {
+        return bankTxTime;
+    }
+
+    public void setBankTxTime(Date bankTxTime) {
+        this.bankTxTime = bankTxTime;
+    }
+
     public static PayOrderAccount toDomain(PayOrderVo payOrderVo) {
         PayOrderAccount payOrderAccount = new PayOrderAccount();
         BeanUtils.copyProperties(payOrderVo,payOrderAccount);
@@ -156,5 +167,11 @@ public class PayOrderVo {
         PayOrderVo payOrderVo = new PayOrderVo();
         BeanUtils.copyProperties(result,payOrderVo);
         return payOrderVo;
+    }
+
+    public static ResultPayOrder toResultOrder(PayOrderAccount result) {
+        ResultPayOrder payOrder = new ResultPayOrder();
+        BeanUtils.copyProperties(result,payOrder);
+        return payOrder;
     }
 }

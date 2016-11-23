@@ -58,6 +58,7 @@ public class PayOrderCardHelper implements IPayOrderAccountHelper {
                     payOrderVo.getOrderNo().toString(), JSON.toJSONString(responseBody));
         }
         payOrderVo.setPayStatus(responseBody.getStatus());
+        payOrderVo.setBankTxTime(responseBody.getBankTxTime());
         messagePublisher.send(textMessage);
         loger.debug("银行卡快捷支付返回"+ JSON.toJSONString(pay));
         return payOrderVo;

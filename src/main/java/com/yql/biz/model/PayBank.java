@@ -4,6 +4,7 @@ import com.yql.biz.enums.CardType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>支付银行实体类</p>
@@ -31,6 +32,10 @@ public class PayBank extends Domain  {
     private String bankId;
     //交易编码
     private String txCode;
+    //绑定状态 10=绑定处理中 20=绑定失败 30=绑定成功
+    private Integer bangStatus;
+    //银行处理时间
+    private Date bankTxTime;
     //绑定流水
     @Column(name = "tx_SN_binding")
     private String txSNBinding;
@@ -50,6 +55,22 @@ public class PayBank extends Domain  {
     //是否删除
     private boolean deleted;
 
+
+    public Integer getBangStatus() {
+        return bangStatus;
+    }
+
+    public void setBangStatus(Integer bangStatus) {
+        this.bangStatus = bangStatus;
+    }
+
+    public Date getBankTxTime() {
+        return bankTxTime;
+    }
+
+    public void setBankTxTime(Date bankTxTime) {
+        this.bankTxTime = bankTxTime;
+    }
 
     public String getBankId() {
         return bankId;
