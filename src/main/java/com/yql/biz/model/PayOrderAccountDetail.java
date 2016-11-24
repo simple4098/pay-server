@@ -19,27 +19,32 @@ public class PayOrderAccountDetail extends Domain {
     //支付订单id
     private Integer payOrderAccountId;
     //支付订单号
-    private Long orderNo;
+    private String orderNo;
     //支付号（系统生产）
     private Long payNo;
     //第三方支付返回的订单号
-    private Long payOrder;
+    private String payOrder;
     //对方userCode
     private String otherUserCode;
     //支付类型
     private PayType payType;
     //持卡人
     private String cardholder;
-    //银行卡号
-    private String bankCard;
     //支付总金额
     private BigDecimal totalPrice;
     //支付是否成功
-    private boolean payStatus;
-    //支付错误信息
-    private String errorMsg;
+    private Integer payStatus;
+    //支付信息
+    private String msg;
+    private Integer payBankId;
 
+    public Integer getPayBankId() {
+        return payBankId;
+    }
 
+    public void setPayBankId(Integer payBankId) {
+        this.payBankId = payBankId;
+    }
 
     public Integer getPayOrderAccountId() {
         return payOrderAccountId;
@@ -57,28 +62,12 @@ public class PayOrderAccountDetail extends Domain {
         this.payAccountId = payAccountId;
     }
 
-    public Long getOrderNo() {
-        return orderNo;
-    }
-
-    public void setOrderNo(Long orderNo) {
-        this.orderNo = orderNo;
-    }
-
     public Long getPayNo() {
         return payNo;
     }
 
     public void setPayNo(Long payNo) {
         this.payNo = payNo;
-    }
-
-    public Long getPayOrder() {
-        return payOrder;
-    }
-
-    public void setPayOrder(Long payOrder) {
-        this.payOrder = payOrder;
     }
 
     public String getOtherUserCode() {
@@ -97,29 +86,14 @@ public class PayOrderAccountDetail extends Domain {
         this.payType = payType;
     }
 
-    public boolean isPayStatus() {
+    public Integer getPayStatus() {
         return payStatus;
     }
 
-    public void setPayStatus(boolean payStatus) {
+    public void setPayStatus(Integer payStatus) {
         this.payStatus = payStatus;
     }
 
-    public String getCardholder() {
-        return cardholder;
-    }
-
-    public void setCardholder(String cardholder) {
-        this.cardholder = cardholder;
-    }
-
-    public String getBankCard() {
-        return bankCard;
-    }
-
-    public void setBankCard(String bankCard) {
-        this.bankCard = bankCard;
-    }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -129,13 +103,37 @@ public class PayOrderAccountDetail extends Domain {
         this.totalPrice = totalPrice;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
+
+    public String getOrderNo() {
+        return orderNo;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 
+    public String getPayOrder() {
+        return payOrder;
+    }
+
+    public void setPayOrder(String payOrder) {
+        this.payOrder = payOrder;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getCardholder() {
+        return cardholder;
+    }
+
+    public void setCardholder(String cardholder) {
+        this.cardholder = cardholder;
+    }
 
 }

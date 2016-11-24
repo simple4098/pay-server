@@ -1,13 +1,15 @@
 package com.yql.biz.vo;
 
+import java.math.BigDecimal;
+
 /**
  * <p> 返给订单系统信息 </p>
  * @auther simple
  * data 2016/11/23 0023.
  */
 public class ResultPayOrder {
-    //错误信息
-    private String errorMsg;
+    //信息
+    private String msg;
     //订单号
     private String orderNo;
     //支付订单号
@@ -16,13 +18,14 @@ public class ResultPayOrder {
     private String payOrder;
     //支付状态
     private Integer payStatus;
+    private BigDecimal payPrice;
 
-    public String getErrorMsg() {
-        return errorMsg;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getOrderNo() {
@@ -55,5 +58,13 @@ public class ResultPayOrder {
 
     public void setPayStatus(Integer payStatus) {
         this.payStatus = payStatus;
+    }
+
+    public BigDecimal getPayPrice() {
+        return payPrice;
+    }
+
+    public void setPayPrice(BigDecimal payPrice) {
+        this.payPrice = payPrice;
     }
 }

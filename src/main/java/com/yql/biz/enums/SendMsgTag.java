@@ -6,6 +6,7 @@ package com.yql.biz.enums;
  * data 2016/11/23 0023.
  */
 public enum SendMsgTag {
+    PAY_SERVER_STATUS("支付消息"),
     PAY_SERVER_BALANCE_SUCCESS("余额支付成功"),
     PAY_SERVER_BALANCE_UNSUCCESS("余额支付失败"),
     PAY_SERVER_QUICK_PAYMENT_SUCCESS("快捷支付成功"),

@@ -65,7 +65,7 @@ yql:
     secretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
     ONSAddr: http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet
     producer:
-      ProducerId: PID_YQL_USER_REGISTER
+      ProducerId: PID_YQL_PAY_SERVER
     consumer:
       ConsumerId: CID_YQL_PAY_SERVER
 

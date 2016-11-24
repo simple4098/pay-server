@@ -15,5 +15,5 @@ public interface IPayOrderAccountDao  extends JpaRepository<PayOrderAccount,Inte
      * 根据订单号查询订单信息
      * @param orderNo 订单号
      */
-    PayOrderAccount findByOrderNo(Long orderNo);
+    PayOrderAccount findByOrderNo(String orderNo);
 }

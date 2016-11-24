@@ -8,10 +8,10 @@ import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponse;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
-import com.yql.biz.vo.pay.response.Response;
 import com.yql.framework.mq.MessagePublisher;
 import com.yql.framework.mq.model.TextMessage;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ import javax.annotation.Resource;
  */
 @Component
 public class PayOrderCardHelper implements IPayOrderAccountHelper {
-    private static final Logger loger = LoggerFactory.getLogger(PayOrderCardHelper.class);
+    private static final Logger log = LoggerFactory.getLogger(PayOrderCardHelper.class);
     @Resource
     private PayClient payClient;
     @Resource
@@ -44,23 +44,24 @@ public class PayOrderCardHelper implements IPayOrderAccountHelper {
         PayBank payBank = payBankDao.findByUserCodeAndTxCode(payOrderVo.getUserCode(),payOrderVo.getTxCode());
         Param payParam = payOrderCardParamHelper.getPayParam(payOrderVo,payBank);
         PayMessageValidateResponse pay = payClient.pay(payParam.getMessage(), payParam.getSignature());
-        TextMessage textMessage = null;
+        log.debug("银行卡快捷支付返回:"+ JSON.toJSONString(pay));
         PayMessageValidateResponseBody responseBody = pay.getPayMessageValidateResponseBody();
         if (PlatformPayUtil.isSuccess(pay)){
+            ResultPayOrder resultPayOrder = PayOrderVo.toSendResultOrder(responseBody,payOrderVo);
             payOrderVo.setPayOrder(responseBody.getPaymentNo());
-            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),
-                    SendMsgTag.PAY_SERVER_QUICK_PAYMENT_SUCCESS.name(),
-                    payOrderVo.getOrderNo().toString(), JSON.toJSONString(responseBody));
+            payOrderVo.setMsg(responseBody.getResponseMessage());
+            payOrderVo.setPayStatus(responseBody.getStatus());
+            payOrderVo.setBankTxTime(responseBody.getBankTxTime());
+            payOrderVo.setPayBankId(payBank.getId());
+            TextMessage textMessage = new TextMessage(applicationConf.getSendMsgTopic(),
+                    SendMsgTag.PAY_SERVER_STATUS.name(),
+                    payOrderVo.getOrderNo(), JSON.toJSONString(resultPayOrder));
+            messagePublisher.send(textMessage);
+            log.debug("发送消息："+JSON.toJSONString(textMessage));
         }else {
-            payOrderVo.setErrorMsg(pay.getHead().getMessage());
-            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),
-                    SendMsgTag.PAY_SERVER_QUICK_PAYMENT_UNSUCCESS.name(),
-                    payOrderVo.getOrderNo().toString(), JSON.toJSONString(responseBody));
+            log.info("支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
+            throw new RuntimeException(pay.getHead().getMessage()+" 支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
         }
-        payOrderVo.setPayStatus(responseBody.getStatus());
-        payOrderVo.setBankTxTime(responseBody.getBankTxTime());
-        messagePublisher.send(textMessage);
-        loger.debug("银行卡快捷支付返回"+ JSON.toJSONString(pay));
         return payOrderVo;
     }
 }

@@ -2,6 +2,7 @@ package com.yql.biz.vo;
 
 import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
+import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
 import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ public class PayOrderVo {
     private Integer payAccountId;
     //支付订单号
     @NotNull(message = "{com.yql.validation.constraints.OrderNo.message}")
-    private Long orderNo;
+    private String orderNo;
     //支付号（系统生产）
     private Long payNo;
     //第三方支付返回的订单号
@@ -36,14 +37,23 @@ public class PayOrderVo {
     //支付总金额
     @NotNull(message = "{com.yql.validation.constraints.totalPrice.message}")
     private BigDecimal totalPrice;
-    //支付错误信息
-    private String errorMsg;
+    //支付信息
+    private String msg;
     //交易状态 10=处理中 20=支付成功 30=支付失败
     private Integer payStatus;
     //应该处理时间
     private Date bankTxTime;
     //备注
     private String remark;
+    private Integer payBankId;
+
+    public Integer getPayBankId() {
+        return payBankId;
+    }
+
+    public void setPayBankId(Integer payBankId) {
+        this.payBankId = payBankId;
+    }
 
     public String getUserCode() {
         return userCode;
@@ -61,11 +71,11 @@ public class PayOrderVo {
         this.payAccountId = payAccountId;
     }
 
-    public Long getOrderNo() {
+    public String getOrderNo() {
         return orderNo;
     }
 
-    public void setOrderNo(Long orderNo) {
+    public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
     }
 
@@ -125,12 +135,12 @@ public class PayOrderVo {
         this.totalPrice = totalPrice;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getRemark() {
@@ -169,9 +179,33 @@ public class PayOrderVo {
         return payOrderVo;
     }
 
+    /**
+     * 转化成前端有用的参数
+     * @param result 支付持久化对象
+     */
     public static ResultPayOrder toResultOrder(PayOrderAccount result) {
         ResultPayOrder payOrder = new ResultPayOrder();
         BeanUtils.copyProperties(result,payOrder);
+        payOrder.setPayPrice(result.getTotalPrice());
         return payOrder;
+    }
+
+    /**
+     *
+     * @param responseBody 支付平台返回对象
+     * @param payOrderVo 支付系统产生支付对象
+     */
+    public static ResultPayOrder toSendResultOrder(PayMessageValidateResponseBody responseBody, PayOrderVo payOrderVo) {
+        if (responseBody!=null){
+            ResultPayOrder resultPayOrder = new ResultPayOrder();
+            resultPayOrder.setPayNo(payOrderVo.getPayNo());
+            resultPayOrder.setMsg(responseBody.getResponseMessage());
+            resultPayOrder.setPayOrder(responseBody.getPaymentNo());
+            resultPayOrder.setPayStatus(responseBody.getStatus());
+            resultPayOrder.setPayPrice(payOrderVo.getTotalPrice());
+            resultPayOrder.setOrderNo(payOrderVo.getOrderNo());
+            return  resultPayOrder;
+        }
+        return null;
     }
 }

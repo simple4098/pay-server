@@ -19,7 +19,7 @@ public class DefaultOrderNoGenerator implements OrderNoGenerator {
         StringBuffer payNo = new StringBuffer();
         String format = DateFormatUtils.format(Calendar.getInstance(), "yyyyMMddHHmmssSSS");
         int ordinal = orderType.ordinal();
-        String s = PayUtil.randomCodeNum(2);
+        String s = PayUtil.randomCodeNum(1);
         payNo.append(format).append(s).append(ordinal);
         return Long.valueOf(payNo.toString());
     }

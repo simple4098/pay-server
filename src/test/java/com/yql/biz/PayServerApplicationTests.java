@@ -8,7 +8,9 @@ import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.vo.ProblemAnswerVo;
+import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.SecurityVo;
+import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +68,7 @@ public class PayServerApplicationTests {
     @Test
     @Ignore
     public void  testUpdateOrder(){
-        PayOrderAccount byOrderNo = this.payOrderAccountDao.findByOrderNo(587965123548245466L);
+        PayOrderAccount byOrderNo = this.payOrderAccountDao.findByOrderNo("587965123548245466");
         PayOrderAccount orderAccount = new PayOrderAccount();
         BeanUtils.copyProperties(byOrderNo,orderAccount);
         orderAccount.setPayNo(123213L);
@@ -97,9 +100,13 @@ public class PayServerApplicationTests {
     }
 
     @Test
-    @Ignore
     public void test1(){
-        System.out.println(Integer.MAX_VALUE);
-        System.out.println(Integer.MIN_VALUE);
+        ResultPayOrder resultPayOrder = new ResultPayOrder();
+        resultPayOrder.setOrderNo("1234569");
+        resultPayOrder.setPayNo(254842221212l);
+        resultPayOrder.setPayStatus(20);
+        resultPayOrder.setPayPrice(new BigDecimal(583));
+        resultPayOrder.setMsg("成功");
+        System.out.println(JSON.toJSONString(resultPayOrder));
     }
 }

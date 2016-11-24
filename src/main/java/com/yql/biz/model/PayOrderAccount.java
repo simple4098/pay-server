@@ -18,7 +18,7 @@ import java.util.Date;
 public class PayOrderAccount extends Domain {
     private Integer payAccountId;
     //支付订单号
-    private Long orderNo;
+    private String orderNo;
     //支付号（系统生产）
     private Long payNo;
     //第三方支付返回的订单号
@@ -36,12 +36,19 @@ public class PayOrderAccount extends Domain {
     private BigDecimal totalPrice;
     //交易状态 10=处理中 20=支付成功 30=支付失败
     private Integer payStatus;
-    //支付错误信息
-    private String errorMsg;
-    //支付错误编码
-    private String errorCode;
+    //支付信息
+    private String msg;
     //银行处理时间
     private Date bankTxTime;
+    private Integer payBankId;
+
+    public Integer getPayBankId() {
+        return payBankId;
+    }
+
+    public void setPayBankId(Integer payBankId) {
+        this.payBankId = payBankId;
+    }
 
     public Integer getPayAccountId() {
         return payAccountId;
@@ -51,11 +58,11 @@ public class PayOrderAccount extends Domain {
         this.payAccountId = payAccountId;
     }
 
-    public Long getOrderNo() {
+    public String getOrderNo() {
         return orderNo;
     }
 
-    public void setOrderNo(Long orderNo) {
+    public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
     }
 
@@ -123,27 +130,19 @@ public class PayOrderAccount extends Domain {
         this.totalPrice = totalPrice;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
     public Date getBankTxTime() {
         return bankTxTime;
     }
 
     public void setBankTxTime(Date bankTxTime) {
         this.bankTxTime = bankTxTime;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

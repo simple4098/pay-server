@@ -45,7 +45,7 @@ public class PayOrderCardParamHelper implements IPayOrderCardParamHelper{
         head.setTxCode(payOrderVo.getTxCode());
         request.setHead(head);
         PayBody payBody = new PayBody();
-        payBody.setPaymentNo(Long.toBinaryString(payNo));
+        payBody.setPaymentNo(Long.toString(payNo)+PayUtil.randomCodeNum(6));
         payBody.setTxSNBinding(payBank.getTxSNBinding());
         payBody.setSettlementFlag(payBank.getSettlementFlag());
         payBody.setAmount(amount);
