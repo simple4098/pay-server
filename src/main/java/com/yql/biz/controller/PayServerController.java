@@ -2,13 +2,10 @@ package com.yql.biz.controller;
 
 import com.yql.biz.constraint.UserCode;
 import com.yql.biz.service.IPayBankService;
-import com.yql.biz.vo.PayAccountVo;
-import com.yql.biz.vo.PayBankVo;
-import com.yql.biz.vo.PayProblemDto;
+import com.yql.biz.vo.*;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.service.IPayProblemService;
-import com.yql.biz.vo.SecurityProblemVo;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,8 +120,8 @@ public class PayServerController {
      */
     @RequestMapping(value = "/set/bank_card" ,method = RequestMethod.POST)
     public ResponseModel setBankCard(@Validated PayBankVo payBankVo){
-        payBankService.savePayBank(payBankVo);
-        return ResponseModel.SUCCESS();
+        ResultBangBank resultBangBank = payBankService.savePayBank(payBankVo);
+        return ResponseModel.SUCCESS(resultBangBank);
     }
     /**
      * 删除支付银行卡
@@ -132,8 +129,8 @@ public class PayServerController {
     @RequestMapping(value = "/del/bank_card" ,method = RequestMethod.POST)
     public ResponseModel delBankCard(@NotNull(message = "{com.yql.validation.constraints.txCode.notnull}") String txCode,
                                      @NotNull(message = "{com.yql.validation.constraints.payAccountId.notnull}") Integer payAccountId){
-        payBankService.delBangBank(txCode,payAccountId);
-        return ResponseModel.SUCCESS();
+        ResultUnBangBank resultUnBangBank = payBankService.delBangBank(txCode, payAccountId);
+        return ResponseModel.SUCCESS(resultUnBangBank);
     }
     /**
      * 获取用户银行卡列表信息

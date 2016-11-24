@@ -6,6 +6,7 @@ import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.Request;
+import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 
 import java.util.List;
 
@@ -62,4 +63,11 @@ public interface IPayAccountServiceHelper {
      * @param json
      */
     List<ProblemAnswerVo> getProblemList(String json);
+
+    /**
+     *
+     * @param payBank 解绑的银行卡信息
+     * @param responseBody 支付平台返回对象
+     */
+    void createDelBankParam(PayBank payBank, UninstallBangResponseBody responseBody);
 }

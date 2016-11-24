@@ -25,6 +25,7 @@ import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.UninstallBangBody;
+import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -214,5 +215,15 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         if (StringUtils.isEmpty(json)) throw new MessageRuntimeException("error.payserver.param.notnull");
         SecurityVo securityVo = JSON.parseObject(json, SecurityVo.class);
         return securityVo.getAnswers();
+    }
+
+    @Override
+    public void createDelBankParam(PayBank payBank, UninstallBangResponseBody responseBody) {
+        Integer status = responseBody.getStatus();
+        if (!status.equals(30)){
+            payBank.setDeleted(true);
+        }
+        payBank.setBangStatus(status);
+        payBank.setBankTxTime(responseBody.getBankTxTime());
     }
 }

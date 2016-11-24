@@ -9,10 +9,13 @@ import com.yql.biz.service.IPayBankService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayBankVo;
+import com.yql.biz.vo.ResultBangBank;
+import com.yql.biz.vo.ResultUnBangBank;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,16 +40,23 @@ public class PayBankService implements IPayBankService {
 
 
     @Override
-    public PayBank savePayBank(PayBankVo payBankVo) {
+    public ResultBangBank savePayBank(PayBankVo payBankVo) {
         PayBank newPayBak = new PayBank();
+        ResultBangBank resultBangBank = new ResultBangBank();
         Param param = payAccountServiceHelper.crateBangBankParam(payBankVo,newPayBak);
         BangResponse response = payClient.bangBank(param.getMessage(), param.getSignature());
         if (PlatformPayUtil.isSuccess(response)){
             BangResponseBody bangResponseBody = response.getBangResponseBody();
             logger.debug("银行卡绑定返回:"+ JSON.toJSONString(response));
+            //payAccountServiceHelper.createBangBankParam(newPayBak,bangResponseBody);
             newPayBak.setBangStatus(bangResponseBody.getStatus());
             newPayBak.setBankTxTime(bangResponseBody.getBankTxTime());
-            return payBankDao.save(newPayBak);
+            BeanUtils.copyProperties(bangResponseBody,resultBangBank);
+            //10=绑定处理中 20=绑定失败 30=绑定成功
+            if (!bangResponseBody.getStatus().equals(20)){
+                payBankDao.save(newPayBak);
+            }
+            return resultBangBank;
         }else {
             throw new RuntimeException(response.getHead().getMessage());
         }
@@ -60,7 +70,8 @@ public class PayBankService implements IPayBankService {
     }
 
     @Override
-    public void delBangBank(String txCode,Integer payAccountId) {
+    public ResultUnBangBank delBangBank(String txCode, Integer payAccountId) {
+        ResultUnBangBank resultUnBangBank = new ResultUnBangBank();
         PayBank payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(payAccountId,txCode ,false);
         if (payBank == null) throw new MessageRuntimeException("error.payserver.payServer.bank.isnull");
         Param param = payAccountServiceHelper.crateUnBangBankParam(payBank);
@@ -68,10 +79,10 @@ public class PayBankService implements IPayBankService {
         if (PlatformPayUtil.isSuccess(response)){
             UninstallBangResponseBody responseBody = response.getUninstallBangResponseBody();
             logger.debug("解银行卡绑定返回:"+ JSON.toJSONString(response));
-            payBank.setDeleted(true);
-            payBank.setBangStatus(responseBody.getStatus());
-            payBank.setBankTxTime(responseBody.getBankTxTime());
+            payAccountServiceHelper.createDelBankParam(payBank,responseBody);
             payBankDao.save(payBank);
+            BeanUtils.copyProperties(responseBody,resultUnBangBank);
+            return resultUnBangBank;
         }else {
             throw new RuntimeException(response.getHead().getMessage());
         }

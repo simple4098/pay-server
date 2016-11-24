@@ -2,6 +2,8 @@ package com.yql.biz.service;
 
 import com.yql.biz.model.PayBank;
 import com.yql.biz.vo.PayBankVo;
+import com.yql.biz.vo.ResultBangBank;
+import com.yql.biz.vo.ResultUnBangBank;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ public interface IPayBankService {
      * @param payBankVo
      * @return
      */
-    PayBank savePayBank(PayBankVo payBankVo);
+    ResultBangBank savePayBank(PayBankVo payBankVo);
 
     /**
      * 根据用户code查询没有删除的银行卡列表
@@ -29,5 +31,5 @@ public interface IPayBankService {
      * @param txCode 交易编码
      * @param payAccountId 支付accountId
      */
-    void delBangBank(String txCode,Integer payAccountId);
+    ResultUnBangBank delBangBank(String txCode, Integer payAccountId);
 }
