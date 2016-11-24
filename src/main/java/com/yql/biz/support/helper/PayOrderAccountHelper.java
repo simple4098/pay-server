@@ -9,6 +9,7 @@ import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.vo.AccountVo;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.web.ResponseModel;
 import com.yql.framework.mq.MessagePublisher;
 import com.yql.framework.mq.model.TextMessage;
@@ -47,19 +48,25 @@ public class PayOrderAccountHelper implements IPayOrderAccountHelper {
         if (data!=null ){
             BigDecimal cashFee = data.getCashFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
-            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_BALANCE_UNSUCCESS.name(), payOrderVo.getOrderNo().toString(),json.getBytes());
+            long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+            payOrderVo.setPayNo(payNo);
+            ResultPayOrder resultPayOrder = new ResultPayOrder();
+            resultPayOrder.setPayPrice(totalPrice);
+            resultPayOrder.setPayNo(payNo);
+            resultPayOrder.setOrderNo(payOrderVo.getOrderNo());
+            resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
+            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo() ,JSON.toJSONString(resultPayOrder));
             if (cashFee!=null && cashFee.subtract(totalPrice).doubleValue()<0){
+                resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
-                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_BALANCE_SUCCESS.name(), payOrderVo.getOrderNo().toString(),"");
+                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(),JSON.toJSONString(resultPayOrder));
                 messagePublisher.send(textMessage);
                 logger.debug("余额成功:"+ payOrderVo.getOrderNo());
             }else {
                 messagePublisher.send(textMessage);
-                logger.debug("余额失败:"+ payOrderVo.getOrderNo());
-                throw new MessageRuntimeException("error.payserver.account.balance");
+                logger.info("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
+                throw new RuntimeException("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
             }
-            long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
-            payOrderVo.setPayNo(payNo);
             return payOrderVo;
         }else {
             throw new RuntimeException(account.getMessage());

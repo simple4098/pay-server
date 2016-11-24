@@ -9,6 +9,7 @@ import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.vo.AccountVo;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.web.ResponseModel;
 import com.yql.framework.mq.MessagePublisher;
 import com.yql.framework.mq.model.TextMessage;
@@ -48,19 +49,25 @@ public class PayOrderDiamondHelper implements IPayOrderAccountHelper{
         if (data!=null ){
             BigDecimal cashFee = data.getDiamondFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
-            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_DIAMOND_UNSUCCESS.name(), payOrderVo.getOrderNo().toString(),json.getBytes());
+            long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+            payOrderVo.setPayNo(payNo);
+            ResultPayOrder resultPayOrder = new ResultPayOrder();
+            resultPayOrder.setPayPrice(totalPrice);
+            resultPayOrder.setPayNo(payNo);
+            resultPayOrder.setOrderNo(payOrderVo.getOrderNo());
+            resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
+            TextMessage textMessage = new TextMessage(applicationConf.getSendMsgTopic(), SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(), JSON.toJSONString(resultPayOrder));
             if (cashFee!=null && cashFee.subtract(totalPrice).doubleValue()<0){
+                resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
-                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_DIAMOND_SUCCESS.name(), payOrderVo.getOrderNo().toString(),"");
+                textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(),JSON.toJSONString(resultPayOrder));
                 messagePublisher.send(textMessage);
                 logger.debug("钻石支付成功:"+ payOrderVo.getOrderNo());
             }else {
                 messagePublisher.send(textMessage);
-                logger.debug("钻石支付失败:"+ payOrderVo.getOrderNo());
-                throw new MessageRuntimeException("error.payserver.account.diamond");
+                logger.info("钻石支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
+                throw new RuntimeException(" 钻石支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
             }
-            long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
-            payOrderVo.setPayNo(payNo);
             return payOrderVo;
         }else {
             throw new RuntimeException(account.getMessage());
