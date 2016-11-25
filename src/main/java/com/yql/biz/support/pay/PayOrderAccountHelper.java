@@ -1,11 +1,10 @@
-package com.yql.biz.support.helper;
+package com.yql.biz.support.pay;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IAccountClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.enums.pay.PayStatus;
-import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.vo.AccountVo;
 import com.yql.biz.vo.PayOrderVo;
@@ -42,7 +41,7 @@ public class PayOrderAccountHelper implements IPayOrderAccountHelper {
     @Override
     public PayOrderVo orderType(PayOrderVo payOrderVo) {
         String json = JSON.toJSONString(payOrderVo);
-        logger.debug("余额支付:"+ JSON.toJSONString(payOrderVo));
+        logger.debug("余额支付:"+ json);
         ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
         AccountVo data = account.getData();
         if (data!=null ){
