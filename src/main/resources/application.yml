@@ -54,6 +54,10 @@ logging:
 yql:
   password-md5-str: yql-payserver-1221
   order-num-key: order_center:order:number
+  #微信appId
+  appid: wxd678efh567hg6787
+  #商户号
+  mchid: 1230000109
   institution-id: 158974554
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER

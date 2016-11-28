@@ -13,6 +13,10 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConf implements ExternalApi {
     private String passwordMd5Str;
     private String orderNumKey;
+    //应用ID
+    private String appid;
+    //商户号
+    private String mchid;
     //监听类的topic
     private String listenerTopic;
     //发送消息的topic
@@ -67,6 +71,22 @@ public class ApplicationConf implements ExternalApi {
 
     public void setSendMsgTopic(String sendMsgTopic) {
         this.sendMsgTopic = sendMsgTopic;
+    }
+
+    public String getAppid() {
+        return appid;
+    }
+
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
+
+    public String getMchid() {
+        return mchid;
+    }
+
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
     }
 
     @Override

@@ -32,16 +32,16 @@ import javax.annotation.Resource;
 public class DemoController {
     private static final Logger logger = LoggerFactory.getLogger(DemoController.class);
     @Resource
-    private IPayService payService;
-    @Resource
     private ComputeClient computeClient;
     @Autowired
     private DiscoveryClient discoveryClient;
     @Resource
     private IUserCenterClient userCenterClient;
-    @Resource
-    private MessagePublisher messagePublisher;
 
+    @RequestMapping(value = "/index")
+    public ResponseModel index(){
+       return ResponseModel.SUCCESS();
+    }
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public ResponseModel pongMessage( String userCode) {
         ResponseModel<UserBasicInfoVo> responseModel = userCenterClient.getBaseUserInfo(userCode);
