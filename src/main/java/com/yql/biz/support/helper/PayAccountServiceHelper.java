@@ -3,6 +3,7 @@ package com.yql.biz.support.helper;
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.conf.SecurityConfiguration;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
@@ -29,6 +30,7 @@ import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -57,8 +59,10 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IUserCenterClient userCenterClient;
     @Resource
     private IPayBankDao payBankDao;
+    @Resource
+    private SecurityConfiguration securityConfiguration;
 
-    @Override
+   /* @Override
     public void md5PayPassword(PayAccount payAccount)  {
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         try{
@@ -70,9 +74,9 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         }catch (Exception e){
             throw new RuntimeException("error.payserver.paypassword");
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void validateOldPassword(String password, PayAccount payAccount)  {
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         String md5PassWord = null;
@@ -86,7 +90,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         if (!payAccount.getPayPassword().equals(md5PassWord)){
             throw new MessageRuntimeException("error.payserver.validate.password");
         }
-    }
+    }*/
 
     @Override
     public Param crateBangBankParam(PayBankVo payBankVo,PayBank newPayBak) {

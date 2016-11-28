@@ -18,24 +18,17 @@ public class PayUtil {
 
     private PayUtil(){}
 
+
     /**
-     *
-     * @param randomCode
-     * @param password
-     * @param passwordMd5String
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws UnsupportedEncodingException
+     * MD5加密一个字符串
+     * @param key 要加密的字符串
+     * @throws Exception
      */
-    public static String md5PassWord(String randomCode,String password,String passwordMd5String) throws Exception {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(randomCode);
-        stringBuffer.append(password);
-        stringBuffer.append(passwordMd5String);
+    public static String md5Key(String key) throws Exception {
         // 生成一个MD5加密计算摘要
         MessageDigest md5=MessageDigest.getInstance("MD5");
-        md5.update(stringBuffer.toString().getBytes());
-        return new BigInteger(1, md5.digest()).toString(16);
+        byte[] digest = md5.digest(key.getBytes("utf-8"));
+        return new String(digest);
     }
 
     /**
@@ -68,11 +61,11 @@ public class PayUtil {
     public static int multiply(BigDecimal totalPrice){
         return totalPrice.multiply(new BigDecimal(100)).intValue();
     }
-    public static void main(String[] args) throws Exception {
+   /* public static void main(String[] args) throws Exception {
         System.out.println(md5PassWord("ssdsd","123456","2323"));
         MessageDigest md5=MessageDigest.getInstance("MD5");
         md5.update(new String("ssdsd"+"123456"+"2323").getBytes());
         System.out.println(new BigInteger(1, md5.digest()).toString(16));
         System.out.println(RandomStringUtils.randomNumeric(0));
-    }
+    }*/
 }

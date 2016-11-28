@@ -57,6 +57,10 @@
 				</exclusion>
 			</exclusions>&ndash;&gt;
 		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
 		<!--消息中心-->
 		<dependency>
 			<groupId>com.yql.framework</groupId>

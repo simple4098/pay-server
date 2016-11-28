@@ -58,6 +58,9 @@ yql:
   appid: wxd678efh567hg6787
   #商户号
   mchid: 1230000109
+  wxKey: jholjsudhsjakqjehejskdh
+  wxNotifyUrl: http://localhost:8081/pay/wx
+  aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
   institution-id: 158974554
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER

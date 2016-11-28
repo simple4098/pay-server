@@ -15,3 +15,4 @@ eureka:
 pay-server:
       url: http://localhost:8080/
       userHost: http://localhost:8082/
+      wxHost: https://api.mch.weixin.qq.com

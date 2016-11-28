@@ -2,13 +2,19 @@ package com.yql.biz.controller;
 
 import com.yql.biz.client.ComputeClient;
 import com.yql.biz.client.IUserCenterClient;
+import com.yql.biz.conf.SecurityConfiguration;
+import com.yql.biz.dao.IBankInfoDao;
+import com.yql.biz.model.BankInfo;
 import com.yql.biz.service.IPayService;
+import com.yql.biz.support.helper.IPayOrderCardParamHelper;
+import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.response.Response;
+import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import com.yql.biz.web.ResponseModel;
 import com.yql.framework.mq.MessagePublisher;
 import org.slf4j.Logger;
@@ -16,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,11 +44,39 @@ public class DemoController {
     private DiscoveryClient discoveryClient;
     @Resource
     private IUserCenterClient userCenterClient;
+    @Resource
+    private SecurityConfiguration securityConfiguration;
+    @Resource
+    private IBankInfoDao bankInfoDao;
+    @Resource
+    private IPayOrderCardParamHelper payOrderCardParamHelper;
 
     @RequestMapping(value = "/index")
-    public ResponseModel index(){
+    public ResponseModel index(WeiXinOrderVo weiXinOrderVo) throws Exception {
+        weiXinOrderVo.setBody("腾讯充值中心-QQ会员充值");
+        weiXinOrderVo.setNotifyUrl("http://www.weixin.qq.com/wxpay/pay.php");
+        weiXinOrderVo.setOutTradeNo("154545454");
+        weiXinOrderVo.setTotalFee(100);
+        weiXinOrderVo.setSign("");
+        weiXinOrderVo.setSpbillCreateIp("127.0.0.1");
+        //String wxPayParam = payOrderCardParamHelper.getWxPayParam(weiXinOrderVo);
+
+        BankInfo one = bankInfoDao.getOne(1);
+        Md5PasswordEncoder md5PasswordEncoder = securityConfiguration.md5PasswordEncoder();
+        String s = md5PasswordEncoder.encodePassword("1245667", 124);
+        boolean passwordValid = md5PasswordEncoder.isPasswordValid(s, "1245667", 124);
+        System.out.println(s+"======="+passwordValid);
+        one.setBankName("招商银行1111");
+        bankInfoDao.save(one);
        return ResponseModel.SUCCESS();
     }
+
+    @RequestMapping(value = "/index1")
+    public ResponseModel index1() throws Exception {
+        BankInfo one = bankInfoDao.getOne(1);
+       return ResponseModel.SUCCESS();
+    }
+
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public ResponseModel pongMessage( String userCode) {
         ResponseModel<UserBasicInfoVo> responseModel = userCenterClient.getBaseUserInfo(userCode);

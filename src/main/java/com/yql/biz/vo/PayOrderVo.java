@@ -2,6 +2,7 @@ package com.yql.biz.vo;
 
 import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
+import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
 import org.springframework.beans.BeanUtils;
 
@@ -46,6 +47,16 @@ public class PayOrderVo {
     //备注
     private String remark;
     private Integer payBankId;
+    //用户ip
+    private String spbillCreateIp;
+
+    public String getSpbillCreateIp() {
+        return spbillCreateIp;
+    }
+
+    public void setSpbillCreateIp(String spbillCreateIp) {
+        this.spbillCreateIp = spbillCreateIp;
+    }
 
     public Integer getPayBankId() {
         return payBankId;
@@ -135,6 +146,12 @@ public class PayOrderVo {
         this.totalPrice = totalPrice;
     }
 
+    public Integer totalFee(){
+        if ( this.totalPrice!=null){
+            return PayUtil.multiply(this.totalPrice);
+        }
+        return null;
+    }
     public String getMsg() {
         return msg;
     }

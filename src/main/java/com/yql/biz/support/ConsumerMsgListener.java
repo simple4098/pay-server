@@ -30,7 +30,7 @@ public class ConsumerMsgListener implements MessageListener {
     public String onMessage(MqMessage message) {
         consumerMsgEventListener.eventHandling(message);
         logger.debug("============end 消息监听器 end================：");
-        return "SUCCESS";
+        return MqMessage.SUCCESS;
     }
 
     @Override

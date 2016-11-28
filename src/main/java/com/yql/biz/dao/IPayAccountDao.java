@@ -1,6 +1,8 @@
 package com.yql.biz.dao;
 
 import com.yql.biz.model.PayAccount;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Repository;
  * data 2016/11/7 0007.
  */
 @Repository
+@CacheConfig(cacheNames = "pay_account")
 public interface IPayAccountDao  extends JpaRepository<PayAccount, Integer> {
 
     /**
@@ -17,6 +20,7 @@ public interface IPayAccountDao  extends JpaRepository<PayAccount, Integer> {
      * @param userCode
      * @return
      */
+    @Cacheable
     PayAccount findByUserCode(String userCode);
 
 

@@ -5,6 +5,7 @@ import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
+import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.vo.PayAccountVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,8 @@ public class PayAccountService implements IPayAccountService {
     private MessageSourceAccessor messageSourceAccessor;
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
+    @Resource
+    private PayPasswordSecurityHelper payPasswordSecurityHelper;
     @Override
     @Transactional(readOnly = true)
     public PayAccount findByUserCode(String userCode) {
@@ -46,9 +49,9 @@ public class PayAccountService implements IPayAccountService {
     public void updatePayPassword(PayAccountVo payAccountVo) {
         logger.debug("更新密码:"+payAccountVo.getUserCode());
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
-        payAccountServiceHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
+        payPasswordSecurityHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
         PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
-        payAccountServiceHelper.md5PayPassword(payAccount);
+        payPasswordSecurityHelper.md5PayPassword(payAccount);
         one.setPayPassword(payAccount.getPayPassword());
         payAccountDao.save(one);
     }
@@ -60,7 +63,7 @@ public class PayAccountService implements IPayAccountService {
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
         PayAccount payAccount1 = PayAccountVo.voToDomain(payAccountVo,payAccount);
         try {
-            payAccountServiceHelper.md5PayPassword(payAccount1);
+            payPasswordSecurityHelper.md5PayPassword(payAccount1);
             payAccount.setPayPassword(payAccount1.getPayPassword());
         } catch (Exception e) {
             throw new MessageRuntimeException("error.payserver.paypassword");
@@ -72,7 +75,7 @@ public class PayAccountService implements IPayAccountService {
     public void validatePassword(PayAccount payAccount) {
         logger.debug("验证密码 userCode:"+payAccount.getUserCode());
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());
-        payAccountServiceHelper.validateOldPassword(payAccount.getPayPassword(),one);
+        payPasswordSecurityHelper.validateOldPassword(payAccount.getPayPassword(),one);
     }
 
     @Override

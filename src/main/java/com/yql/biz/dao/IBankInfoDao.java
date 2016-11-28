@@ -1,6 +1,7 @@
 package com.yql.biz.dao;
 
 import com.yql.biz.model.BankInfo;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
  * data 2016/11/18 0018.
  */
 @Repository
+@CacheConfig(cacheNames = "bank_info")
 public interface IBankInfoDao extends JpaRepository<BankInfo,Integer> {
     /**
      * 根据名称查询 银行卡信息

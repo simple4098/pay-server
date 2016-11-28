@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 微信客户端
  * @author simple
  */
-@FeignClient(value = "wx-pay",url = "https://api.mch.weixin.qq.com",fallback = WxPayClient.class)
+@FeignClient(value = "wx-pay",url = "${pay-server.wxHost}",fallback = WxPayClient.class)
 public interface IWxPayClient {
 
 
     @RequestMapping(value = "/pay/unifiedorder",method = RequestMethod.POST)
-   ResponseModel<AccountVo> getAccount(@RequestParam(name = "userCode") String userCode);
+   ResponseModel<AccountVo> pay(@RequestParam String xml);
 
 }

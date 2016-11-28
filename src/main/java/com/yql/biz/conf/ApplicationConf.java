@@ -17,6 +17,10 @@ public class ApplicationConf implements ExternalApi {
     private String appid;
     //商户号
     private String mchid;
+    //微信key
+    private String wxKey;
+    private String wxNotifyUrl;
+    private String aliPayNotifyUrl;
     //监听类的topic
     private String listenerTopic;
     //发送消息的topic
@@ -87,6 +91,30 @@ public class ApplicationConf implements ExternalApi {
 
     public void setMchid(String mchid) {
         this.mchid = mchid;
+    }
+
+    public String getWxKey() {
+        return wxKey;
+    }
+
+    public void setWxKey(String wxKey) {
+        this.wxKey = wxKey;
+    }
+
+    public String getWxNotifyUrl() {
+        return wxNotifyUrl;
+    }
+
+    public void setWxNotifyUrl(String wxNotifyUrl) {
+        this.wxNotifyUrl = wxNotifyUrl;
+    }
+
+    public String getAliPayNotifyUrl() {
+        return aliPayNotifyUrl;
+    }
+
+    public void setAliPayNotifyUrl(String aliPayNotifyUrl) {
+        this.aliPayNotifyUrl = aliPayNotifyUrl;
     }
 
     @Override
