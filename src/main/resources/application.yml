@@ -68,8 +68,8 @@ yql:
       host: http://localhost:8080
       pay-uri: /test?id={id}
   mq:
-    accessKey: LTAIukPGqYkArvKd
-    secretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
+    AccessKey: LTAIukPGqYkArvKd
+    SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
     ONSAddr: http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet
     producer:
       ProducerId: PID_YQL_PAY_SERVER
