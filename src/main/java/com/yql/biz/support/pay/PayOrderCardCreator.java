@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.PayClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IPayBankDao;
+import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.helper.IPayOrderCardParamHelper;
@@ -27,8 +28,8 @@ import javax.annotation.Resource;
  * data 2016/11/11 0011.
  */
 @Component
-public class PayOrderCardHelper implements IPayOrderAccountHelper {
-    private static final Logger log = LoggerFactory.getLogger(PayOrderCardHelper.class);
+public class PayOrderCardCreator implements IPayOrderCreator {
+    private static final Logger log = LoggerFactory.getLogger(PayOrderCardCreator.class);
     @Resource
     private PayClient payClient;
     @Resource
@@ -41,7 +42,7 @@ public class PayOrderCardHelper implements IPayOrderAccountHelper {
     private ApplicationConf applicationConf;
 
     @Override
-    public PayOrderVo orderType(PayOrderVo payOrderVo) {
+    public PayOrderVo transform(PayOrderVo payOrderVo) {
         PayBank payBank = payBankDao.findByUserCodeAndTxCode(payOrderVo.getUserCode(),payOrderVo.getTxCode());
         Param payParam = payOrderCardParamHelper.getPayParam(payOrderVo,payBank);
         PayMessageValidateResponse pay = payClient.pay(payParam.getMessage(), payParam.getSignature());
@@ -64,5 +65,10 @@ public class PayOrderCardHelper implements IPayOrderAccountHelper {
             throw new RuntimeException(pay.getHead().getMessage()+" 支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
         }
         return payOrderVo;
+    }
+
+    @Override
+    public boolean supports(PayOrderVo payOrderVo) {
+        return PayType.QUICK_PAYMENT.equals(payOrderVo.getPayType());
     }
 }

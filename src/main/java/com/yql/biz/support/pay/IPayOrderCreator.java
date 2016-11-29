@@ -7,7 +7,9 @@ import com.yql.biz.vo.PayOrderVo;
  * creator simple
  * data 2016/11/11 0011.
  */
-public interface IPayOrderAccountHelper {
+public interface IPayOrderCreator{
 
-    PayOrderVo orderType(PayOrderVo payOrderVo);
+    PayOrderVo transform(PayOrderVo payOrderVo);
+
+    boolean supports(PayOrderVo payOrderVo);
 }

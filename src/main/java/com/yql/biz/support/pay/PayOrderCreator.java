@@ -3,6 +3,7 @@ package com.yql.biz.support.pay;
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IAccountClient;
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.support.OrderNoGenerator;
@@ -20,14 +21,13 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**
- * <p> 钻石支付 </p>
- * @auther simple
- * data 2016/11/23 0023.
+ * <p>余额支付</p>
+ * creator simple
+ * data 2016/11/11 0011.
  */
 @Component
-public class PayOrderDiamondHelper implements IPayOrderAccountHelper{
-
-    private static final Logger logger = LoggerFactory.getLogger(PayOrderDiamondHelper.class);
+public class PayOrderCreator implements IPayOrderCreator {
+    private static final Logger logger = LoggerFactory.getLogger(PayOrderCreator.class);
 
     @Resource
     private OrderNoGenerator orderNoGenerator;
@@ -40,13 +40,13 @@ public class PayOrderDiamondHelper implements IPayOrderAccountHelper{
 
 
     @Override
-    public PayOrderVo orderType(PayOrderVo payOrderVo) {
+    public PayOrderVo transform(PayOrderVo payOrderVo) {
         String json = JSON.toJSONString(payOrderVo);
-        logger.debug("钻石支付:"+ JSON.toJSONString(payOrderVo));
+        logger.debug("余额支付:"+ json);
         ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
         AccountVo data = account.getData();
         if (data!=null ){
-            BigDecimal cashFee = data.getDiamondFee();
+            BigDecimal cashFee = data.getCashFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
             long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
             payOrderVo.setPayNo(payNo);
@@ -55,22 +55,27 @@ public class PayOrderDiamondHelper implements IPayOrderAccountHelper{
             resultPayOrder.setPayNo(payNo);
             resultPayOrder.setOrderNo(payOrderVo.getOrderNo());
             resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
-            TextMessage textMessage = new TextMessage(applicationConf.getSendMsgTopic(), SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(), JSON.toJSONString(resultPayOrder));
+            TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo() ,JSON.toJSONString(resultPayOrder));
             if (cashFee!=null && cashFee.subtract(totalPrice).doubleValue()<0){
                 resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(),JSON.toJSONString(resultPayOrder));
                 messagePublisher.send(textMessage);
-                logger.debug("钻石支付成功:"+ payOrderVo.getOrderNo());
+                logger.debug("余额成功:"+ payOrderVo.getOrderNo());
             }else {
                 messagePublisher.send(textMessage);
-                logger.info("钻石支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
-                throw new RuntimeException(" 钻石支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
+                logger.info("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
+                throw new RuntimeException("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
             }
             return payOrderVo;
         }else {
             throw new RuntimeException(account.getMessage());
         }
 
+    }
+
+    @Override
+    public boolean supports(PayOrderVo payOrderVo) {
+        return PayType.ACCOUNT.equals(payOrderVo.getPayType());
     }
 }

@@ -1,8 +1,5 @@
 package com.yql.biz.enums;
 
-import com.yql.biz.support.PayServerApplicationContext;
-import com.yql.biz.support.pay.IPayOrderAccountHelper;
-
 /**
  * <p>支付类型</p>
  * creator simple
@@ -10,35 +7,11 @@ import com.yql.biz.support.pay.IPayOrderAccountHelper;
  */
 public enum PayType {
 
-    ACCOUNT("余额支付") {
-        @Override
-        public IPayOrderAccountHelper createOrder() {
-            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderAccountHelper");
-        }
-    },
-    QUICK_PAYMENT("银行卡快捷支付") {
-        @Override
-        public IPayOrderAccountHelper createOrder() {
-            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderCardHelper");
-        }
-    },
-    DIAMOND("钻石支付"){
-        @Override
-        public IPayOrderAccountHelper createOrder() {
-            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderDiamondHelper");
-        }
-    },WX_PAY("微信支付"){
-        @Override
-        public IPayOrderAccountHelper createOrder() {
-            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderWxPayHelper");
-        }
-    },ALI_PAY("支付宝支付"){
-        @Override
-        public IPayOrderAccountHelper createOrder() {
-            return (IPayOrderAccountHelper) PayServerApplicationContext.getBean("payOrderAliPayHelper");
-        }
-    };
-    public abstract IPayOrderAccountHelper createOrder();
+    ACCOUNT("余额支付"),
+    QUICK_PAYMENT("银行卡快捷支付"),
+    DIAMOND("钻石支付"),
+    WX_PAY("微信支付"),
+    ALI_PAY("支付宝支付");
     private String value;
 
     PayType(String value) {
