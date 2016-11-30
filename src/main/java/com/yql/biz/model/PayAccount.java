@@ -27,7 +27,7 @@ public class PayAccount extends  Domain  {
     private String payPassword;
     //随机数
     @Column(name = "random_code")
-    private String randomCode  = PayUtil.randomCode(3);
+    private String randomCode  = PayUtil.randomCode(6);
     //是否默认系统支付银行卡顺序 1 默认 0 不默认
     @Column(name = "system_pay_seq")
     private boolean systemPaySeq;

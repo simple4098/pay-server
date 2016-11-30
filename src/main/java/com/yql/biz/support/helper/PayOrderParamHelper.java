@@ -115,7 +115,7 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
     public String getSign(DjPay djPay) {
         String wxKey = applicationConf.getWxKey();
         Map<String, Object> param = PlatformPayUtil.obtObjParm(djPay);
-        String str = PlatformPayUtil.concatStr(param);
+        String str = PlatformPayUtil.sortParm(param);
         StringBuffer stringBuffer = new StringBuffer(str);
         log.debug("并按照参数名ASCII字典序排序生成字符串:\n"+stringBuffer.toString());
         stringBuffer.append("&key=").append(wxKey);

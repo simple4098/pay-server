@@ -2,6 +2,7 @@ package com.yql.biz.vo.pay.wx;
 
 
 import com.yql.biz.util.PayUtil;
+import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.util.TenpayUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,18 +113,8 @@ public class ResponseHandler {
 	 * @return boolean
 	 */
 	public boolean isTenpaySign() {
-		StringBuffer sb = new StringBuffer();
-		Set es = this.parameters.entrySet();
-		Iterator it = es.iterator();
-		while(it.hasNext()) {
-			Map.Entry entry = (Map.Entry)it.next();
-			String k = (String)entry.getKey();
-			String v = (String)entry.getValue();
-			if(!"sign".equals(k) && null != v && !"".equals(v)) {
-				sb.append(k + "=" + v + "&");
-			}
-		}
-		
+		String str = PlatformPayUtil.sortParm( this.parameters);
+		StringBuffer sb = new StringBuffer(str);
 		sb.append("key=" + this.getKey());
 		//算出摘要
 		String enc = TenpayUtil.getCharacterEncoding(this.request, this.response);

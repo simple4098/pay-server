@@ -19,14 +19,12 @@ public class PayUtil {
 
 
     /**
-     * 生产num位数的数字+num位数的字母
+     * 生产num位随机字符串
      * @param num 多少位的字母，数字
      */
     public static String  randomCode(int num){
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(RandomStringUtils.randomNumeric(num));
-        stringBuffer.append(RandomStringUtils.randomAlphabetic(num));
-        return  stringBuffer.toString();
+        String randomCode = RandomStringUtils.randomAlphanumeric(num);
+        return  randomCode;
     }
 
     /**

@@ -21,7 +21,7 @@ public class WeiXinOrderVo extends DjPay {
     //商户号
     private String mchId ;
     //随机字符串 生成不长于32位随机数
-    private String nonceStr = PayUtil.randomCode(16);
+    private String nonceStr = PayUtil.randomCode(32);
     //签名
     private String sign;
     //商品描述
@@ -29,7 +29,7 @@ public class WeiXinOrderVo extends DjPay {
     //商户订单号
     private String outTradeNo;
     //总额
-    private int totalFee;
+    private Integer totalFee;
     //终端ip
     private String spbillCreateIp;
     //异步通知地址
@@ -91,11 +91,11 @@ public class WeiXinOrderVo extends DjPay {
     }
 
     @XmlElement(name = "total_fee")
-    public int getTotalFee() {
+    public Integer getTotalFee() {
         return totalFee;
     }
 
-    public void setTotalFee(int totalFee) {
+    public void setTotalFee(Integer totalFee) {
         this.totalFee = totalFee;
     }
     @XmlElement(name = "spbill_create_ip")

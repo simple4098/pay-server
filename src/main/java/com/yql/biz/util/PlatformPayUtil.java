@@ -127,7 +127,8 @@ public class PlatformPayUtil<T extends DjPay> {
      */
     public static <T extends DjPay> Map<String,Object> obtObjParm( T t) {
         Method[] methods = t.getClass().getMethods();
-        Map<String,Object> param = new HashMap<>();
+        SortedMap<String,Object> param = new TreeMap();
+        //Map<String,Object> param = new HashMap<>();
         for (Method m:methods){
             XmlElement annotation = m.getAnnotation(XmlElement.class);
             if (annotation!=null){
@@ -189,5 +190,20 @@ public class PlatformPayUtil<T extends DjPay> {
             sb.deleteCharAt(sb.length()-1);
         }
         return sb.toString();
+    }
+
+    public static String sortParm(Map parameters) {
+        StringBuffer sb = new StringBuffer();
+        Set es = parameters.entrySet();
+        Iterator it = es.iterator();
+        while(it.hasNext()) {
+            Map.Entry entry = (Map.Entry)it.next();
+            String k = (String)entry.getKey();
+            Object v = entry.getValue();
+            if(!"sign".equals(k) && null != v && !"".equals(v)) {
+                sb.append(k + "=" + v + "&");
+            }
+        }
+        return  sb.toString();
     }
 }

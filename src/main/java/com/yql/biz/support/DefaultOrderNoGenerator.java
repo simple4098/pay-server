@@ -27,7 +27,7 @@ public class DefaultOrderNoGenerator implements OrderNoGenerator {
     @Override
     public String generateBankCode(PayBank payBank, BankCodeType bankCodeType) {
         StringBuffer txCode = new StringBuffer(bankCodeType.name());
-        String s = PayUtil.randomCode(3);
+        String s = PayUtil.randomCode(6);
         txCode.append(payBank.getUserCode()).append(s);
         return txCode.toString();
     }

@@ -20,7 +20,7 @@ public class PayAccountVo {
     //旧的支付密码
     private String oldPayPassword;
     //随机数
-    private String randomCode  = PayUtil.randomCode(3);
+    private String randomCode  = PayUtil.randomCode(6);
     //是否默认系统支付银行卡顺序 1 默认 0 不默认
     private boolean systemPaySeq;
     //小额支付 0 未开通 1 开通
