@@ -40,13 +40,25 @@ public class PayUtil {
     }
 
     /**
-     * 金额转化成分
+     * 元转化成分
      * @param totalPrice 支付金额
      */
     public static int priceToCent(BigDecimal totalPrice){
         return totalPrice.multiply(new BigDecimal(100)).intValue();
     }
 
+    /**
+     * 分转化成元
+     * @param cent 分
+     * @return
+     */
+    public static BigDecimal centToPrice(Integer cent){
+        return  new BigDecimal(cent).divide(new BigDecimal(100));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(randomCode(32));
+    }
     /**
      * 10位 时间戳
      * @return

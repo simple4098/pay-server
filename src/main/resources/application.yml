@@ -57,11 +57,11 @@ yql:
   password-md5-str: yql-payserver-1221
   order-num-key: order_center:order:number
   #微信appId
-  appid: wx2421b1c4370ec43b
+  appid: wxd36dd408cb79ea6b
   #商户号
-  mchid: 10000100
+  mchid: 1418256002
   #微信key
-  wxKey: jholjsudhsjakqjehejskdh
+  wxKey: wOdzXgWwbwjPEEZoMXWKudytfYvq6iLo
   #微信异步通知
   wxNotifyUrl: http://localhost:8081/pay/wx
   #阿里异步通知
@@ -72,7 +72,7 @@ yql:
   kunlun:
       host: http://localhost:8080
       pay-uri: /test?id={id}
-      wxHost: http://localhost:8080/
+      wxHost: https://api.mch.weixin.qq.com
       prepayUri: /pay/unifiedorder
   mq:
     AccessKey: LTAIukPGqYkArvKd

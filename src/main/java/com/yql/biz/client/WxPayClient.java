@@ -32,7 +32,8 @@ public class WxPayClient implements IWxPayClient {
             WeiXinResponse response = (WeiXinResponse)PlatformPayUtil.convertXmlStrToObject(WeiXinResponse.class, resContent);
             logger.debug("====resContent=====:"+resContent);
             return ResponseModel.SUCCESS(response);
+        }else {
+            throw new RuntimeException("wx pay 预付订单请求异常 httpPost:"+httpPost);
         }
-        return null;
     }
 }

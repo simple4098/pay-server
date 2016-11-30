@@ -118,10 +118,10 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
         String str = PlatformPayUtil.sortParm(param);
         StringBuffer stringBuffer = new StringBuffer(str);
         log.debug("并按照参数名ASCII字典序排序生成字符串:\n"+stringBuffer.toString());
-        stringBuffer.append("&key=").append(wxKey);
+        stringBuffer.append("key=").append(wxKey);
         log.debug("连接商户key:\n"+stringBuffer.toString());
         String md5Key = PayUtil.MD5Encode(stringBuffer.toString(),"UTF-8").toUpperCase();
-        log.debug("==================sign:\n"+md5Key);
+        log.debug("WeiXin Pay sign:"+md5Key);
         return md5Key;
     }
 

@@ -14,6 +14,7 @@ import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.support.pay.PayOrderCreatorComposition;
+import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.PayOrderAccountDetailVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
@@ -98,7 +99,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
             if (tenpaySign){
                 if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
                     weiXinResponse.setReturnCode(WxPayResult.SUCCESS);
-                    resultPayOrder.setPayPrice(new BigDecimal(weiXinNotifyVo.getTotalFee()));
+                    BigDecimal totalFee = PayUtil.centToPrice(Integer.valueOf(weiXinNotifyVo.getTotalFee()));
+                    resultPayOrder.setPayPrice(totalFee);
                     resultPayOrder.setPayOrder(weiXinNotifyVo.getTransactionId());
                     resultPayOrder.setPayStatus(20);
                     json = JSON.toJSONString(resultPayOrder);

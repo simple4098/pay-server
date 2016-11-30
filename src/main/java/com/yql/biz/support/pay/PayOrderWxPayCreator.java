@@ -49,16 +49,24 @@ public class PayOrderWxPayCreator implements IPayOrderCreator {
         if (weiXinResponseResponseModel!=null && weiXinResponseResponseModel.getData()!=null){
             WeiXinAppRequest weiXinAppRequest = new WeiXinAppRequest();
             WeiXinResponse data = weiXinResponseResponseModel.getData();
-            if (data.getAppId().equals(weiXinOrderVo.getAppId()) && data.getMchId().equals(weiXinOrderVo.getMchId()) && data.getResultCode().equals(WxPayResult.SUCCESS) && data.getReturnCode().equals(WxPayResult.SUCCESS)){
-                weiXinAppRequest.setAppId(weiXinOrderVo.getAppId());
-                weiXinAppRequest.setPrepayid(data.getPrepayId());
-                weiXinAppRequest.setPartnerid(data.getMchId());
-                weiXinAppRequest.setNonceStr(weiXinOrderVo.getNonceStr());
-                String sign = payOrderCardParamHelper.getSign(weiXinAppRequest);
-                weiXinAppRequest.setSign(sign);
-                logger.debug("生成 app 参数:"+JSON.toJSONString(weiXinAppRequest));
-                payOrderVo.setPayOrder(data.getPrepayId());
-                payOrderVo.setAppRequest(weiXinAppRequest);
+            if (data.getReturnCode().equals(WxPayResult.SUCCESS)){
+                if (data.getAppId().equals(weiXinOrderVo.getAppId()) && data.getMchId().equals(weiXinOrderVo.getMchId()) ){
+                    if (data.getResultCode().equals(WxPayResult.FAIL)) throw new RuntimeException(data.getErrCodeDes());
+                    weiXinAppRequest.setAppId(weiXinOrderVo.getAppId());
+                    weiXinAppRequest.setPrepayid(data.getPrepayId());
+                    weiXinAppRequest.setPartnerid(data.getMchId());
+                    weiXinAppRequest.setNonceStr(weiXinOrderVo.getNonceStr());
+                    String sign = payOrderCardParamHelper.getSign(weiXinAppRequest);
+                    weiXinAppRequest.setSign(sign);
+                    logger.debug("生成app参数:"+JSON.toJSONString(weiXinAppRequest));
+                    payOrderVo.setPayOrder(data.getPrepayId());
+                    payOrderVo.setAppRequest(weiXinAppRequest);
+                }else {
+                    logger.error("预付订单异常: 微信response appID MchId"+data.getAppId()+"\t"+ data.getMchId()+"\n"+" 系统微信账户信息: appID MchId"+weiXinOrderVo.getMchId() +"\t"+weiXinOrderVo.getAppId());
+                    throw new RuntimeException("下微信预付订单异常,appID MchId 不一致");
+                }
+            }else {
+                throw new RuntimeException(data.getReturnMsg());
             }
         }
         payOrderVo.setPayStatus(40);
