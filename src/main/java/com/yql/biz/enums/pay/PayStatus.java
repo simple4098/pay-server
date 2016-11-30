@@ -6,8 +6,8 @@ package com.yql.biz.enums.pay;
  * data 2016/11/23 0023.
  */
 public enum PayStatus {
-    HANDLING("支付中",10),PAY_SUCCESS("支付成功",20),PAY_UNSUCCESS("支付失败",30);
-    private int value;
+    HANDLING("支付中",10),PAY_SUCCESS("支付成功",20),PAY_UNSUCCESS("支付失败",30),WX_PAY_UNIFIED_ORDER("微信预付订单",40);
+    private Integer value;
     private String desc;
 
     PayStatus(String desc,int value) {
@@ -15,11 +15,11 @@ public enum PayStatus {
         this.desc = desc;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 

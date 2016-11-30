@@ -21,6 +21,8 @@ public class ResultPayOrder {
     //支付状态
     private Integer payStatus;
     private BigDecimal payPrice;
+    //支付通道标识 微信openid  快捷支付银行卡编码
+    private String txCode;
     private WeiXinAppRequest appRequest;
 
     public String getMsg() {
@@ -77,5 +79,13 @@ public class ResultPayOrder {
 
     public void setAppRequest(WeiXinAppRequest appRequest) {
         this.appRequest = appRequest;
+    }
+
+    public String getTxCode() {
+        return txCode;
+    }
+
+    public void setTxCode(String txCode) {
+        this.txCode = txCode;
     }
 }

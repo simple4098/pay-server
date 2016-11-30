@@ -15,6 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "pay_order_account")
+@Cacheable
 public class PayOrderAccount extends Domain {
     private Integer payAccountId;
     //支付订单号
@@ -41,6 +42,8 @@ public class PayOrderAccount extends Domain {
     //银行处理时间
     private Date bankTxTime;
     private Integer payBankId;
+    //支付通道标识 微信openid  快捷支付银行卡编码
+    private String txCode;
 
     public Integer getPayBankId() {
         return payBankId;
@@ -144,5 +147,13 @@ public class PayOrderAccount extends Domain {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getTxCode() {
+        return txCode;
+    }
+
+    public void setTxCode(String txCode) {
+        this.txCode = txCode;
     }
 }

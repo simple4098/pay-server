@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IPayOrderAccountDao;
 import com.yql.biz.dao.IPayOrderAccountDetailDao;
-import com.yql.biz.enums.SendMsgTag;
+import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayOrderAccount;
@@ -18,17 +18,16 @@ import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.PayOrderAccountDetailVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
-import com.yql.biz.vo.pay.response.WeiXinResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.ResponseHandler;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
-import com.yql.framework.mq.model.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
+import java.util.Date;
 import java.util.SortedMap;
 
 /**
@@ -82,43 +81,45 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
 
     @Override
+    @Transactional
     public WeiXinResponseResult callPayNotify(ResponseHandler responseHandler) {
         log.debug("==============debug==========");
-        WeiXinResponseResult weiXinResponse = new WeiXinResponseResult();
+        WeiXinResponseResult weiXinResponse = new WeiXinResponseResult(WxPayResult.SUCCESS);
         responseHandler.setKey(applicationConf.getWxKey());
         SortedMap allParameters = responseHandler.getAllParameters();
         WeiXinNotifyVo weiXinNotifyVo = payOrderParamHelper.getWxCallBackParam(allParameters);
-        ResultPayOrder resultPayOrder = new ResultPayOrder();
-        resultPayOrder.setPayStatus(10);
-        String json = JSON.toJSONString(resultPayOrder);
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_WX_CALLBACK.name(),weiXinNotifyVo.getOutTradeNo(),json);
-        sendMessageHelper.sendMessage(textMessage);
-        if (WxPayResult.SUCCESS.name().equals(weiXinNotifyVo.getResultCode())){
-            boolean tenpaySign = responseHandler.isTenpaySign();
-            log.debug(" 微信异步通知: "+responseHandler.getDebugInfo());
-            if (tenpaySign){
-                if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
-                    weiXinResponse.setReturnCode(WxPayResult.SUCCESS);
-                    BigDecimal totalFee = PayUtil.centToPrice(Integer.valueOf(weiXinNotifyVo.getTotalFee()));
-                    resultPayOrder.setPayPrice(totalFee);
-                    resultPayOrder.setPayOrder(weiXinNotifyVo.getTransactionId());
-                    resultPayOrder.setPayStatus(20);
-                    json = JSON.toJSONString(resultPayOrder);
-                    textMessage.setBody(json.getBytes());
-                }else {
-                    resultPayOrder.setPayStatus(30);
-                    json = JSON.toJSONString(resultPayOrder);
-                    weiXinResponse.setReturnCode(WxPayResult.FAIL);
-                    textMessage.setBody(json.getBytes());
-                }
-                sendMessageHelper.sendMessage(textMessage);
+        PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(weiXinNotifyVo.getOutTradeNo());
+        if (orderAccount!=null){
+            //订单已经成功处理,直接返回给微信成功状态
+            if (PayStatus.PAY_SUCCESS.getValue().equals(orderAccount.getPayStatus())){
+                return  weiXinResponse;
             }else {
-                weiXinResponse.setReturnCode(WxPayResult.FAIL);
-                weiXinResponse.setReturnMsg("签名失败");
+                ResultPayOrder resultPayOrder = new ResultPayOrder();
+                sendMessageHelper.sendWxNotify(resultPayOrder,weiXinNotifyVo.getOutTradeNo());
+                if (WxPayResult.SUCCESS.name().equals(weiXinNotifyVo.getResultCode())){
+                    boolean tenpaySign = responseHandler.isTenpaySign();
+                    log.debug(" 微信异步通知: "+responseHandler.getDebugInfo());
+                    if (tenpaySign){
+                        if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
+                            orderAccount.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
+                            Date date = PayUtil.dataFormat(weiXinNotifyVo.getTimeEnd());
+                            orderAccount.setBankTxTime(date);
+                            orderAccount.setTxCode(weiXinNotifyVo.getOpenid());
+                            payOrderAccountDao.save(orderAccount);
+                        }
+                        sendMessageHelper.sendWxNotifyResult(weiXinResponse,resultPayOrder,weiXinNotifyVo);
+                    }else {
+                        weiXinResponse.setReturnCode(WxPayResult.FAIL);
+                        weiXinResponse.setReturnMsg("签名失败");
+                    }
+                }else {
+                    weiXinResponse.setReturnCode(WxPayResult.FAIL);
+                    weiXinResponse.setReturnMsg(weiXinNotifyVo.getResultCode());
+                }
             }
         }else {
             weiXinResponse.setReturnCode(WxPayResult.FAIL);
-            weiXinResponse.setReturnMsg(weiXinNotifyVo.getResultCode());
+            weiXinResponse.setReturnMsg("查询不到此商户订单");
         }
         return weiXinResponse;
     }

@@ -29,6 +29,8 @@ public class ApplicationConf implements ExternalApi {
     private String sendMsgTopic;
     //机构代码
     private String institutionId;
+    //发送消息开关
+    private boolean isOpen;
     private Kunlun kunlun;
 
     public String getInstitutionId() {
@@ -127,6 +129,14 @@ public class ApplicationConf implements ExternalApi {
     @Override
     public String getWxprepayUrl() {
         return kunlun.getWxHost()+kunlun.getPrepayUri();
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 
     public static class Kunlun {

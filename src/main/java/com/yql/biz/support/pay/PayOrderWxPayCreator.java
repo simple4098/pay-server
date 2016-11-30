@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IWxPayClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.enums.PayType;
+import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.vo.PayOrderVo;
@@ -69,7 +70,7 @@ public class PayOrderWxPayCreator implements IPayOrderCreator {
                 throw new RuntimeException(data.getReturnMsg());
             }
         }
-        payOrderVo.setPayStatus(40);
+        payOrderVo.setPayStatus(PayStatus.WX_PAY_UNIFIED_ORDER.getValue());
         return payOrderVo;
     }
 

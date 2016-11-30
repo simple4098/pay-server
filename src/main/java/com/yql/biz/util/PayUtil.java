@@ -2,9 +2,13 @@ package com.yql.biz.util;
 
 import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import java.math.BigDecimal;
 import java.security.MessageDigest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * <p>支付工具类</p>
@@ -56,9 +60,6 @@ public class PayUtil {
         return  new BigDecimal(cent).divide(new BigDecimal(100));
     }
 
-    public static void main(String[] args) {
-        System.out.println(randomCode(32));
-    }
     /**
      * 10位 时间戳
      * @return
@@ -101,4 +102,19 @@ public class PayUtil {
 
     private static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
+
+    public static Date dataFormat(String timeEnd) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        try {
+            return sdf.parse(timeEnd);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Date date = dataFormat("20141030133525");
+        System.out.println(date);
+    }
 }

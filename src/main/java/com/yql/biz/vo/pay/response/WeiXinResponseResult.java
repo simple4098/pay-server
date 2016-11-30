@@ -15,6 +15,13 @@ public class WeiXinResponseResult {
     private WxPayResult returnCode;
     private String returnMsg;
 
+    public WeiXinResponseResult() {
+    }
+
+    public WeiXinResponseResult(WxPayResult returnCode) {
+        this.returnCode = returnCode;
+    }
+
     @XmlElement(name = "return_code")
     public WxPayResult getReturnCode() {
         return returnCode;
