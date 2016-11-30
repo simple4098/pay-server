@@ -1,5 +1,7 @@
 package com.yql.biz.vo;
 
+import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
+
 import java.math.BigDecimal;
 
 /**
@@ -19,6 +21,7 @@ public class ResultPayOrder {
     //支付状态
     private Integer payStatus;
     private BigDecimal payPrice;
+    private WeiXinAppRequest appRequest;
 
     public String getMsg() {
         return msg;
@@ -66,5 +69,13 @@ public class ResultPayOrder {
 
     public void setPayPrice(BigDecimal payPrice) {
         this.payPrice = payPrice;
+    }
+
+    public WeiXinAppRequest getAppRequest() {
+        return appRequest;
+    }
+
+    public void setAppRequest(WeiXinAppRequest appRequest) {
+        this.appRequest = appRequest;
     }
 }

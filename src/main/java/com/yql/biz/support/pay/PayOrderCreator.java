@@ -7,6 +7,7 @@ import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.support.OrderNoGenerator;
+import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.vo.AccountVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
@@ -34,7 +35,7 @@ public class PayOrderCreator implements IPayOrderCreator {
     @Resource
     private IAccountClient accountClient;
     @Resource
-    private MessagePublisher messagePublisher;
+    private SendMessageHelper sendMessageHelper;
     @Resource
     private ApplicationConf applicationConf;
 
@@ -60,10 +61,10 @@ public class PayOrderCreator implements IPayOrderCreator {
                 resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(),JSON.toJSONString(resultPayOrder));
-                messagePublisher.send(textMessage);
+                sendMessageHelper.sendMessage(textMessage);
                 logger.debug("余额成功:"+ payOrderVo.getOrderNo());
             }else {
-                messagePublisher.send(textMessage);
+                sendMessageHelper.sendMessage(textMessage);
                 logger.info("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
                 throw new RuntimeException("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
             }

@@ -19,7 +19,9 @@ public class ApplicationConf implements ExternalApi {
     private String mchid;
     //微信key
     private String wxKey;
+    //微信异步通知
     private String wxNotifyUrl;
+    //阿里异步通知
     private String aliPayNotifyUrl;
     //监听类的topic
     private String listenerTopic;
@@ -122,9 +124,20 @@ public class ApplicationConf implements ExternalApi {
         return kunlun.getHost()+kunlun.getPayUri();
     }
 
+    @Override
+    public String getWxprepayUrl() {
+        return kunlun.getWxHost()+kunlun.getPrepayUri();
+    }
+
     public static class Kunlun {
-        private String host; //接口host
-        private String payUri; //关联方总数
+        //快捷支付接口host
+        private String host;
+        //快捷支付uri
+        private String payUri;
+        //微信host
+        private String wxHost;
+        //微信预付订单uri
+        private String prepayUri;
 
         public String getHost() {
             return host;
@@ -140,6 +153,22 @@ public class ApplicationConf implements ExternalApi {
 
         public void setPayUri(String payUri) {
             this.payUri = payUri;
+        }
+
+        public String getWxHost() {
+            return wxHost;
+        }
+
+        public void setWxHost(String wxHost) {
+            this.wxHost = wxHost;
+        }
+
+        public String getPrepayUri() {
+            return prepayUri;
+        }
+
+        public void setPrepayUri(String prepayUri) {
+            this.prepayUri = prepayUri;
         }
     }
 }

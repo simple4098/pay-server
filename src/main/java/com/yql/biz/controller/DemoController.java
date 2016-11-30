@@ -5,9 +5,7 @@ import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.SecurityConfiguration;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.model.BankInfo;
-import com.yql.biz.service.IPayService;
-import com.yql.biz.support.helper.IPayOrderCardParamHelper;
-import com.yql.biz.util.PayUtil;
+import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
@@ -16,7 +14,6 @@ import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import com.yql.biz.web.ResponseModel;
-import com.yql.framework.mq.MessagePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +46,7 @@ public class DemoController {
     @Resource
     private IBankInfoDao bankInfoDao;
     @Resource
-    private IPayOrderCardParamHelper payOrderCardParamHelper;
+    private IPayOrderParamHelper payOrderCardParamHelper;
 
     @RequestMapping(value = "/index")
     public ResponseModel index(WeiXinOrderVo weiXinOrderVo) throws Exception {

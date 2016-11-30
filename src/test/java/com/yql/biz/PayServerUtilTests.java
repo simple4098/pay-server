@@ -1,22 +1,26 @@
 package com.yql.biz;
 
-import com.alibaba.fastjson.JSON;
 import com.yql.biz.util.PlatformPayUtil;
-import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.*;
 import com.yql.biz.vo.pay.response.*;
+import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
+import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlElement;
+import java.beans.IntrospectionException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Date;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /*@RunWith(SpringRunner.class)*/
 public class PayServerUtilTests {
@@ -193,14 +197,72 @@ public class PayServerUtilTests {
     }
 
     @Test
-    @Ignore
+    public void test5() throws Exception {
+        WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();
+        weiXinOrderVo.setBody("腾讯充值中心-QQ会员充值");
+        weiXinOrderVo.setNotifyUrl("http://www.weixin.qq.com/wxpay/pay.php");
+        weiXinOrderVo.setOutTradeNo("154545454");
+        weiXinOrderVo.setTotalFee(100);
+        weiXinOrderVo.setSign("dfdfdfd");
+        weiXinOrderVo.setSpbillCreateIp("127.0.0.1");
+        //Class entity = (Class)((ParameterizedType)w.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+     /*   Field[] fields = WeiXinOrderVo.class.getDeclaredFields();*/
+        Map<String, Object> param = PlatformPayUtil.obtObjParm(weiXinOrderVo);
+        String str = PlatformPayUtil.concatStr(param);
+        logger.debug(str);
+    }
+
+    @Test
+
     public void test4() throws IOException {
         //MTIzNDU2111
-        String s = "123456";
+        String s = "1234561";
         byte[] b = s.getBytes();
         String encode = new BASE64Encoder().encode(b);
         logger.debug(encode);
         byte[] mtIzNDU2111s = new BASE64Decoder().decodeBuffer("MTIzNDU2111");
         logger.debug(new String(mtIzNDU2111s));
+    }
+
+    @Test
+    public void  test233(){
+        SortedMap<String,Object> sortedMap = new TreeMap<String,Object>();
+        sortedMap.put("return_code","SUCCESS");
+        sortedMap.put("appid","wx2421b1c4370ec43b");
+        sortedMap.put("mch_id","10000100");
+        sortedMap.put("total_fee",100);
+        WeiXinNotifyVo wxCallBackParam = getWxCallBackParam(sortedMap);
+        System.out.println(wxCallBackParam);
+    }
+    public static WeiXinNotifyVo getWxCallBackParam(SortedMap allParameters) {
+        Method[] methods = WeiXinNotifyVo.class.getMethods();
+        WeiXinNotifyVo weiXinNotifyVo = new WeiXinNotifyVo();
+        for (Method m:methods){
+            XmlElement annotation = m.getAnnotation(XmlElement.class);
+            if (annotation!=null){
+                String name = annotation.name();
+                Object value = allParameters.get(name);
+                System.out.println(name+"=000000000000="+value);
+                try {
+                    String getName = m.getName();
+                    String fieldName = getName.substring(3);
+                    Method method = null;
+                    if (value instanceof  String){
+                        method =  weiXinNotifyVo.getClass().getMethod("set" + fieldName,String.class);
+                    }
+                    if (value instanceof Integer){
+                        method =  weiXinNotifyVo.getClass().getMethod("set" + fieldName,Integer.class);
+
+                    }
+                    if (method!=null){
+                        method.invoke(weiXinNotifyVo,value);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        return weiXinNotifyVo;
     }
 }

@@ -2,6 +2,9 @@ package com.yql.biz.service;
 
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
+import com.yql.biz.vo.pay.response.WeiXinResponse;
+import com.yql.biz.vo.pay.response.WeiXinResponseResult;
+import com.yql.biz.vo.pay.wx.ResponseHandler;
 
 /**
  * <p>支付账单</p>
@@ -16,4 +19,9 @@ public interface IPayOrderAccountService {
      */
     ResultPayOrder order(PayOrderVo payOrderVo);
 
+    /**
+     * 微信回调
+     * @param responseHandler
+     */
+    WeiXinResponseResult callPayNotify(ResponseHandler responseHandler);
 }

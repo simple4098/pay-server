@@ -4,6 +4,7 @@ import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
+import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.NotNull;
@@ -33,14 +34,14 @@ public class PayOrderVo {
     //持卡人
     private String cardholder;
     //交易码
-    @NotNull(message = "{com.yql.validation.constraints.txCode.notnull}")
+   /* @NotNull(message = "{com.yql.validation.constraints.txCode.notnull}")*/
     private String txCode;
     //支付总金额
     @NotNull(message = "{com.yql.validation.constraints.totalPrice.message}")
     private BigDecimal totalPrice;
     //支付信息
     private String msg;
-    //交易状态 10=处理中 20=支付成功 30=支付失败
+    //交易状态 10=处理中 20=支付成功 30=支付失败 40=微信预付单
     private Integer payStatus;
     //应该处理时间
     private Date bankTxTime;
@@ -49,6 +50,8 @@ public class PayOrderVo {
     private Integer payBankId;
     //用户ip
     private String spbillCreateIp;
+    //微信响应内容
+    private WeiXinAppRequest appRequest;
 
     public String getSpbillCreateIp() {
         return spbillCreateIp;
@@ -148,7 +151,7 @@ public class PayOrderVo {
 
     public Integer totalFee(){
         if ( this.totalPrice!=null){
-            return PayUtil.multiply(this.totalPrice);
+            return PayUtil.priceToCent(this.totalPrice);
         }
         return null;
     }
@@ -184,6 +187,14 @@ public class PayOrderVo {
         this.bankTxTime = bankTxTime;
     }
 
+    public WeiXinAppRequest getAppRequest() {
+        return appRequest;
+    }
+
+    public void setAppRequest(WeiXinAppRequest appRequest) {
+        this.appRequest = appRequest;
+    }
+
     public static PayOrderAccount toDomain(PayOrderVo payOrderVo) {
         PayOrderAccount payOrderAccount = new PayOrderAccount();
         BeanUtils.copyProperties(payOrderVo,payOrderAccount);
@@ -200,7 +211,7 @@ public class PayOrderVo {
      * 转化成前端有用的参数
      * @param result 支付持久化对象
      */
-    public static ResultPayOrder toResultOrder(PayOrderAccount result) {
+    public static ResultPayOrder toResultOrder(PayOrderVo result) {
         ResultPayOrder payOrder = new ResultPayOrder();
         BeanUtils.copyProperties(result,payOrder);
         payOrder.setPayPrice(result.getTotalPrice());

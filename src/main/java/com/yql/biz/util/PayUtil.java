@@ -3,11 +3,8 @@ package com.yql.biz.util;
 import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * <p>支付工具类</p>
@@ -19,17 +16,7 @@ public class PayUtil {
     private PayUtil(){}
 
 
-    /**
-     * MD5加密一个字符串
-     * @param key 要加密的字符串
-     * @throws Exception
-     */
-    public static String md5Key(String key) throws Exception {
-        // 生成一个MD5加密计算摘要
-        MessageDigest md5=MessageDigest.getInstance("MD5");
-        byte[] digest = md5.digest(key.getBytes("utf-8"));
-        return new String(digest);
-    }
+
 
     /**
      * 生产num位数的数字+num位数的字母
@@ -58,14 +45,50 @@ public class PayUtil {
      * 金额转化成分
      * @param totalPrice 支付金额
      */
-    public static int multiply(BigDecimal totalPrice){
+    public static int priceToCent(BigDecimal totalPrice){
         return totalPrice.multiply(new BigDecimal(100)).intValue();
     }
-   /* public static void main(String[] args) throws Exception {
-        System.out.println(md5PassWord("ssdsd","123456","2323"));
-        MessageDigest md5=MessageDigest.getInstance("MD5");
-        md5.update(new String("ssdsd"+"123456"+"2323").getBytes());
-        System.out.println(new BigInteger(1, md5.digest()).toString(16));
-        System.out.println(RandomStringUtils.randomNumeric(0));
-    }*/
+
+    /**
+     * 10位 时间戳
+     * @return
+     */
+    public static String getTimeStamp() {
+        return String.valueOf(System.currentTimeMillis() / 1000);
+    }
+
+    private static String byteArrayToHexString(byte b[]) {
+        StringBuffer resultSb = new StringBuffer();
+        for (int i = 0; i < b.length; i++)
+            resultSb.append(byteToHexString(b[i]));
+
+        return resultSb.toString();
+    }
+
+    private static String byteToHexString(byte b) {
+        int n = b;
+        if (n < 0)
+            n += 256;
+        int d1 = n / 16;
+        int d2 = n % 16;
+        return hexDigits[d1] + hexDigits[d2];
+    }
+
+    public static String MD5Encode(String origin, String charsetname) {
+        String resultString = null;
+        try {
+            resultString = new String(origin);
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            if (charsetname == null || "".equals(charsetname))
+                resultString = byteArrayToHexString(md.digest(resultString
+                        .getBytes()));
+            else
+                resultString = byteArrayToHexString(md.digest(resultString.getBytes(charsetname)));
+        } catch (Exception exception) {
+        }
+        return resultString;
+    }
+
+    private static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 }

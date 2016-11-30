@@ -46,6 +46,8 @@ spring:
       basename: ValidationMessages,errors,messages_zh
 
 logging:
+  log4j.appender.file.encoding: UTF-8
+  log4j.appender.A1.File: /home/logs/pay-server.log
   level:
     org.springframeword : ERROR
     org.apache.catalina: ERROR
@@ -55,11 +57,14 @@ yql:
   password-md5-str: yql-payserver-1221
   order-num-key: order_center:order:number
   #微信appId
-  appid: wxd678efh567hg6787
+  appid: wx2421b1c4370ec43b
   #商户号
-  mchid: 1230000109
+  mchid: 10000100
+  #微信key
   wxKey: jholjsudhsjakqjehejskdh
+  #微信异步通知
   wxNotifyUrl: http://localhost:8081/pay/wx
+  #阿里异步通知
   aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
   institution-id: 158974554
   listenerTopic: TEST_USER_REGISTER
@@ -67,6 +72,8 @@ yql:
   kunlun:
       host: http://localhost:8080
       pay-uri: /test?id={id}
+      wxHost: http://localhost:8080/
+      prepayUri: /pay/unifiedorder
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf

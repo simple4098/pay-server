@@ -1,43 +1,16 @@
 package com.yql.biz.support.helper;
 
-import com.alibaba.fastjson.JSON;
-import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.conf.SecurityConfiguration;
-import com.yql.biz.dao.IBankInfoDao;
-import com.yql.biz.dao.IPayAccountDao;
-import com.yql.biz.dao.IPayBankDao;
-import com.yql.biz.enums.BankCodeType;
-import com.yql.biz.enums.IdentificationType;
-import com.yql.biz.enums.RealNameAuthType;
 import com.yql.biz.exception.MessageRuntimeException;
-import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
-import com.yql.biz.model.PayBank;
-import com.yql.biz.support.OrderNoGenerator;
-import com.yql.biz.util.PayUtil;
-import com.yql.biz.util.PlatformPayUtil;
-import com.yql.biz.vo.PayBankVo;
-import com.yql.biz.vo.ProblemAnswerVo;
-import com.yql.biz.vo.SecurityVo;
-import com.yql.biz.vo.UserBasicInfoVo;
-import com.yql.biz.vo.pay.Param;
-import com.yql.biz.vo.pay.request.BangBody;
-import com.yql.biz.vo.pay.request.Head;
-import com.yql.biz.vo.pay.request.Request;
-import com.yql.biz.vo.pay.request.UninstallBangBody;
-import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
-import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * <p>密码加密，解密 实现方式</p>

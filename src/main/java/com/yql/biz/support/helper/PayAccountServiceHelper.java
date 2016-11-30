@@ -3,7 +3,6 @@ package com.yql.biz.support.helper;
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
-import com.yql.biz.conf.SecurityConfiguration;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
@@ -15,7 +14,6 @@ import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
-import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.ProblemAnswerVo;
@@ -30,11 +28,9 @@ import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -59,38 +55,6 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IUserCenterClient userCenterClient;
     @Resource
     private IPayBankDao payBankDao;
-    @Resource
-    private SecurityConfiguration securityConfiguration;
-
-   /* @Override
-    public void md5PayPassword(PayAccount payAccount)  {
-        String passwordMd5Str = applicationConf.getPasswordMd5Str();
-        try{
-            String base64 = payAccount.getPayPassword();
-            byte[] bytes = new BASE64Decoder().decodeBuffer(base64);
-            String payPassword = new String(bytes);
-            String md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payPassword, passwordMd5Str);
-            payAccount.setPayPassword(md5PassWord);
-        }catch (Exception e){
-            throw new RuntimeException("error.payserver.paypassword");
-        }
-    }*/
-
-   /* @Override
-    public void validateOldPassword(String password, PayAccount payAccount)  {
-        String passwordMd5Str = applicationConf.getPasswordMd5Str();
-        String md5PassWord = null;
-        try{
-            byte[] bytes = new BASE64Decoder().decodeBuffer(password);
-            String payPassword = new String(bytes);
-            md5PassWord = PayUtil.md5PassWord(payAccount.getRandomCode(), payPassword, passwordMd5Str);
-        }catch (Exception e){
-            throw new MessageRuntimeException("error.payserver.paypassword");
-        }
-        if (!payAccount.getPayPassword().equals(md5PassWord)){
-            throw new MessageRuntimeException("error.payserver.validate.password");
-        }
-    }*/
 
     @Override
     public Param crateBangBankParam(PayBankVo payBankVo,PayBank newPayBak) {

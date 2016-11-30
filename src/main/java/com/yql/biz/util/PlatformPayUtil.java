@@ -3,7 +3,6 @@ package com.yql.biz.util;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.DjPay;
 import com.yql.biz.vo.pay.response.Response;
-import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -12,9 +11,10 @@ import sun.misc.BASE64Encoder;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
+import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Signature;
 import java.util.*;
@@ -66,6 +66,21 @@ public class PlatformPayUtil<T extends DjPay> {
         return fw.toString();
     }
 
+    public static Object convertXmlStrToObject(Class clazz, String xmlStr) {
+        Object xmlObject = null;
+        try {
+            JAXBContext context = JAXBContext.newInstance(clazz);
+            // 进行将Xml转成对象的核心接口
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            StringReader sr = new StringReader(xmlStr);
+            xmlObject = unmarshaller.unmarshal(sr);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return xmlObject;
+    }
+
+
     /**
      * 快捷支付是否成功
      * @param response
@@ -107,18 +122,23 @@ public class PlatformPayUtil<T extends DjPay> {
 
     /**
      *
-     * @param weiXinOrderVo 微信下预付订单对象
+     * @param t 微信相关对象（微信下预付订单对象、APP 请求支付对象）
      * @return 把一个对象的 属性-值 以key-value的形式存起来
      */
-    public static Map<String,Object> obtObjParm(WeiXinOrderVo weiXinOrderVo) throws Exception {
-        Method[] methods = WeiXinOrderVo.class.getMethods();
+    public static <T extends DjPay> Map<String,Object> obtObjParm( T t) {
+        Method[] methods = t.getClass().getMethods();
         Map<String,Object> param = new HashMap<>();
         for (Method m:methods){
             XmlElement annotation = m.getAnnotation(XmlElement.class);
             if (annotation!=null){
-                Object invoke = m.invoke(weiXinOrderVo);
+                Object invoke = null;
+                try {
+                    invoke = m.invoke(t);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 String name = annotation.name();
-                System.out.println(name+"=="+invoke);
+                System.out.println(name+"=000000000000="+invoke);
                 if (!StringUtils.isEmpty(invoke)){
                     param.put(name,invoke);
                 }

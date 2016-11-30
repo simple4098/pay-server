@@ -58,8 +58,17 @@
 			</exclusions>&ndash;&gt;
 		</dependency>-->
 		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>2.7.5</version>
 		</dependency>
 		<!--消息中心-->
 		<dependency>
@@ -175,70 +184,70 @@
 
 	<build>
 		<plugins>
-			<!--<plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>-->
+			</plugin>
 			<!--
              使用aspectj-maven-plugin 插件编译springboot 可能会出现下面的错误
              java.lang.IllegalStateException: Failed to write metadata at org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor.writeMetaData(ConfigurationMetadataAnnotationProcessor.java:394)
              较简单的处理方式是在maven-compiler-plugin插件中配置<proc>none</proc>
             -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<proc>none</proc>
-				</configuration>
-				<executions>
-					<execution>
-						<id>default-compile</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<configuration>
-							<forceAjcCompile>true</forceAjcCompile>
-							<complianceLevel>${java.version}</complianceLevel>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
-							<verbose>false</verbose>
-							<outxml>false</outxml>
-							<aspectLibraries>
-								<aspectLibrary>
-									<groupId>org.springframework</groupId>
-									<artifactId>spring-aspects</artifactId>
-								</aspectLibrary>
-							</aspectLibraries>
-						</configuration>
-						<goals>
-							<goal>compile</goal>
-							<!--<goal>test-compile</goal>-->
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>1.8.9</version>
-					</dependency>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjrt</artifactId>
-						<version>1.8.9</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>org.apache.maven.plugins</groupId>-->
+				<!--<artifactId>maven-compiler-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<source>${java.version}</source>-->
+					<!--<target>${java.version}</target>-->
+					<!--<proc>none</proc>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>default-compile</id>-->
+						<!--<phase>none</phase>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
+			<!--<plugin>-->
+				<!--<groupId>org.codehaus.mojo</groupId>-->
+				<!--<artifactId>aspectj-maven-plugin</artifactId>-->
+				<!--<version>1.8</version>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>compile</id>-->
+						<!--<configuration>-->
+							<!--<forceAjcCompile>true</forceAjcCompile>-->
+							<!--<complianceLevel>${java.version}</complianceLevel>-->
+							<!--<source>${java.version}</source>-->
+							<!--<target>${java.version}</target>-->
+							<!--<verbose>false</verbose>-->
+							<!--<outxml>false</outxml>-->
+							<!--<aspectLibraries>-->
+								<!--<aspectLibrary>-->
+									<!--<groupId>org.springframework</groupId>-->
+									<!--<artifactId>spring-aspects</artifactId>-->
+								<!--</aspectLibrary>-->
+							<!--</aspectLibraries>-->
+						<!--</configuration>-->
+						<!--<goals>-->
+							<!--<goal>compile</goal>-->
+							<!--&lt;!&ndash;<goal>test-compile</goal>&ndash;&gt;-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+				<!--<dependencies>-->
+					<!--<dependency>-->
+						<!--<groupId>org.aspectj</groupId>-->
+						<!--<artifactId>aspectjtools</artifactId>-->
+						<!--<version>1.8.9</version>-->
+					<!--</dependency>-->
+					<!--<dependency>-->
+						<!--<groupId>org.aspectj</groupId>-->
+						<!--<artifactId>aspectjrt</artifactId>-->
+						<!--<version>1.8.9</version>-->
+					<!--</dependency>-->
+				<!--</dependencies>-->
+			<!--</plugin>-->
 		</plugins>
 	</build>
 

@@ -10,7 +10,6 @@ import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.SecurityVo;
-import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

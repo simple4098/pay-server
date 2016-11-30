@@ -7,14 +7,14 @@ import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.model.PayBank;
-import com.yql.biz.support.helper.IPayOrderCardParamHelper;
+import com.yql.biz.support.helper.IPayOrderParamHelper;
+import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponse;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
-import com.yql.framework.mq.MessagePublisher;
 import com.yql.framework.mq.model.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ public class PayOrderCardCreator implements IPayOrderCreator {
     @Resource
     private PayClient payClient;
     @Resource
-    private IPayOrderCardParamHelper payOrderCardParamHelper;
+    private IPayOrderParamHelper payOrderCardParamHelper;
     @Resource
-    private MessagePublisher messagePublisher;
+    private SendMessageHelper sendMessageHelper;
     @Resource
     private IPayBankDao payBankDao;
     @Resource
@@ -58,7 +58,7 @@ public class PayOrderCardCreator implements IPayOrderCreator {
             TextMessage textMessage = new TextMessage(applicationConf.getSendMsgTopic(),
                     SendMsgTag.PAY_SERVER_STATUS.name(),
                     payOrderVo.getOrderNo(), JSON.toJSONString(resultPayOrder));
-            messagePublisher.send(textMessage);
+            sendMessageHelper.sendMessage(textMessage);
             log.debug("发送消息："+JSON.toJSONString(textMessage));
         }else {
             log.info("支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
