@@ -24,8 +24,10 @@ public class PayOrderController {
     private IPayOrderAccountService payOrderAccountService;
 
 
+
     /**
-     * 账单支付
+     * <p>账单支付</p>
+     * <p>余额提现</p>
      * @param payOrderVo 支付账单信息
      */
     @RequestMapping("/order")
@@ -34,18 +36,10 @@ public class PayOrderController {
         return ResponseModel.SUCCESS(order);
     }
 
-    /**
-     * 用户提现
-     * @param payOrderVo
-     * @return
-     */
-     @RequestMapping("/draw_money")
-    public ResponseModel drawMoney(@Validated PayOrderVo payOrderVo){
 
 
 
-        return ResponseModel.SUCCESS();
-    }
+
     /**
      * 支付平台通知商户支付成功 失败
      */

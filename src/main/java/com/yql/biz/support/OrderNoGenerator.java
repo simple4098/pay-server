@@ -11,7 +11,7 @@ public interface OrderNoGenerator {
      * 支付单号（pay-server中的支付号码）
      * @param orderType 订单类型
      */
-    long generate(PayType orderType);
+    String generate(PayType orderType);
 
 
 

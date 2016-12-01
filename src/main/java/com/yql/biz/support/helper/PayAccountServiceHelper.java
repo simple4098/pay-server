@@ -1,6 +1,7 @@
 package com.yql.biz.support.helper;
 
 import com.alibaba.fastjson.JSON;
+import com.yql.biz.client.IAccountClient;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IBankInfoDao;
@@ -15,10 +16,7 @@ import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.util.PlatformPayUtil;
-import com.yql.biz.vo.PayBankVo;
-import com.yql.biz.vo.ProblemAnswerVo;
-import com.yql.biz.vo.SecurityVo;
-import com.yql.biz.vo.UserBasicInfoVo;
+import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
@@ -33,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -55,9 +54,11 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IUserCenterClient userCenterClient;
     @Resource
     private IPayBankDao payBankDao;
+    @Resource
+    private IAccountClient accountClient;
 
     @Override
-    public Param crateBangBankParam(PayBankVo payBankVo,PayBank newPayBak) {
+    public Param crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
         PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
         if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
         PayBankVo.voToDomain(newPayBak,payBankVo, payAccount);
@@ -76,19 +77,21 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         payBank = payBankDao.findByPayAccountIdAndTxSNBindingAndDeleted(newPayBak.getPayAccountId(), txSNBinding,false);
         payBank = payBankDao.findByPayAccountIdAndSettlementFlagAndDeleted(newPayBak.getPayAccountId(), settlementFlag,false);
         if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
+        BangBody bangBody = new BangBody();
         newPayBak.setTxSNBinding(txSNBinding);
         newPayBak.setTxCode(txCode);
-        newPayBak.setBankId(byBankName.getBankCode());
+        if (byBankName!=null){
+            bangBody.setBankId(byBankName.getBankCode());
+            newPayBak.setBankId(byBankName.getBankCode());
+        }
         newPayBak.setSettlementFlag(settlementFlag);
         Head head = new Head() ;
         head.setInstitutionID(applicationConf.getInstitutionId());
         head.setTxCode(txCode);
         request.setHead(head);
-        BangBody bangBody = new BangBody();
         bangBody.setAccountName(newPayBak.getBankName());
         bangBody.setAccountNumber(newPayBak.getBankCard());
         bangBody.setIdentificationType(payAccount.getIdentificationType().getValue());
-        bangBody.setBankId(byBankName.getBankCode());
         bangBody.setCardType(newPayBak.getCardType().getValue());
         bangBody.setPhoneNumber(newPayBak.getPhoneNumber());
         bangBody.setTxSNBinding(txSNBinding);
@@ -194,4 +197,21 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         payBank.setBangStatus(status);
         payBank.setBankTxTime(responseBody.getBankTxTime());
     }
+
+    @Override
+    public void validateDrawMoney(PayOrderVo payOrderVo) {
+        ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
+        AccountVo data = account.getData();
+        if (data==null){
+           throw new MessageRuntimeException("error.payserver.account.cashFee");
+        }else{
+            BigDecimal cashFee = data.getCashFee();
+            int i = payOrderVo.getTotalPrice().compareTo(cashFee);
+            if (i!=-1){
+                throw new MessageRuntimeException("error.payserver.account.balance");
+            }
+        }
+    }
+
+
 }

@@ -3,6 +3,8 @@ package com.yql.biz.model;
 import com.yql.biz.enums.PayType;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 
@@ -21,12 +23,13 @@ public class PayOrderAccountDetail extends Domain {
     //支付订单号
     private String orderNo;
     //支付号（系统生产）
-    private Long payNo;
+    private String payNo;
     //第三方支付返回的订单号
     private String payOrder;
     //对方userCode
     private String otherUserCode;
     //支付类型
+    @Enumerated(value = EnumType.STRING)
     private PayType payType;
     //持卡人
     private String cardholder;
@@ -62,11 +65,11 @@ public class PayOrderAccountDetail extends Domain {
         this.payAccountId = payAccountId;
     }
 
-    public Long getPayNo() {
+    public String getPayNo() {
         return payNo;
     }
 
-    public void setPayNo(Long payNo) {
+    public void setPayNo(String payNo) {
         this.payNo = payNo;
     }
 

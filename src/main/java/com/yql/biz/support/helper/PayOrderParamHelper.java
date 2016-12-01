@@ -43,7 +43,7 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
     @Override
     public Param getPayParam(PayOrderVo payOrderVo,PayBank payBank) {
         int amount = PayUtil.priceToCent(payOrderVo.getTotalPrice());
-        long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+        String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayNo(payNo);
         Request<PayBody> request = new Request<>();
         Head head = new Head() ;
@@ -51,7 +51,7 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
         head.setTxCode(payOrderVo.getTxCode());
         request.setHead(head);
         PayBody payBody = new PayBody();
-        payBody.setPaymentNo(Long.toString(payNo)+PayUtil.randomCodeNum(6));
+        payBody.setPaymentNo(payNo);
         payBody.setTxSNBinding(payBank.getTxSNBinding());
         payBody.setSettlementFlag(payBank.getSettlementFlag());
         payBody.setAmount(amount);
@@ -68,8 +68,9 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
     @Override
     public String getWxPayParam(PayOrderVo payOrderVo,WeiXinOrderVo weiXinOrderVo) {
         try {
-            long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+            String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
             payOrderVo.setPayNo(payNo);
+            weiXinOrderVo.setOutTradeNo(payNo);
             String sign = getSign(weiXinOrderVo);
             weiXinOrderVo.setSign(sign);
             String payRequestXml = PlatformPayUtil.payRequestXml(weiXinOrderVo);

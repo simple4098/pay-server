@@ -39,7 +39,7 @@ public class PayOrderWxPayCreator implements IPayOrderCreator {
     public PayOrderVo transform(PayOrderVo payOrderVo) {
         WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();
         weiXinOrderVo.setNotifyUrl(applicationConf.getWxNotifyUrl());
-        weiXinOrderVo.setOutTradeNo(payOrderVo.getOrderNo());
+       /* weiXinOrderVo.setOutTradeNo(payOrderVo.getOrderNo());*/
         weiXinOrderVo.setTotalFee(payOrderVo.totalFee());
         weiXinOrderVo.setSpbillCreateIp(payOrderVo.getSpbillCreateIp());
         weiXinOrderVo.setBody("零享购-消费");

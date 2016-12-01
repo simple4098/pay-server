@@ -11,7 +11,8 @@ public enum PayType {
     QUICK_PAYMENT("银行卡快捷支付"),
     DIAMOND("钻石支付"),
     WX_PAY("微信支付"),
-    ALI_PAY("支付宝支付");
+    ALI_PAY("支付宝支付"),
+    DRAW_MONEY("提现");
     private String value;
 
     PayType(String value) {

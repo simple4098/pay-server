@@ -19,11 +19,11 @@ public class PayOrderVo {
     @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     private Integer payAccountId;
-    //支付订单号
+    //支付/提现订单号
     @NotNull(message = "{com.yql.validation.constraints.OrderNo.message}")
     private String orderNo;
     //支付号（系统生产）
-    private Long payNo;
+    private String payNo;
     //第三方支付返回的订单号
     private String payOrder;
     //对方userCode
@@ -93,11 +93,11 @@ public class PayOrderVo {
         this.orderNo = orderNo;
     }
 
-    public Long getPayNo() {
+    public String getPayNo() {
         return payNo;
     }
 
-    public void setPayNo(Long payNo) {
+    public void setPayNo(String payNo) {
         this.payNo = payNo;
     }
 

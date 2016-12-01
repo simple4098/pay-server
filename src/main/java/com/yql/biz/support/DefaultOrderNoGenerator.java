@@ -15,13 +15,13 @@ public class DefaultOrderNoGenerator implements OrderNoGenerator {
 
 
     @Override
-    public long generate(PayType orderType) {
+    public String generate(PayType orderType) {
         StringBuffer payNo = new StringBuffer();
         String format = DateFormatUtils.format(Calendar.getInstance(), "yyyyMMddHHmmssSSS");
         int ordinal = orderType.ordinal();
-        String s = PayUtil.randomCodeNum(1);
+        String s = PayUtil.randomCodeNum(14);
         payNo.append(format).append(s).append(ordinal);
-        return Long.valueOf(payNo.toString());
+        return payNo.toString();
     }
 
     @Override

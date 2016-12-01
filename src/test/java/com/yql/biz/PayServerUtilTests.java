@@ -1,11 +1,13 @@
 package com.yql.biz;
 
+import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.*;
 import com.yql.biz.vo.pay.response.*;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
 import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -198,7 +200,7 @@ public class PayServerUtilTests {
 
     @Test
     public void test5() throws Exception {
-        WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();
+      /*  WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();
         weiXinOrderVo.setBody("腾讯充值中心-QQ会员充值");
         weiXinOrderVo.setNotifyUrl("http://www.weixin.qq.com/wxpay/pay.php");
         weiXinOrderVo.setOutTradeNo("154545454");
@@ -206,10 +208,11 @@ public class PayServerUtilTests {
         weiXinOrderVo.setSign("dfdfdfd");
         weiXinOrderVo.setSpbillCreateIp("127.0.0.1");
         //Class entity = (Class)((ParameterizedType)w.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-     /*   Field[] fields = WeiXinOrderVo.class.getDeclaredFields();*/
+     *//*   Field[] fields = WeiXinOrderVo.class.getDeclaredFields();*//*
         Map<String, Object> param = PlatformPayUtil.obtObjParm(weiXinOrderVo);
-        String str = PlatformPayUtil.concatStr(param);
-        logger.debug(str);
+        String str = PlatformPayUtil.sortParm(param);*/
+        System.out.println(RandomStringUtils.randomAlphanumeric(12));
+        System.out.println(RandomStringUtils.randomAlphabetic(12));
     }
 
     @Test
@@ -264,5 +267,14 @@ public class PayServerUtilTests {
             }
         }
         return weiXinNotifyVo;
+    }
+
+    @Test
+    public void  testMd5(){
+        /*String str = "appid=wxd36dd408cb79ea6b&body=零享购-消费&mch_id=1418256002&nonce_str=DIahsYGiQpfWg8wWKExH2u81K4zicYzL&notify_url=http://localhost:8081/pay/wx&out_trade_no=587965123548245466&spbill_create_ip=127.0.0.1&total_fee=100&key=6830818\n";
+
+        String md5Encode = PayUtil.MD5Encode(str, "GBK");
+        System.out.println(md5Encode.toUpperCase());*/
+        System.out.println(!(true));
     }
 }

@@ -21,7 +21,7 @@ public class PayOrderAccount extends Domain {
     //支付订单号
     private String orderNo;
     //支付号（系统生产）
-    private Long payNo;
+    private String payNo;
     //第三方支付返回的订单号
     private String payOrder;
     //对方userCode
@@ -41,7 +41,10 @@ public class PayOrderAccount extends Domain {
     private String msg;
     //银行处理时间
     private Date bankTxTime;
+    //绑定银行卡id
     private Integer payBankId;
+    //银行卡编码
+    private String  bankCode;
     //支付通道标识 微信openid  快捷支付银行卡编码
     private String txCode;
 
@@ -69,11 +72,11 @@ public class PayOrderAccount extends Domain {
         this.orderNo = orderNo;
     }
 
-    public Long getPayNo() {
+    public String getPayNo() {
         return payNo;
     }
 
-    public void setPayNo(Long payNo) {
+    public void setPayNo(String payNo) {
         this.payNo = payNo;
     }
 
@@ -155,5 +158,13 @@ public class PayOrderAccount extends Domain {
 
     public void setTxCode(String txCode) {
         this.txCode = txCode;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 }

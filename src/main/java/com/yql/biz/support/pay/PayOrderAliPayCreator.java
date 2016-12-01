@@ -2,6 +2,7 @@ package com.yql.biz.support.pay;
 
 import com.yql.biz.enums.PayType;
 import com.yql.biz.vo.PayOrderVo;
+import org.springframework.stereotype.Service;
 
 /**
  * <p> 支付宝支付 </p>
@@ -9,6 +10,7 @@ import com.yql.biz.vo.PayOrderVo;
  * @auther simple
  * data 2016/11/25 0025.
  */
+@Service
 public class PayOrderAliPayCreator implements IPayOrderCreator {
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {

@@ -3,9 +3,9 @@ package com.yql.biz.support.helper;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.vo.PayBankVo;
+import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.pay.Param;
-import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 
 import java.util.List;
@@ -32,9 +32,10 @@ public interface IPayAccountServiceHelper {
     //void validateOldPassword(String password,PayAccount payAccount);
 
     /**
-     * 创建绑定银行卡必要的参数：
+     * 创建快捷支付
+     * 绑定银行卡必要的参数：
      */
-    Param crateBangBankParam(PayBankVo payBankVo,PayBank newPayBak);
+    Param crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak);
 
     /**
      * 根据userCode 查询payAccount。如果查询不到，就初始化一个
@@ -70,4 +71,12 @@ public interface IPayAccountServiceHelper {
      * @param responseBody 支付平台返回对象
      */
     void createDelBankParam(PayBank payBank, UninstallBangResponseBody responseBody);
+
+    /**
+     * 提前金额验证
+     * @param payOrderVo 提现订单对象
+     */
+    void validateDrawMoney(PayOrderVo payOrderVo);
+
+
 }

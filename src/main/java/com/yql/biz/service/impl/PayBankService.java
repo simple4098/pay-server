@@ -12,7 +12,8 @@ import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.ResultBangBank;
 import com.yql.biz.vo.ResultUnBangBank;
 import com.yql.biz.vo.pay.Param;
-import com.yql.biz.vo.pay.response.*;
+import com.yql.biz.vo.pay.response.UninstallBangResponse;
+import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -43,12 +44,13 @@ public class PayBankService implements IPayBankService {
     public ResultBangBank savePayBank(PayBankVo payBankVo) {
         PayBank newPayBak = new PayBank();
         ResultBangBank resultBangBank = new ResultBangBank();
-        Param param = payAccountServiceHelper.crateBangBankParam(payBankVo,newPayBak);
-        BangResponse response = payClient.bangBank(param.getMessage(), param.getSignature());
+        payAccountServiceHelper.crateQuickBangBankParam(payBankVo,newPayBak);
+        payBankDao.save(newPayBak);
+        return resultBangBank;
+      /*  BangResponse response = payClient.bangBank(param.getMessage(), param.getSignature());
         if (PlatformPayUtil.isSuccess(response)){
             BangResponseBody bangResponseBody = response.getBangResponseBody();
             logger.debug("银行卡绑定返回:"+ JSON.toJSONString(response));
-            //payAccountServiceHelper.createBangBankParam(newPayBak,bangResponseBody);
             newPayBak.setBangStatus(bangResponseBody.getStatus());
             newPayBak.setBankTxTime(bangResponseBody.getBankTxTime());
             BeanUtils.copyProperties(bangResponseBody,resultBangBank);
@@ -59,7 +61,7 @@ public class PayBankService implements IPayBankService {
             return resultBangBank;
         }else {
             throw new RuntimeException(response.getHead().getMessage());
-        }
+        }*/
     }
 
     @Override

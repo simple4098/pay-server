@@ -17,7 +17,7 @@ public class PayOrderAccountDetailVo {
     private Long payAccountId;
     private Integer payOrderAccountId;
     //支付订单号
-    private Long orderNo;
+    private String orderNo;
     //支付号（系统生产）
     private Long payNo;
     //第三方支付返回的订单号
@@ -63,11 +63,11 @@ public class PayOrderAccountDetailVo {
         this.payAccountId = payAccountId;
     }
 
-    public Long getOrderNo() {
+    public String getOrderNo() {
         return orderNo;
     }
 
-    public void setOrderNo(Long orderNo) {
+    public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
     }
 

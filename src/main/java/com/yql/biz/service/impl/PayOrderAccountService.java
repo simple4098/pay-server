@@ -88,7 +88,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         responseHandler.setKey(applicationConf.getWxKey());
         SortedMap allParameters = responseHandler.getAllParameters();
         WeiXinNotifyVo weiXinNotifyVo = payOrderParamHelper.getWxCallBackParam(allParameters);
-        PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(weiXinNotifyVo.getOutTradeNo());
+        PayOrderAccount orderAccount = payOrderAccountDao.findByPayNo(weiXinNotifyVo.getOutTradeNo());
         if (orderAccount!=null){
             //订单已经成功处理,直接返回给微信成功状态
             if (PayStatus.PAY_SUCCESS.getValue().equals(orderAccount.getPayStatus())){
@@ -105,6 +105,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
                             Date date = PayUtil.dataFormat(weiXinNotifyVo.getTimeEnd());
                             orderAccount.setBankTxTime(date);
                             orderAccount.setTxCode(weiXinNotifyVo.getOpenid());
+                            orderAccount.setBankCode(weiXinNotifyVo.getBankType());
                             payOrderAccountDao.save(orderAccount);
                         }
                         sendMessageHelper.sendWxNotifyResult(weiXinResponse,resultPayOrder,weiXinNotifyVo);

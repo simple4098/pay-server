@@ -49,7 +49,7 @@ public class PayOrderCreator implements IPayOrderCreator {
         if (data!=null ){
             BigDecimal cashFee = data.getCashFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
-            long payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+            String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
             payOrderVo.setPayNo(payNo);
             ResultPayOrder resultPayOrder = new ResultPayOrder();
             resultPayOrder.setPayPrice(totalPrice);

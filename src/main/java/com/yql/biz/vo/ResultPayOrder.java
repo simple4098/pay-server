@@ -15,7 +15,7 @@ public class ResultPayOrder {
     //订单号
     private String orderNo;
     //支付订单号
-    private Long payNo	;
+    private String payNo	;
     //第三方支付号
     private String payOrder;
     //支付状态
@@ -41,11 +41,11 @@ public class ResultPayOrder {
         this.orderNo = orderNo;
     }
 
-    public Long getPayNo() {
+    public String getPayNo() {
         return payNo;
     }
 
-    public void setPayNo(Long payNo) {
+    public void setPayNo(String payNo) {
         this.payNo = payNo;
     }
 

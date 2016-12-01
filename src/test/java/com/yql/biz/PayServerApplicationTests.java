@@ -70,7 +70,7 @@ public class PayServerApplicationTests {
         PayOrderAccount byOrderNo = this.payOrderAccountDao.findByOrderNo("587965123548245466");
         PayOrderAccount orderAccount = new PayOrderAccount();
         BeanUtils.copyProperties(byOrderNo,orderAccount);
-        orderAccount.setPayNo(123213L);
+        orderAccount.setPayNo("123213");
         this.payOrderAccountDao.save(orderAccount);
     }
 
@@ -102,7 +102,7 @@ public class PayServerApplicationTests {
     public void test1(){
         ResultPayOrder resultPayOrder = new ResultPayOrder();
         resultPayOrder.setOrderNo("1234569");
-        resultPayOrder.setPayNo(254842221212l);
+        resultPayOrder.setPayNo("254842221212");
         resultPayOrder.setPayStatus(20);
         resultPayOrder.setPayPrice(new BigDecimal(583));
         resultPayOrder.setMsg("成功");
