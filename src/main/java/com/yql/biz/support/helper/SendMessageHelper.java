@@ -6,6 +6,7 @@ import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
 import com.yql.biz.util.PayUtil;
+import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
@@ -28,20 +29,20 @@ public class SendMessageHelper {
     private static final Logger log = LoggerFactory.getLogger(SendMessageHelper.class);
     @Resource
     private ApplicationConf applicationConf;
-
     @Resource
     private MessagePublisher messagePublisher;
+
 
     /**
      * 基本发消息方法
      * @param textMessage
      */
     public void sendMessage(TextMessage textMessage){
-        if (applicationConf.isOpen()){
+        boolean open = applicationConf.isOpen();
+        log.debug("消息开关:\t"+open+"================textMessage====================\n"+JSON.toJSONString(textMessage));
+        if (open){
             log.debug("============发送消息 start=============");
             messagePublisher.send(textMessage);
-        }else {
-            log.debug("============发送消息 关闭=============");
         }
     }
 
@@ -83,5 +84,17 @@ public class SendMessageHelper {
             textMessage.setBody(json.getBytes());
         }
         sendMessage(textMessage);
+    }
+
+    /**
+     * 提现发送消息
+     * @param payOrderVo 提现订单信息
+     */
+    public void sendDrawMoney(PayOrderVo payOrderVo) {
+        ResultPayOrder resultPayOrder = PayOrderVo.toResultOrder(payOrderVo);
+        String json = JSON.toJSONString(resultPayOrder);
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_DRAE_MONEY.name(),payOrderVo.getOrderNo(),json);
+        sendMessage(textMessage);
+
     }
 }

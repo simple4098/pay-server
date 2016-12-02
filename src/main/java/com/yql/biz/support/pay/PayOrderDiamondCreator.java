@@ -44,7 +44,7 @@ public class PayOrderDiamondCreator implements IPayOrderCreator {
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
         String json = JSON.toJSONString(payOrderVo);
-        logger.debug("钻石支付:"+ JSON.toJSONString(payOrderVo));
+        logger.debug("钻石支付:"+ json);
         ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
         AccountVo data = account.getData();
         if (data!=null ){

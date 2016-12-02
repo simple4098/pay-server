@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IPayOrderAccountDao;
 import com.yql.biz.dao.IPayOrderAccountDetailDao;
+import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
+import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.model.PayOrderAccountDetail;
@@ -95,7 +97,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
                 return  weiXinResponse;
             }else {
                 ResultPayOrder resultPayOrder = new ResultPayOrder();
-                sendMessageHelper.sendWxNotify(resultPayOrder,weiXinNotifyVo.getOutTradeNo());
+                sendMessageHelper.sendWxNotify(resultPayOrder,orderAccount.getOrderNo());
                 if (WxPayResult.SUCCESS.name().equals(weiXinNotifyVo.getResultCode())){
                     boolean tenpaySign = responseHandler.isTenpaySign();
                     log.debug(" 微信异步通知: "+responseHandler.getDebugInfo());
@@ -108,6 +110,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
                             orderAccount.setBankCode(weiXinNotifyVo.getBankType());
                             payOrderAccountDao.save(orderAccount);
                         }
+                        weiXinNotifyVo.setOutTradeNo(orderAccount.getOrderNo());
                         sendMessageHelper.sendWxNotifyResult(weiXinResponse,resultPayOrder,weiXinNotifyVo);
                     }else {
                         weiXinResponse.setReturnCode(WxPayResult.FAIL);
@@ -123,5 +126,17 @@ public class PayOrderAccountService implements IPayOrderAccountService {
             weiXinResponse.setReturnMsg("查询不到此商户订单");
         }
         return weiXinResponse;
+    }
+
+    @Override
+    public void updateDrawMoneyStatus(String payOrderNo,Integer payStatus) {
+        PayOrderAccount byOrderNo = payOrderAccountDao.findByOrderNo(payOrderNo);
+        if (!PayType.DRAW_MONEY.equals(byOrderNo.getPayType())) throw new MessageRuntimeException("error.payserver.payType.param");
+        byOrderNo.setPayStatus(payStatus);
+        payOrderAccountDao.save(byOrderNo);
+        PayOrderVo payOrderVo = new PayOrderVo();
+        payOrderVo.setOrderNo(payOrderNo);
+        payOrderVo.setPayStatus(payStatus);
+        sendMessageHelper.sendDrawMoney(payOrderVo);
     }
 }

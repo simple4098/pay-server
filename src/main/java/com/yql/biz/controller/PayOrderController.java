@@ -1,5 +1,6 @@
 package com.yql.biz.controller;
 
+import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>支付订单</p>
@@ -34,6 +36,12 @@ public class PayOrderController {
     public ResponseModel index(@Validated PayOrderVo payOrderVo){
         ResultPayOrder order = payOrderAccountService.order(payOrderVo);
         return ResponseModel.SUCCESS(order);
+    }
+
+    @RequestMapping("/draw_money_status")
+    public ResponseModel drawMoneyStatus(@OrderNo String orderNo, @NotNull(message = "com.yql.validation.constraints.payStatus.message") Integer payStatus){
+        payOrderAccountService.updateDrawMoneyStatus(orderNo,payStatus);
+        return ResponseModel.SUCCESS();
     }
 
 

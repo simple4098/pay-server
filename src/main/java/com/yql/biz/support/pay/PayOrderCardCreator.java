@@ -6,6 +6,7 @@ import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.SendMsgTag;
+import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
@@ -19,6 +20,7 @@ import com.yql.framework.mq.model.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -43,6 +45,7 @@ public class PayOrderCardCreator implements IPayOrderCreator {
 
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
+        if (StringUtils.isEmpty(payOrderVo.getTxCode())) throw new MessageRuntimeException("com.yql.validation.constraints.txCode.notnull");
         PayBank payBank = payBankDao.findByUserCodeAndTxCode(payOrderVo.getUserCode(),payOrderVo.getTxCode());
         Param payParam = payOrderCardParamHelper.getPayParam(payOrderVo,payBank);
         PayMessageValidateResponse pay = payClient.pay(payParam.getMessage(), payParam.getSignature());

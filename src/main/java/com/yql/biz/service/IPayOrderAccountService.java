@@ -24,4 +24,10 @@ public interface IPayOrderAccountService {
      * @param responseHandler
      */
     WeiXinResponseResult callPayNotify(ResponseHandler responseHandler);
+
+    /**
+     * 更新提现状态
+     * @param payOrderNo 提现订单号
+     */
+    void updateDrawMoneyStatus(String payOrderNo,Integer payStatus);
 }

@@ -207,7 +207,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         }else{
             BigDecimal cashFee = data.getCashFee();
             int i = payOrderVo.getTotalPrice().compareTo(cashFee);
-            if (i!=-1){
+            if (i==1){
                 throw new MessageRuntimeException("error.payserver.account.balance");
             }
         }
