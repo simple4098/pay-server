@@ -39,7 +39,7 @@ public interface IPayAccountService {
      * 小额支付开关
      * @param payAccount
      */
-    void updatePayAccountSamllMoney(PayAccount payAccount);
+    void updatePayAccountSmallMoney(PayAccount payAccount);
 
     /**
      * 更新实名认证

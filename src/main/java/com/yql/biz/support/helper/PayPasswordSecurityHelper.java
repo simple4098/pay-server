@@ -59,7 +59,8 @@ public class PayPasswordSecurityHelper {
                 throw new MessageRuntimeException("error.payserver.validate.password");
             }
         }catch (Exception e){
-            throw new MessageRuntimeException("error.payserver.paypassword");
+            logger.debug("验证密码异常",e);
+            throw new RuntimeException(e.getMessage());
         }
 
     }

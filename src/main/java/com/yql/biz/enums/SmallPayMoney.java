@@ -5,7 +5,7 @@ package com.yql.biz.enums;
  * creator simple
  * data 2016/11/7 0007.
  */
-public enum SamllPayMoney {
+public enum SmallPayMoney {
     MONEY_200(200),
     MONEY_500(500),
     MONEY_800(800),
@@ -13,7 +13,7 @@ public enum SamllPayMoney {
     MONEY_2000(2000);
 
     private Integer value;
-    SamllPayMoney(Integer value) {
+    SmallPayMoney(Integer value) {
         this.value = value;
     }
 

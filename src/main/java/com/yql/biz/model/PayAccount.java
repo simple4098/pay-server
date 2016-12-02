@@ -1,12 +1,11 @@
 package com.yql.biz.model;
 
 import com.yql.biz.enums.IdentificationType;
-import com.yql.biz.enums.SamllPayMoney;
+import com.yql.biz.enums.SmallPayMoney;
 import com.yql.biz.util.PayUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * <p>支付账号实体类</p>
@@ -35,9 +34,9 @@ public class PayAccount extends  Domain  {
     @Column(name = "small_pay")
     private boolean smallPay;
     //小额支付金额 枚举 MONEY_200  MONEY_500 MONEY_800 MONEY_1000 MONEY_2000
-    @Column(name = "samll_pay_money")
+    @Column(name = "small_pay_money")
     @Enumerated(value = EnumType.STRING)
-    private SamllPayMoney samllPayMoney = SamllPayMoney.MONEY_200;
+    private SmallPayMoney smallPayMoney = SmallPayMoney.MONEY_200;
     //是否实名认证
     @Column(name = "real_name_auth")
     private boolean realNameAuth;
@@ -113,12 +112,12 @@ public class PayAccount extends  Domain  {
         this.smallPay = smallPay;
     }
 
-    public SamllPayMoney getSamllPayMoney() {
-        return samllPayMoney;
+    public SmallPayMoney getSmallPayMoney() {
+        return smallPayMoney;
     }
 
-    public void setSamllPayMoney(SamllPayMoney samllPayMoney) {
-        this.samllPayMoney = samllPayMoney;
+    public void setSmallPayMoney(SmallPayMoney smallPayMoney) {
+        this.smallPayMoney = smallPayMoney;
     }
 
     public boolean isRealNameAuth() {

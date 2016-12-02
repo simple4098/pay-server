@@ -79,10 +79,12 @@ public class PayAccountService implements IPayAccountService {
     }
 
     @Override
-    public void updatePayAccountSamllMoney(PayAccount payAccount) {
+    public void updatePayAccountSmallMoney(PayAccount payAccount) {
+        //验证支付密码
+        validatePassword(payAccount);
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());
         one.setSmallPay(payAccount.isSmallPay());
-        one.setSamllPayMoney(payAccount.getSamllPayMoney());
+        one.setSmallPayMoney(payAccount.getSmallPayMoney());
         payAccountDao.save(one);
     }
 

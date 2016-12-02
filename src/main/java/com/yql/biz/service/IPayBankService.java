@@ -1,6 +1,7 @@
 package com.yql.biz.service;
 
 import com.yql.biz.model.PayBank;
+import com.yql.biz.vo.DelBankCardVo;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.ResultBangBank;
 import com.yql.biz.vo.ResultUnBangBank;
@@ -28,8 +29,7 @@ public interface IPayBankService {
 
     /**
      * 删除绑定银行卡
-     * @param txCode 交易编码
-     * @param payAccountId 支付accountId
+     * @param delBankCard 移除银行卡参数对象
      */
-    ResultUnBangBank delBangBank(String txCode, Integer payAccountId);
+    ResultUnBangBank delBangBank(DelBankCardVo delBankCard);
 }

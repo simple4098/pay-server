@@ -1,6 +1,6 @@
 package com.yql.biz.vo;
 
-import com.yql.biz.enums.SamllPayMoney;
+import com.yql.biz.enums.SmallPayMoney;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.util.PayUtil;
 
@@ -26,7 +26,7 @@ public class PayAccountVo {
     //小额支付 0 未开通 1 开通
     private boolean smallPay;
     //小额支付金额 枚举 MONEY_200  MONEY_500 MONEY_800 MONEY_1000 MONEY_2000
-    private SamllPayMoney samllPayMoney ;
+    private SmallPayMoney smallPayMoney;
     //是否实名认证
     private boolean realNameAuth;
 
@@ -86,12 +86,12 @@ public class PayAccountVo {
         this.smallPay = smallPay;
     }
 
-    public SamllPayMoney getSamllPayMoney() {
-        return samllPayMoney;
+    public SmallPayMoney getSmallPayMoney() {
+        return smallPayMoney;
     }
 
-    public void setSamllPayMoney(SamllPayMoney samllPayMoney) {
-        this.samllPayMoney = samllPayMoney;
+    public void setSmallPayMoney(SmallPayMoney smallPayMoney) {
+        this.smallPayMoney = smallPayMoney;
     }
 
     public boolean isRealNameAuth() {

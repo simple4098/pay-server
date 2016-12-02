@@ -2,12 +2,16 @@ package com.yql.biz.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.PayClient;
+import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.exception.MessageRuntimeException;
+import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.service.IPayBankService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
+import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.util.PlatformPayUtil;
+import com.yql.biz.vo.DelBankCardVo;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.ResultBangBank;
 import com.yql.biz.vo.ResultUnBangBank;
@@ -38,6 +42,10 @@ public class PayBankService implements IPayBankService {
     private IPayAccountServiceHelper payAccountServiceHelper;
     @Resource
     private PayClient payClient;
+    @Resource
+    private PayPasswordSecurityHelper payPasswordSecurityHelper;
+    @Resource
+    private IPayAccountDao payAccountDao;
 
 
     @Override
@@ -72,10 +80,16 @@ public class PayBankService implements IPayBankService {
     }
 
     @Override
-    public ResultUnBangBank delBangBank(String txCode, Integer payAccountId) {
+    public ResultUnBangBank delBangBank(DelBankCardVo delBankCard) {
+        PayAccount one = payAccountDao.findOne(delBankCard.getPayAccountId());
+        //移除银行卡验证密码
+        payPasswordSecurityHelper.validateOldPassword(delBankCard.getPayPassword(),one);
         ResultUnBangBank resultUnBangBank = new ResultUnBangBank();
-        PayBank payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(payAccountId,txCode ,false);
+        PayBank payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(delBankCard.getPayAccountId(),delBankCard.getTxCode() ,false);
         if (payBank == null) throw new MessageRuntimeException("error.payserver.payServer.bank.isnull");
+        payBank.setDeleted(true);
+        payBankDao.save(payBank);
+        /* //解绑银行卡调用支付平台接口
         Param param = payAccountServiceHelper.crateUnBangBankParam(payBank);
         UninstallBangResponse response = payClient.uninstallBangBank(param.getMessage(),param.getSignature());
         if (PlatformPayUtil.isSuccess(response)){
@@ -87,6 +101,7 @@ public class PayBankService implements IPayBankService {
             return resultUnBangBank;
         }else {
             throw new RuntimeException(response.getHead().getMessage());
-        }
+        }*/
+        return resultUnBangBank;
     }
 }

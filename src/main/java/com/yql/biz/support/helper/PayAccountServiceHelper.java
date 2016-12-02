@@ -26,6 +26,7 @@ import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

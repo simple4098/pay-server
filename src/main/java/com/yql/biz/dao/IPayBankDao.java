@@ -13,7 +13,6 @@ import java.util.List;
  * data 2016/11/7 0007.
  */
 @Repository
-@CacheConfig(cacheNames = "pay_bank")
 public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
     /**
      * 根据accountId查询银行卡列表信息

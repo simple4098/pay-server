@@ -39,9 +39,9 @@ public class PayServerController {
      * 开关小额支付并且小额支付金额
      * @return
      */
-    @RequestMapping("/open_close/samll_money_pay")
+    @RequestMapping("/open_close/small_money_pay")
     public ResponseModel openClose(@Validated  PayAccount payAccount){
-        payAccountService.updatePayAccountSamllMoney(payAccount);
+        payAccountService.updatePayAccountSmallMoney(payAccount);
         return ResponseModel.SUCCESS();
     }
 
@@ -127,10 +127,9 @@ public class PayServerController {
      * 删除支付银行卡
      */
     @RequestMapping(value = "/del/bank_card" ,method = RequestMethod.POST)
-    public ResponseModel delBankCard(@NotNull(message = "{com.yql.validation.constraints.txCode.notnull}") String txCode,
-                                     @NotNull(message = "{com.yql.validation.constraints.payAccountId.notnull}") Integer payAccountId){
-        ResultUnBangBank resultUnBangBank = payBankService.delBangBank(txCode, payAccountId);
-        return ResponseModel.SUCCESS(resultUnBangBank);
+    public ResponseModel delBankCard(@Validated DelBankCardVo delBankCardVo){
+         payBankService.delBangBank(delBankCardVo);
+        return ResponseModel.SUCCESS();
     }
     /**
      * 获取用户银行卡列表信息
