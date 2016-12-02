@@ -117,6 +117,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
                             orderAccount.setBankTxTime(date);
                             orderAccount.setTxCode(weiXinNotifyVo.getOpenid());
                             orderAccount.setBankCode(weiXinNotifyVo.getBankType());
+                            orderAccount.setPayOrder(weiXinNotifyVo.getTransactionId());
                             payOrderAccountDao.save(orderAccount);
                         }
                         weiXinNotifyVo.setOutTradeNo(orderAccount.getOrderNo());

@@ -15,7 +15,7 @@ import java.util.List;
  * data 2016/11/7 0007.
  */
 @Repository
-@CacheConfig(cacheNames = "pay_order_account")
+/*@CacheConfig(cacheNames = "pay_order_account")*/
 public interface IPayOrderAccountDao  extends JpaRepository<PayOrderAccount,Integer>{
     /**
      * 根据订单号查询订单信息
