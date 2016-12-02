@@ -2,6 +2,7 @@ package com.yql.biz.controller;
 
 import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.service.IPayOrderAccountService;
+import com.yql.biz.vo.DrawMoneyVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.response.Response;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * <p>支付订单</p>
@@ -38,11 +40,26 @@ public class PayOrderController {
         return ResponseModel.SUCCESS(order);
     }
 
+    /**
+     * 提现状态修改
+     * @param orderNo 订单号
+     * @param payStatus 订单状态
+     * @see ( com.yql.biz.enums.pay.PayStatus  )  订单状态参考
+     *
+     * @return
+     */
     @RequestMapping("/draw_money_status")
     public ResponseModel drawMoneyStatus(@OrderNo String orderNo, @NotNull(message = "com.yql.validation.constraints.payStatus.message") Integer payStatus){
         payOrderAccountService.updateDrawMoneyStatus(orderNo,payStatus);
         return ResponseModel.SUCCESS();
     }
+
+    @RequestMapping("/draw_money_list")
+    public ResponseModel drawMoneyList(){
+        List<DrawMoneyVo>  list = payOrderAccountService.findDrawMoneyList();
+        return ResponseModel.SUCCESS(list);
+    }
+
 
 
 

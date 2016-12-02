@@ -1,6 +1,7 @@
 package com.yql.biz.dao;
 
 import com.yql.biz.model.PayBank;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * data 2016/11/7 0007.
  */
 @Repository
+@CacheConfig(cacheNames = "pay_bank")
 public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
     /**
      * 根据accountId查询银行卡列表信息
@@ -71,4 +73,10 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
      * @param b 是否删除
      */
     PayBank findByPayAccountIdAndSettlementFlagAndDeleted(Integer payAccountId, String settlementFlag, boolean b);
+
+    /**
+     *
+     * @param txCode 支付标识
+     */
+    PayBank findByTxCode(String txCode);
 }
