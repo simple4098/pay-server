@@ -57,6 +57,10 @@
 				</exclusion>
 			</exclusions>&ndash;&gt;
 		</dependency>-->
+		<!--<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spirng-boot-stater-devtools</artifactId>
+		</dependency>-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
@@ -187,6 +191,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork>
+				</configuration>
 			</plugin>
 			<!--
              使用aspectj-maven-plugin 插件编译springboot 可能会出现下面的错误

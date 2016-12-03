@@ -25,6 +25,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      cache:
+        use_query_cache: true
       naming:
         strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -75,6 +77,7 @@ yql:
       pay-uri: /test?id={id}
       wxHost: https://api.mch.weixin.qq.com
       prepayUri: /pay/unifiedorder
+      wxQuneryUri: /pay/orderquery
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf

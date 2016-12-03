@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <p> 异步通知返回给微信对象 </p>
+ * <p> 微信支付【统一下单】 微信返回的内容。 </p>
  * @auther simple
  * data 2016/11/16 0016.
  */

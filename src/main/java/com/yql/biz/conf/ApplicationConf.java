@@ -127,8 +127,13 @@ public class ApplicationConf implements ExternalApi {
     }
 
     @Override
-    public String getWxprepayUrl() {
+    public String getWxPrepayUrl() {
         return kunlun.getWxHost()+kunlun.getPrepayUri();
+    }
+
+    @Override
+    public String getWxQueryOrder() {
+        return kunlun.getWxHost()+kunlun.getWxQuneryUri();
     }
 
     public boolean isOpen() {
@@ -148,6 +153,16 @@ public class ApplicationConf implements ExternalApi {
         private String wxHost;
         //微信预付订单uri
         private String prepayUri;
+        //微信查询订单
+        private String wxQuneryUri;
+
+        public String getWxQuneryUri() {
+            return wxQuneryUri;
+        }
+
+        public void setWxQuneryUri(String wxQuneryUri) {
+            this.wxQuneryUri = wxQuneryUri;
+        }
 
         public String getHost() {
             return host;

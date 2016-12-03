@@ -16,5 +16,11 @@ public interface ExternalApi {
      * 微信预付订单url
      * @return
      */
-    String getWxprepayUrl();
+    String getWxPrepayUrl();
+
+    /**
+     * 微信查询订单url
+     * @return
+     */
+    String getWxQueryOrder();
 }

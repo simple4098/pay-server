@@ -5,6 +5,7 @@ import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.DrawMoneyVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
+import com.yql.biz.vo.ResultWxQueryOrder;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
@@ -54,16 +55,25 @@ public class PayOrderController {
         return ResponseModel.SUCCESS();
     }
 
+    /**
+     * 提现列表
+     * @return
+     */
     @RequestMapping("/draw_money_list")
     public ResponseModel drawMoneyList(){
         List<DrawMoneyVo>  list = payOrderAccountService.findDrawMoneyList();
         return ResponseModel.SUCCESS(list);
     }
 
-
-
-
-
+    /**
+     * 查询订单的支付平台信息
+     * @param orderNo 订单号
+     */
+    @RequestMapping("/queryOrder")
+    public ResponseModel drawMoneyList(@OrderNo String orderNo){
+        ResultWxQueryOrder resultWxQueryOrder =   payOrderAccountService.findWxOrderInfo(orderNo);
+        return ResponseModel.SUCCESS(resultWxQueryOrder);
+    }
 
     /**
      * 支付平台通知商户支付成功 失败
