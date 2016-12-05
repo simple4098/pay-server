@@ -2,6 +2,7 @@ package com.yql.biz.client;
 
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.util.PlatformPayUtil;
+import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinQueryOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
 import com.yql.biz.web.ResponseModel;
@@ -29,6 +30,7 @@ public class WxPayClient implements IWxPayClient {
         boolean httpPost = httpClient.callHttpPost(wxprepayUrl, xml);
         if (httpPost) {
             String resContent = httpClient.getResContent();
+            logger.debug("微信统一接口下单 resContent"+resContent);
             WeiXinResponse response = (WeiXinResponse)PlatformPayUtil.convertXmlStrToObject(WeiXinResponse.class, resContent);
             logger.debug("微信统一接口下单 【prepayId:"+response.getPrepayId()+"】");
             return ResponseModel.SUCCESS(response);
@@ -44,6 +46,7 @@ public class WxPayClient implements IWxPayClient {
         boolean httpPost = httpClient.callHttpPost(queryOrder, xml);
         if (httpPost) {
             String resContent = httpClient.getResContent();
+            logger.info("微信查询订单返回 resContent:"+resContent);
             WeiXinQueryOrderResponse response = (WeiXinQueryOrderResponse)PlatformPayUtil.convertXmlStrToObject(WeiXinQueryOrderResponse.class, resContent);
             logger.debug("微信查询订单返回 【outTradeNo:"+response.getOutTradeNo()+"】 ");
             return ResponseModel.SUCCESS(response);
@@ -51,5 +54,21 @@ public class WxPayClient implements IWxPayClient {
             throw new RuntimeException("微信查询订单异常 返回状态:"+httpPost);
         }
 
+    }
+
+    @Override
+    public ResponseModel<WeiXinCloseOrderResponse> closeOrder(@RequestParam String xml) {
+        String closeOrder = applicationConf.getWxCloseOrder();
+        TenpayHttpClient httpClient = new TenpayHttpClient();
+        boolean httpPost = httpClient.callHttpPost(closeOrder, xml);
+        if (httpPost) {
+            String resContent = httpClient.getResContent();
+            logger.info("微信关闭订单返回 resContent:"+resContent);
+            WeiXinCloseOrderResponse response = (WeiXinCloseOrderResponse)PlatformPayUtil.convertXmlStrToObject(WeiXinCloseOrderResponse.class, resContent);
+            logger.debug("微信关闭订单返回 【outTradeNo:"+response.getOutTradeNo()+"】 ");
+            return ResponseModel.SUCCESS(response);
+        }else {
+            throw new RuntimeException("微信关闭订单异常 返回状态:"+httpPost);
+        }
     }
 }

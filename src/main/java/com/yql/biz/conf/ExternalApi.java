@@ -23,4 +23,9 @@ public interface ExternalApi {
      * @return
      */
     String getWxQueryOrder();
+
+    /**
+     * 关闭微信订单
+     */
+    String getWxCloseOrder();
 }

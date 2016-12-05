@@ -1,5 +1,6 @@
 package com.yql.biz.client;
 
+import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinQueryOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
 import com.yql.biz.web.ResponseModel;
@@ -24,5 +25,12 @@ public interface IWxPayClient {
      * @param xml 调用微信接口的xml数据
      */
     ResponseModel<WeiXinQueryOrderResponse> queryWxOrder(@RequestParam String xml);
+
+    /**
+     * 关闭微信订单
+     * @param xml 请求xml
+     */
+    ResponseModel<WeiXinCloseOrderResponse>  closeOrder(@RequestParam String xml);
+
 
 }

@@ -16,7 +16,7 @@ public class ResultWxQueryOrder {
     //订单号
     private String orderNo;
     //支付订单号
-    private String payNo	;
+    private String payNo;
     //第三方支付号
     private String payOrder;
     //支付状态

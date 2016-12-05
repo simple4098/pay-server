@@ -6,6 +6,7 @@ import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
+import com.yql.biz.enums.pay.WxPayType;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
@@ -42,9 +43,10 @@ public class PayOrderWxPayCreator implements IPayOrderCreator {
        /* weiXinOrderVo.setOutTradeNo(payOrderVo.getOrderNo());*/
         weiXinOrderVo.setTotalFee(payOrderVo.totalFee());
         weiXinOrderVo.setSpbillCreateIp(payOrderVo.getSpbillCreateIp());
-        weiXinOrderVo.setBody("零享购-消费");
+        weiXinOrderVo.setBody(applicationConf.getWxBody());
         weiXinOrderVo.setAppId(applicationConf.getAppid());
         weiXinOrderVo.setMchId(applicationConf.getMchid());
+        weiXinOrderVo.setTradeType(WxPayType.APP);
         String wxPayParam = payOrderCardParamHelper.getWxPayParam(payOrderVo,weiXinOrderVo);
         ResponseModel<WeiXinResponse> weiXinResponseResponseModel = wxPayClient.sendPrepay(wxPayParam);
         if (weiXinResponseResponseModel!=null && weiXinResponseResponseModel.getData()!=null){

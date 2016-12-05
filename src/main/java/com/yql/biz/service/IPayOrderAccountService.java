@@ -4,6 +4,7 @@ import com.yql.biz.vo.DrawMoneyVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.ResultWxQueryOrder;
+import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.ResponseHandler;
@@ -46,4 +47,11 @@ public interface IPayOrderAccountService {
      * @return
      */
     ResultWxQueryOrder findWxOrderInfo(String orderNo);
+
+    /**
+     * 关闭订单
+     * @param orderNo
+     * @return
+     */
+    WeiXinCloseOrderResponse closeOrder(String orderNo);
 }

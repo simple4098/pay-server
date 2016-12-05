@@ -7,6 +7,7 @@ import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.ResultWxQueryOrder;
 import com.yql.biz.vo.pay.response.Response;
+import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,10 +70,20 @@ public class PayOrderController {
      * 查询订单的支付平台信息
      * @param orderNo 订单号
      */
-    @RequestMapping("/queryOrder")
-    public ResponseModel drawMoneyList(@OrderNo String orderNo){
+    @RequestMapping("/query_order")
+    public ResponseModel queryOrder(@OrderNo String orderNo){
         ResultWxQueryOrder resultWxQueryOrder =   payOrderAccountService.findWxOrderInfo(orderNo);
         return ResponseModel.SUCCESS(resultWxQueryOrder);
+    }
+
+    /**
+     * 关闭订单
+     * @param orderNo 订单号
+     */
+    @RequestMapping("/close_order")
+    public ResponseModel closeOrder(@OrderNo String orderNo){
+        WeiXinCloseOrderResponse weiXinCloseOrderResponse =   payOrderAccountService.closeOrder(orderNo);
+        return ResponseModel.SUCCESS(weiXinCloseOrderResponse);
     }
 
     /**

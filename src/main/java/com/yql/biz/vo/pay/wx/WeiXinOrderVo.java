@@ -36,7 +36,7 @@ public class WeiXinOrderVo extends DjPay {
     private String notifyUrl;
     //交易类型
     @Enumerated(value = EnumType.STRING)
-    private WxPayType tradeType = WxPayType.APP;
+    private WxPayType tradeType;
 
     @XmlElement(name = "appid")
     public String getAppId() {

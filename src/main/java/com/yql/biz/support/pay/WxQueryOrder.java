@@ -61,7 +61,7 @@ public class WxQueryOrder implements  IQueryOrder {
             }
         } catch (Exception e) {
             log.error("wx 查询订单异常",e);
-            throw  new RuntimeException("wx 查询订单异常");
+            throw  new RuntimeException("wx 查询订单异常+"+e.getMessage());
         }
         return resultWxQueryOrder;
     }

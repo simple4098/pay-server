@@ -18,11 +18,13 @@ import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
+import com.yql.biz.support.pay.CloseOrderComposition;
 import com.yql.biz.support.pay.PayOrderCreatorComposition;
 import com.yql.biz.support.pay.QueryOrderComposition;
 import com.yql.biz.util.PayDateUtil;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.*;
+import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.ResponseHandler;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
@@ -63,6 +65,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private IPayBankDao payBankDao;
     @Resource(name = "queryOrderComposition")
     private QueryOrderComposition queryOrderComposition;
+    @Resource(name = "closeOrderComposition")
+    private CloseOrderComposition closeOrderComposition;
 
     @Override
     public ResultPayOrder order(PayOrderVo payOrderVo) {
@@ -178,5 +182,12 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(orderNo);
         ResultWxQueryOrder wxQueryOrder = queryOrderComposition.transform(orderAccount);
         return wxQueryOrder;
+    }
+
+    @Override
+    public WeiXinCloseOrderResponse closeOrder(String orderNo) {
+        PayOrderAccount payOrderAccount = payOrderAccountDao.findByOrderNo(orderNo);
+        WeiXinCloseOrderResponse transform = closeOrderComposition.transform(payOrderAccount);
+        return transform;
     }
 }

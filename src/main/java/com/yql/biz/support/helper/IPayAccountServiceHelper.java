@@ -17,19 +17,9 @@ import java.util.List;
  */
 public interface IPayAccountServiceHelper {
 
-    /**
-     * 加密支付密码
-     * @param payAccount
-     * @throws Exception 加密异常
-     */
- /*   void md5PayPassword(PayAccount payAccount) ;*/
 
-    /**
-     * 验证旧密码是否正确
-     * @param password 用户输入之前的的密码
-     * @param payAccount 数据库存储支付数据
-     */
-    //void validateOldPassword(String password,PayAccount payAccount);
+
+
 
     /**
      * 创建快捷支付
@@ -73,7 +63,7 @@ public interface IPayAccountServiceHelper {
     void createDelBankParam(PayBank payBank, UninstallBangResponseBody responseBody);
 
     /**
-     * 提前金额验证
+     * 提现金额验证
      * @param payOrderVo 提现订单对象
      */
     void validateDrawMoney(PayOrderVo payOrderVo);

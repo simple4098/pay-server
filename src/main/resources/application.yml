@@ -66,6 +66,8 @@ yql:
   wxKey: wOdzXgWwbwjPEEZoMXWKudytfYvq6iLo
   #微信异步通知
   wxNotifyUrl: http://localhost:8081/pay/wx
+  #微信支付 body
+  wxBody: 零享购-消费
   #阿里异步通知
   aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
   institution-id: 158974554
@@ -78,6 +80,7 @@ yql:
       wxHost: https://api.mch.weixin.qq.com
       prepayUri: /pay/unifiedorder
       wxQuneryUri: /pay/orderquery
+      wxCloseUri: /pay/closeorder
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
