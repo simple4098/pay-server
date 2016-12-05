@@ -1,10 +1,13 @@
 package com.yql.biz.support.pay;
 
 import com.alibaba.fastjson.JSON;
+import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.pay.PayStatus;
+import com.yql.biz.model.PayAccount;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
+import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.vo.PayOrderVo;
 import org.slf4j.Logger;
@@ -29,10 +32,17 @@ public class DrawMoneyCreator implements IPayOrderCreator{
     private SendMessageHelper sendMessageHelper;
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
+    @Resource
+    private PayPasswordSecurityHelper payPasswordSecurityHelper;
+    @Resource
+    private IPayAccountDao payAccountDao;
 
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
         log.debug("提现申请json:"+JSON.toJSONString(payOrderVo));
+        //支付验证支付密码
+        PayAccount payAccount = payAccountDao.findByUserCode(payOrderVo.getUserCode());
+        payPasswordSecurityHelper.validateOldPassword(payOrderVo.getPayPassword(),payAccount);
         payAccountServiceHelper.validateDrawMoney(payOrderVo);
         String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayNo(payNo);

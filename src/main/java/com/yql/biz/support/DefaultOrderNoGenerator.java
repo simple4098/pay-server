@@ -2,6 +2,7 @@ package com.yql.biz.support;
 
 import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.PayType;
+import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.util.PayUtil;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -29,6 +30,14 @@ public class DefaultOrderNoGenerator implements OrderNoGenerator {
         StringBuffer txCode = new StringBuffer(bankCodeType.name());
         String s = PayUtil.randomCode(6);
         txCode.append(payBank.getUserCode()).append(s);
+        return txCode.toString();
+    }
+
+    @Override
+    public String generateBalanceDiamondCode(PayAccount account,PayType payType) {
+        String randomCode = PayUtil.randomCode(6);
+        StringBuffer txCode = new StringBuffer(payType.name());
+        txCode.append(account.getUserCode()).append(randomCode);
         return txCode.toString();
     }
 

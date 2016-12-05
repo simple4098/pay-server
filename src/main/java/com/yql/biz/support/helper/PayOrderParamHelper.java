@@ -68,9 +68,6 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
     @Override
     public String getWxPayParam(PayOrderVo payOrderVo,WeiXinOrderVo weiXinOrderVo) {
         try {
-            String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
-            payOrderVo.setPayNo(payNo);
-            weiXinOrderVo.setOutTradeNo(payNo);
             String sign = getSign(weiXinOrderVo);
             weiXinOrderVo.setSign(sign);
             String payRequestXml = PlatformPayUtil.payRequestXml(weiXinOrderVo);

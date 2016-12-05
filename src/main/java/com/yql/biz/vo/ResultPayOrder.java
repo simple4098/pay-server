@@ -1,7 +1,5 @@
 package com.yql.biz.vo;
 
-import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
-
 import java.math.BigDecimal;
 
 /**
@@ -16,14 +14,12 @@ public class ResultPayOrder {
     private String orderNo;
     //支付订单号
     private String payNo	;
-    //第三方支付号
-    private String payOrder;
     //支付状态
     private Integer payStatus;
     private BigDecimal payPrice;
     //支付通道标识 微信openid  快捷支付银行卡编码
     private String txCode;
-    private WeiXinAppRequest appRequest;
+    //private WeiXinAppRequest appRequest;
 
     public String getMsg() {
         return msg;
@@ -49,13 +45,7 @@ public class ResultPayOrder {
         this.payNo = payNo;
     }
 
-    public String getPayOrder() {
-        return payOrder;
-    }
 
-    public void setPayOrder(String payOrder) {
-        this.payOrder = payOrder;
-    }
 
     public Integer getPayStatus() {
         return payStatus;
@@ -73,13 +63,13 @@ public class ResultPayOrder {
         this.payPrice = payPrice;
     }
 
-    public WeiXinAppRequest getAppRequest() {
+  /*  public WeiXinAppRequest getAppRequest() {
         return appRequest;
     }
 
     public void setAppRequest(WeiXinAppRequest appRequest) {
         this.appRequest = appRequest;
-    }
+    }*/
 
     public String getTxCode() {
         return txCode;

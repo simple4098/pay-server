@@ -1,7 +1,6 @@
 package com.yql.biz.vo;
 
 import com.yql.biz.enums.pay.WxTradeState;
-import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 
 import java.math.BigDecimal;
 

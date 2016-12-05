@@ -139,7 +139,6 @@ public class PlatformPayUtil<T extends DjPay> {
                     e.printStackTrace();
                 }
                 String name = annotation.name();
-                System.out.println(name+"=000000000000="+invoke);
                 if (!StringUtils.isEmpty(invoke)){
                     param.put(name,invoke);
                 }

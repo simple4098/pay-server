@@ -4,7 +4,6 @@ import com.yql.biz.enums.PayType;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
-import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.NotNull;
@@ -51,7 +50,9 @@ public class PayOrderVo {
     //用户ip
     private String spbillCreateIp;
     //微信响应内容
-    private WeiXinAppRequest appRequest;
+    //private WeiXinAppRequest appRequest;
+    //支付密码
+    private String payPassword;
 
     public String getSpbillCreateIp() {
         return spbillCreateIp;
@@ -187,13 +188,21 @@ public class PayOrderVo {
         this.bankTxTime = bankTxTime;
     }
 
-    public WeiXinAppRequest getAppRequest() {
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
+    }
+
+    /*public WeiXinAppRequest getAppRequest() {
         return appRequest;
     }
 
     public void setAppRequest(WeiXinAppRequest appRequest) {
         this.appRequest = appRequest;
-    }
+    }*/
 
     public static PayOrderAccount toDomain(PayOrderVo payOrderVo) {
         PayOrderAccount payOrderAccount = new PayOrderAccount();
@@ -228,10 +237,10 @@ public class PayOrderVo {
             ResultPayOrder resultPayOrder = new ResultPayOrder();
             resultPayOrder.setPayNo(payOrderVo.getPayNo());
             resultPayOrder.setMsg(responseBody.getResponseMessage());
-            resultPayOrder.setPayOrder(responseBody.getPaymentNo());
             resultPayOrder.setPayStatus(responseBody.getStatus());
             resultPayOrder.setPayPrice(payOrderVo.getTotalPrice());
             resultPayOrder.setOrderNo(payOrderVo.getOrderNo());
+            resultPayOrder.setTxCode(payOrderVo.getTxCode());
             return  resultPayOrder;
         }
         return null;

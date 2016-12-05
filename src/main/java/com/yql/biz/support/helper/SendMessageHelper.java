@@ -54,7 +54,7 @@ public class SendMessageHelper {
     public void sendWxNotify(ResultPayOrder resultPayOrder, String outTradeNo) {
         resultPayOrder.setPayStatus(PayStatus.HANDLING.getValue());
         String json = JSON.toJSONString(resultPayOrder);
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_WX_CALLBACK.name(),outTradeNo,json);
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),outTradeNo,json);
         sendMessage(textMessage);
     }
 
@@ -66,12 +66,13 @@ public class SendMessageHelper {
      */
     public void sendWxNotifyResult(WeiXinResponseResult weiXinResponse, ResultPayOrder resultPayOrder, WeiXinNotifyVo weiXinNotifyVo) {
         String json = "";
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_WX_CALLBACK.name(),weiXinNotifyVo.getOutTradeNo(),json);
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),weiXinNotifyVo.getOutTradeNo(),json);
         if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
             weiXinResponse.setReturnCode(WxPayResult.SUCCESS);
             BigDecimal totalFee = PayUtil.centToPrice(Integer.valueOf(weiXinNotifyVo.getTotalFee()));
             resultPayOrder.setPayPrice(totalFee);
-            resultPayOrder.setPayOrder(weiXinNotifyVo.getTransactionId());
+            //resultPayOrder.setPayOrder(weiXinNotifyVo.getTransactionId());
+            resultPayOrder.setTxCode(weiXinNotifyVo.getOpenid());
             resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
             json = JSON.toJSONString(resultPayOrder);
             textMessage.setBody(json.getBytes());
@@ -93,7 +94,7 @@ public class SendMessageHelper {
     public void sendDrawMoney(PayOrderVo payOrderVo) {
         ResultPayOrder resultPayOrder = PayOrderVo.toResultOrder(payOrderVo);
         String json = JSON.toJSONString(resultPayOrder);
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_DRAE_MONEY.name(),payOrderVo.getOrderNo(),json);
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo(),json);
         sendMessage(textMessage);
 
     }

@@ -1,13 +1,11 @@
 package com.yql.biz.service;
 
-import com.yql.biz.vo.DrawMoneyVo;
-import com.yql.biz.vo.PayOrderVo;
-import com.yql.biz.vo.ResultPayOrder;
-import com.yql.biz.vo.ResultWxQueryOrder;
+import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.ResponseHandler;
+import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 
 import java.util.List;
 
@@ -54,4 +52,13 @@ public interface IPayOrderAccountService {
      * @return
      */
     WeiXinCloseOrderResponse closeOrder(String orderNo);
+
+    /**
+     * 移动端获取预付单信息
+     * @param orderNo 订单号
+     * @param spbillCreateIp 用户ip
+     * @return
+     */
+    AppPrepayInfo prepay(String orderNo, String spbillCreateIp);
+
 }

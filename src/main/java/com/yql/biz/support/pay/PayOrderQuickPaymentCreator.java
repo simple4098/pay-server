@@ -3,12 +3,15 @@ package com.yql.biz.support.pay;
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.PayClient;
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.exception.MessageRuntimeException;
+import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
+import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayOrderVo;
@@ -30,8 +33,8 @@ import javax.annotation.Resource;
  * data 2016/11/11 0011.
  */
 @Component
-public class PayOrderCardCreator implements IPayOrderCreator {
-    private static final Logger log = LoggerFactory.getLogger(PayOrderCardCreator.class);
+public class PayOrderQuickPaymentCreator implements IPayOrderCreator {
+    private static final Logger log = LoggerFactory.getLogger(PayOrderQuickPaymentCreator.class);
     @Resource
     private PayClient payClient;
     @Resource
@@ -42,9 +45,16 @@ public class PayOrderCardCreator implements IPayOrderCreator {
     private IPayBankDao payBankDao;
     @Resource
     private ApplicationConf applicationConf;
+    @Resource
+    private PayPasswordSecurityHelper payPasswordSecurityHelper;
+    @Resource
+    private IPayAccountDao payAccountDao;
 
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
+        //支付验证支付密码
+        PayAccount payAccount = payAccountDao.findByUserCode(payOrderVo.getUserCode());
+        payPasswordSecurityHelper.validateOldPassword(payOrderVo.getPayPassword(),payAccount);
         if (StringUtils.isEmpty(payOrderVo.getTxCode())) throw new MessageRuntimeException("com.yql.validation.constraints.txCode.notnull");
         PayBank payBank = payBankDao.findByUserCodeAndTxCode(payOrderVo.getUserCode(),payOrderVo.getTxCode());
         Param payParam = payOrderCardParamHelper.getPayParam(payOrderVo,payBank);

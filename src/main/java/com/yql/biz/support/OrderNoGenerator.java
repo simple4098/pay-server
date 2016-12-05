@@ -3,6 +3,7 @@ package com.yql.biz.support;
 
 import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.PayType;
+import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 
 
@@ -21,5 +22,11 @@ public interface OrderNoGenerator {
      * @param bankCodeType  绑定类型  解绑类型  交易类型
      */
     String generateBankCode(PayBank payBank, BankCodeType bankCodeType);
+
+    /**
+     * 生成余额  钻石支付 生成 txCode
+     * @param account 账户信息
+     */
+    String generateBalanceDiamondCode(PayAccount account,PayType payType);
 
 }

@@ -41,8 +41,6 @@ public class PayBankService implements IPayBankService {
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
     @Resource
-    private PayClient payClient;
-    @Resource
     private PayPasswordSecurityHelper payPasswordSecurityHelper;
     @Resource
     private IPayAccountDao payAccountDao;

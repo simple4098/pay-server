@@ -1,13 +1,13 @@
 package com.yql.biz.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.service.IPayOrderAccountService;
-import com.yql.biz.vo.DrawMoneyVo;
-import com.yql.biz.vo.PayOrderVo;
-import com.yql.biz.vo.ResultPayOrder;
-import com.yql.biz.vo.ResultWxQueryOrder;
+import com.yql.biz.util.PlatformPayUtil;
+import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
+import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>支付订单</p>
@@ -84,6 +85,17 @@ public class PayOrderController {
     public ResponseModel closeOrder(@OrderNo String orderNo){
         WeiXinCloseOrderResponse weiXinCloseOrderResponse =   payOrderAccountService.closeOrder(orderNo);
         return ResponseModel.SUCCESS(weiXinCloseOrderResponse);
+    }
+
+    /**
+     * 获取移动端信息
+     * @param orderNo 订单号
+     * @param spbillCreateIp 用户ip
+     */
+    @RequestMapping("/wx_prepay")
+    public ResponseModel prepay(@OrderNo String orderNo,@NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp){
+        AppPrepayInfo appPrepayInfo =   payOrderAccountService.prepay(orderNo,spbillCreateIp);
+        return ResponseModel.SUCCESS(appPrepayInfo);
     }
 
     /**
