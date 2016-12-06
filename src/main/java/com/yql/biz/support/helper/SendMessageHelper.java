@@ -53,8 +53,7 @@ public class SendMessageHelper {
      */
     public void sendWxNotify(ResultPayOrder resultPayOrder, String outTradeNo) {
         resultPayOrder.setPayStatus(PayStatus.HANDLING.getValue());
-        String json = JSON.toJSONString(resultPayOrder);
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),outTradeNo,json);
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),outTradeNo,resultPayOrder);
         sendMessage(textMessage);
     }
 
@@ -65,24 +64,20 @@ public class SendMessageHelper {
      * @param weiXinNotifyVo 微信异步通知的参数值
      */
     public void sendWxNotifyResult(WeiXinResponseResult weiXinResponse, ResultPayOrder resultPayOrder, WeiXinNotifyVo weiXinNotifyVo) {
-        String json = "";
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),weiXinNotifyVo.getOutTradeNo(),json);
+        TextMessage textMessage = null;
         if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
             weiXinResponse.setReturnCode(WxPayResult.SUCCESS);
             BigDecimal totalFee = PayUtil.centToPrice(Integer.valueOf(weiXinNotifyVo.getTotalFee()));
             resultPayOrder.setPayPrice(totalFee);
-            //resultPayOrder.setPayOrder(weiXinNotifyVo.getTransactionId());
             resultPayOrder.setTxCode(weiXinNotifyVo.getOpenid());
             resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
-            json = JSON.toJSONString(resultPayOrder);
-            textMessage.setBody(json.getBytes());
+            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),weiXinNotifyVo.getOutTradeNo(),resultPayOrder);
         }else {
             weiXinResponse.setReturnCode(WxPayResult.FAIL);
             weiXinResponse.setReturnMsg("微信异步通知,处理业务失败");
             resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
-            json = JSON.toJSONString(resultPayOrder);
             weiXinResponse.setReturnCode(WxPayResult.FAIL);
-            textMessage.setBody(json.getBytes());
+            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),weiXinNotifyVo.getOutTradeNo(),resultPayOrder);
         }
         sendMessage(textMessage);
     }
@@ -93,8 +88,7 @@ public class SendMessageHelper {
      */
     public void sendDrawMoney(PayOrderVo payOrderVo) {
         ResultPayOrder resultPayOrder = PayOrderVo.toResultOrder(payOrderVo);
-        String json = JSON.toJSONString(resultPayOrder);
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo(),json);
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo(),resultPayOrder);
         sendMessage(textMessage);
 
     }

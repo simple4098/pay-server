@@ -32,7 +32,7 @@ public class PayOrderWxPayCreator implements IPayOrderCreator {
 
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
-        logger.debug("=======生产微信订单========"+ JSON.toJSONString(payOrderVo));
+        logger.debug("微信订单支付:"+ JSON.toJSONString(payOrderVo));
         String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayNo(payNo);
         payOrderVo.setPayStatus(PayStatus.WX_PAY_UNIFIED_ORDER.getValue());
