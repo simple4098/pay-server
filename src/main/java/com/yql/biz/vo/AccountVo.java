@@ -13,7 +13,7 @@ public class AccountVo {
     //金币余额
     private BigDecimal goldFee;
     //用户code
-    private BigDecimal userCode;
+    private String userCode;
     //钻石余额
     private BigDecimal diamondFee;
 
@@ -33,11 +33,11 @@ public class AccountVo {
         this.goldFee = goldFee;
     }
 
-    public BigDecimal getUserCode() {
+    public String getUserCode() {
         return userCode;
     }
 
-    public void setUserCode(BigDecimal userCode) {
+    public void setUserCode(String userCode) {
         this.userCode = userCode;
     }
 

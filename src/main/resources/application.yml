@@ -73,7 +73,7 @@ yql:
   institution-id: 158974554
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER
-  isOpen: false
+  openSendMessage: true
   kunlun:
       host: http://localhost:8080
       pay-uri: /test?id={id}

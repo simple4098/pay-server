@@ -114,7 +114,7 @@ public class PayUtil {
     }
 
     public static void main(String[] args) {
-        Date date = dataFormat("20141030133525");
-        System.out.println(date);
+        String s = randomCode(32);
+        System.out.println(s);
     }
 }

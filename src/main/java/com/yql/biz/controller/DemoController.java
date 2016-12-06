@@ -1,11 +1,14 @@
 package com.yql.biz.controller;
 
 import com.yql.biz.client.ComputeClient;
+import com.yql.biz.client.IAccountClient;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.SecurityConfiguration;
 import com.yql.biz.dao.IBankInfoDao;
+import com.yql.biz.exception.DataObjectNotFoundException;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
+import com.yql.biz.vo.AccountVo;
 import com.yql.biz.vo.UserBasicInfoVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.BangBody;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * <p> 模拟调用第三方支付接口 </p>
@@ -47,6 +51,8 @@ public class DemoController {
     private IBankInfoDao bankInfoDao;
     @Resource
     private IPayOrderParamHelper payOrderCardParamHelper;
+    @Resource
+    private IAccountClient accountClient;
 
     @RequestMapping(value = "/index")
     public ResponseModel index(WeiXinOrderVo weiXinOrderVo) throws Exception {
@@ -76,11 +82,10 @@ public class DemoController {
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public ResponseModel pongMessage( String userCode) {
-        ResponseModel<UserBasicInfoVo> responseModel = userCenterClient.getBaseUserInfo(userCode);
-       responseModel.successIfPresent(userBasicInfoVo -> {
-
-       });
-        return responseModel;
+      /*  ResponseModel<UserBasicInfoVo> responseModel = userCenterClient.getBaseUserInfo(userCode);
+        ResponseModel<UserBasicInfoVo> responseModel1 = Optional.ofNullable(responseModel).orElseThrow(DataObjectNotFoundException::new);*/
+        ResponseModel<AccountVo> jaq85s2n = accountClient.getAccount("jaq85s2n");
+        return jaq85s2n;
     }
 
     @RequestMapping("/add-feign")

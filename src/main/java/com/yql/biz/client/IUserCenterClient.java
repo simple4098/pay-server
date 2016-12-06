@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 用户中心client
  * @author simple
  */
-@FeignClient(value = "user-center",url = "${pay-server.userHost}",fallback = UserCenterHystrix.class)
+@FeignClient(value = "user-center",fallback = UserCenterHystrix.class)
 public interface IUserCenterClient {
 
     /**

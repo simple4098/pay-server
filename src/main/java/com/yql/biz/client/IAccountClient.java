@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 账户中心客户端
  * @author simple
  */
-@FeignClient(value = "pay-accounting",url = "http://192.168.0.32",fallback = AccountClientHystrix.class)
+@FeignClient(value = "pay-accounting")
 public interface IAccountClient {
 
 
-    @RequestMapping(value = "/account/info",method = RequestMethod.POST)
+    @RequestMapping(value = "/account/info",method = RequestMethod.GET)
    ResponseModel<AccountVo> getAccount(@RequestParam(name = "userCode") String userCode);
 
 }

@@ -61,4 +61,10 @@ public interface IPayOrderAccountService {
      */
     AppPrepayInfo prepay(String orderNo, String spbillCreateIp);
 
+    /**
+     * 查询订单信息
+     * @param orderNo 订单号
+     * @return
+     */
+    ResultPayOrder findOrderInfo(String orderNo);
 }

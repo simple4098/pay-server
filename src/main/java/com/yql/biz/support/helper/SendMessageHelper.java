@@ -38,7 +38,7 @@ public class SendMessageHelper {
      * @param textMessage
      */
     public void sendMessage(TextMessage textMessage){
-        boolean open = applicationConf.isOpen();
+        boolean open = applicationConf.getOpenSendMessage();
         log.debug("消息开关:\t"+open+"================textMessage====================\n"+JSON.toJSONString(textMessage));
         if (open){
             log.debug("============发送消息 start=============");

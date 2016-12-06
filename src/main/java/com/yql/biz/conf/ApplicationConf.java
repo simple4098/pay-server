@@ -32,7 +32,7 @@ public class ApplicationConf implements ExternalApi {
     //机构代码
     private String institutionId;
     //发送消息开关
-    private boolean isOpen;
+    private boolean openSendMessage;
     private Kunlun kunlun;
 
     public String getInstitutionId() {
@@ -151,12 +151,12 @@ public class ApplicationConf implements ExternalApi {
         return kunlun.getWxHost()+kunlun.getWxQuneryUri();
     }
 
-    public boolean isOpen() {
-        return isOpen;
+    public boolean getOpenSendMessage() {
+        return openSendMessage;
     }
 
-    public void setOpen(boolean open) {
-        isOpen = open;
+    public void setOpenSendMessage(boolean openSendMessage) {
+        this.openSendMessage = openSendMessage;
     }
 
     public static class Kunlun {

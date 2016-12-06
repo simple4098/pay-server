@@ -242,4 +242,12 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         }
         return null;
     }
+
+    @Override
+    public ResultPayOrder findOrderInfo(String orderNo) {
+        PayOrderAccount byOrderNo = payOrderAccountDao.findByOrderNo(orderNo);
+        PayOrderVo payOrderVo = PayOrderVo.domainToVo(byOrderNo);
+        ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
+        return payOrder;
+    }
 }

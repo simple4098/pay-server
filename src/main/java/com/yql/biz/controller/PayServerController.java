@@ -1,7 +1,9 @@
 package com.yql.biz.controller;
 
+import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.constraint.UserCode;
 import com.yql.biz.service.IPayBankService;
+import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.*;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
@@ -32,6 +34,8 @@ public class PayServerController {
     private IPayProblemService payProblemService;
     @Resource
     private IPayBankService payBankService;
+    @Resource
+    private IPayOrderAccountService payOrderAccountService;
 
 
 
@@ -138,5 +142,15 @@ public class PayServerController {
     public ResponseModel obtBankCard(@UserCode  String userCode){
         List<PayBankVo> list = payBankService.findByUserCode(userCode);
         return ResponseModel.SUCCESS(list);
+    }
+
+    /**
+     * 查询订单状态
+     * @param orderNo 订单号
+     */
+    @RequestMapping("/query/order")
+    public ResponseModel queryOrder(@OrderNo String orderNo){
+        ResultPayOrder resultPayOrder =   payOrderAccountService.findOrderInfo(orderNo);
+        return ResponseModel.SUCCESS(resultPayOrder);
     }
 }

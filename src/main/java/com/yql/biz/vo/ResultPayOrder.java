@@ -1,5 +1,7 @@
 package com.yql.biz.vo;
 
+import com.yql.biz.enums.PayType;
+
 import java.math.BigDecimal;
 
 /**
@@ -19,6 +21,7 @@ public class ResultPayOrder {
     private BigDecimal payPrice;
     //支付通道标识 微信openid  快捷支付银行卡编码
     private String txCode;
+    private PayType payType;
     //private WeiXinAppRequest appRequest;
 
     public String getMsg() {
@@ -77,5 +80,13 @@ public class ResultPayOrder {
 
     public void setTxCode(String txCode) {
         this.txCode = txCode;
+    }
+
+    public PayType getPayType() {
+        return payType;
+    }
+
+    public void setPayType(PayType payType) {
+        this.payType = payType;
     }
 }
