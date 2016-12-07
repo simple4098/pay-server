@@ -2,6 +2,8 @@ package com.yql.biz.support.helper;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IAccountClient;
+import com.yql.biz.client.IFyCheckCardPayClient;
+import com.yql.biz.client.IFyPayForClient;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IBankInfoDao;
@@ -10,14 +12,20 @@ import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.RealNameAuthType;
+import com.yql.biz.enums.fy.FyRequestType;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
+import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.fy.CheckCardRequest;
+import com.yql.biz.vo.pay.fy.CheckCardResponse;
+import com.yql.biz.vo.pay.fy.FyPayForRequest;
+import com.yql.biz.vo.pay.fy.FyPayRequest;
 import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
@@ -57,6 +65,8 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IPayBankDao payBankDao;
     @Resource
     private IAccountClient accountClient;
+    @Resource
+    private IFyCheckCardPayClient fyCheckCardPayClient;
 
     @Override
     public Param crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
@@ -69,8 +79,14 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         if (!CollectionUtils.isEmpty(list)) {
             newPayBak.setSort(list.size());
         }
+        CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),payBankVo.getBankCard(),payBankVo.getCardholder(),"0",payAccount.getIdentificationNumber(),payBankVo.getPhoneNumber());
+        String md5String = checkCardRequest.toMd5String(applicationConf.getFyKey());
+        checkCardRequest.setSign(md5String);
+        String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
+        logger.debug("发送报文xml:"+xml);
+        String checkCardResponse = fyCheckCardPayClient.checkCard(xml);
+        CheckCardResponse cardResponse = (CheckCardResponse) PlatformPayUtil.convertXmlStrToObject(CheckCardResponse.class,checkCardResponse);
         Request<BangBody> request = new Request<>();
-        BankInfo byBankName = bankInfoDao.findByBankName(newPayBak.getBankName());
         String txSNBinding = orderNoGenerator.generateBankCode(newPayBak, BankCodeType.SN_BINDING);
         String txCode = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.TX_CODE);
         String settlementFlag = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.SETTLEMENTFLAG);
@@ -78,28 +94,17 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         payBank = payBankDao.findByPayAccountIdAndTxSNBindingAndDeleted(newPayBak.getPayAccountId(), txSNBinding,false);
         payBank = payBankDao.findByPayAccountIdAndSettlementFlagAndDeleted(newPayBak.getPayAccountId(), settlementFlag,false);
         if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
-        BangBody bangBody = new BangBody();
         newPayBak.setTxSNBinding(txSNBinding);
         newPayBak.setTxCode(txCode);
-        if (byBankName!=null){
-            bangBody.setBankId(byBankName.getBankCode());
-            newPayBak.setBankId(byBankName.getBankCode());
+        if (cardResponse!=null){
+            newPayBak.setBankName(cardResponse.getCnm());
+            newPayBak.setBankId(cardResponse.getInsCd());
         }
         newPayBak.setSettlementFlag(settlementFlag);
         Head head = new Head() ;
         head.setInstitutionID(applicationConf.getInstitutionId());
         head.setTxCode(txCode);
         request.setHead(head);
-        bangBody.setAccountName(newPayBak.getBankName());
-        bangBody.setAccountNumber(newPayBak.getBankCard());
-        bangBody.setIdentificationType(payAccount.getIdentificationType().getValue());
-        bangBody.setCardType(newPayBak.getCardType().getValue());
-        bangBody.setPhoneNumber(newPayBak.getPhoneNumber());
-        bangBody.setTxSNBinding(txSNBinding);
-        bangBody.setIdentificationNumber(payAccount.getIdentificationNumber());
-        bangBody.setValidDate(newPayBak.getValidDate());
-        bangBody.setcVN2(newPayBak.getCvn2());
-        request.setBody(bangBody);
         try {
             return  PlatformPayUtil.payRequest(request);
         } catch (Exception e) {

@@ -15,11 +15,10 @@ public interface IFyPayForClient {
     /**
      * 验证银行卡信息
      */
-    @RequestMapping(value = "/req.do",method = RequestMethod.POST,produces = "charset=UTF-8")
+    @RequestMapping(value = "/req.do",method = RequestMethod.POST)
     String payFor(@RequestParam(name = "reqtype") String reqtype, @RequestParam(name = "xml")String xml,
                   @RequestParam(name = "mac")String mac, @RequestParam(name = "merid")String merid);
 
 
-   // String payFor(FyPayRequest request);
 
 }

@@ -31,6 +31,10 @@ public class ApplicationConf implements ExternalApi {
     private String sendMsgTopic;
     //机构代码
     private String institutionId;
+    //商户code
+    private String fyMerid;
+    //商户秘钥
+    private String fyKey;
     //发送消息开关
     private boolean openSendMessage;
     private Kunlun kunlun;
@@ -129,6 +133,23 @@ public class ApplicationConf implements ExternalApi {
 
     public void setWxBody(String wxBody) {
         this.wxBody = wxBody;
+    }
+
+    public String getFyMerid() {
+
+        return fyMerid;
+    }
+
+    public void setFyMerid(String fyMerid) {
+        this.fyMerid = fyMerid;
+    }
+
+    public String getFyKey() {
+        return fyKey;
+    }
+
+    public void setFyKey(String fyKey) {
+        this.fyKey = fyKey;
     }
 
     @Override

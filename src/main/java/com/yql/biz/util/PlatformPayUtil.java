@@ -54,16 +54,21 @@ public class PlatformPayUtil<T extends DjPay> {
         return   param;
     }
 
-    public static <T> String payRequestXml(T t)throws Exception{
-        JAXBContext context = JAXBContext.newInstance(t.getClass());
-        Marshaller marshaller = context.createMarshaller();
-        // 是否省略xm头声明信
-        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, false);
-        //是否标准格式输出
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,Boolean.FALSE);
-        StringWriter fw = new StringWriter();
-        marshaller.marshal(t, fw);
-        return fw.toString();
+    public static <T> String payRequestXml(T t){
+        try{
+            JAXBContext context = JAXBContext.newInstance(t.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            // 是否省略xm头声明信
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, false);
+            //是否标准格式输出
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,Boolean.FALSE);
+            StringWriter fw = new StringWriter();
+            marshaller.marshal(t, fw);
+            return fw.toString();
+        }catch (Exception e){
+            logger.error("解析异常",e);
+        }
+        return null;
     }
 
     public static Object convertXmlStrToObject(Class clazz, String xmlStr) {

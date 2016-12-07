@@ -16,7 +16,9 @@ public class CheckCardResponse extends FyPay {
     private String ossn;
     private String cardNo;
     private String mchntCd;
+    //银行名称
     private String cnm;
+    //银行机构号
     private String insCd;
 
     @XmlElement(name = "Rcd")

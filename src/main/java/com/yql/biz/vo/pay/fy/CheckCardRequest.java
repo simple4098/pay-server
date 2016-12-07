@@ -15,7 +15,7 @@ public class CheckCardRequest extends FyPay {
     //商户id
     private String mchntCd;
     //商户流水号
-    private String oSsn;
+    private String oSsn = PayUtil.randomCode(30);
     //银行卡号
     private String ono;
     //姓名
@@ -28,6 +28,17 @@ public class CheckCardRequest extends FyPay {
     //银行预留手 机号
     private String mno;
 
+    public CheckCardRequest() {
+    }
+
+    public CheckCardRequest(String mchntCd, String ono, String onm, String oCerTp, String ocerNo, String mno) {
+        this.mchntCd = mchntCd;
+        this.ono = ono;
+        this.onm = onm;
+        this.oCerTp = oCerTp;
+        this.ocerNo = ocerNo;
+        this.mno = mno;
+    }
 
     @XmlElement(name = "MchntCd")
     public String getMchntCd() {

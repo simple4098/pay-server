@@ -69,20 +69,13 @@ public class DemoController {
         checkCardRequest.setOno("6217711002734000");
         checkCardRequest.setoCerTp("0");
         checkCardRequest.setOnm("马龙");
-        checkCardRequest.setoSsn(PayUtil.randomCode(32));
+        checkCardRequest.setoSsn(PayUtil.randomCode(30));
         String md5String = checkCardRequest.toMd5String("5old71wihg2tqjug9kkpxnhx9hiujoqj");
         checkCardRequest.setSign(md5String);
         String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
         logger.debug(xml+"==========sign:"+md5String);
         String checkCardResponse = fyPayClient.checkCard(xml);
-        //HttpClientUtil httpClientUtil = new HttpClientUtil();
-        /*TenpayHttpClient tenpayHttpClient = new TenpayHttpClient();
-        tenpayHttpClient.setMethod("GET");
-        tenpayHttpClient.setReqContent("http://www-1.fuiou.com:18670/mobile_pay/checkCard/checkCard01.pay?FM="+xml);
-        tenpayHttpClient.callHttp();
-        String resContent = tenpayHttpClient.getResContent();
-        System.out.println(resContent);*/
-        System.out.println(checkCardResponse);
+
         CheckCardResponse checkCardResponse1 = (CheckCardResponse) PlatformPayUtil.convertXmlStrToObject(CheckCardResponse.class,checkCardResponse);
        return ResponseModel.SUCCESS(checkCardResponse1);
     }
@@ -91,7 +84,7 @@ public class DemoController {
     public ResponseModel indexFor() throws Exception {
         FyPayForRequest request = new FyPayForRequest("0302","6510","6217711002734000","ml",200,"15198003270");
         String payRequestXml = PlatformPayUtil.payRequestXml(request);
-        FyPayRequest fyPayRequest = new FyPayRequest("0002900F0345178", FyRequestType.payforreq,new String(payRequestXml.getBytes(),"utf-8"));
+        FyPayRequest fyPayRequest = new FyPayRequest("0002900F0345178", FyRequestType.payforreq,payRequestXml);
         String md5String = fyPayRequest.toMd5String("123456");
         fyPayRequest.setMac(md5String);
         System.out.println("发送报文"+ payRequestXml);

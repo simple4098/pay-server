@@ -40,6 +40,11 @@ public interface IPayOrderAccountService {
     List<DrawMoneyVo> findDrawMoneyList();
 
     /**
+     * 批量执行提现操作
+     */
+    void updateDrawMoney();
+
+    /**
      * 查询微信订单信息
      * @param orderNo par-server 订单号
      * @return

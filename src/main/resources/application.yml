@@ -71,19 +71,31 @@ yql:
   #阿里异步通知
   aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
   institution-id: 158974554
+  #商户编码
+  fyMerid: 0002900F0345178
+  #商户密钥
+  fyKey: 123456
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER
   openSendMessage: true
   kunlun:
       host: http://localhost:8080
       pay-uri: /test?id={id}
+      #微信host
       wxHost: https://api.mch.weixin.qq.com
+      #微信预付订单uri
       prepayUri: /pay/unifiedorder
+      #微信查询订单uri
       wxQuneryUri: /pay/orderquery
+      #微信关闭订单uri
       wxCloseUri: /pay/closeorder
+      #富友检验银行卡host
       fyCheckHost: http://www-1.fuiou.com:18670
+      #富友代付host
       fyPayForHost: http://www-1.fuiou.com:8992/fuMer
+      #富友检查银行卡uri
       checkCardUri: /mobile_pay/payFor/checkCard01.pay
+      #富友代付uri
       payForUri: /req.do
   mq:
     AccessKey: LTAIukPGqYkArvKd
