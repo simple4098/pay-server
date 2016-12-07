@@ -91,8 +91,8 @@ public class DemoController {
     public ResponseModel indexFor() throws Exception {
         FyPayForRequest request = new FyPayForRequest("0302","6510","6217711002734000","ml",200,"15198003270");
         String payRequestXml = PlatformPayUtil.payRequestXml(request);
-        FyPayRequest fyPayRequest = new FyPayRequest("0002900F0096235", FyRequestType.payforreq,new String(payRequestXml.getBytes(),"utf-8"));
-        String md5String = fyPayRequest.toMd5String("5old71wihg2tqjug9kkpxnhx9hiujoqj");
+        FyPayRequest fyPayRequest = new FyPayRequest("0002900F0345178", FyRequestType.payforreq,new String(payRequestXml.getBytes(),"utf-8"));
+        String md5String = fyPayRequest.toMd5String("123456");
         fyPayRequest.setMac(md5String);
         System.out.println("发送报文"+ payRequestXml);
         System.out.println("请求参数"+ JSON.toJSONString(fyPayRequest));
