@@ -1,6 +1,7 @@
 package com.yql.biz.controller;
 
 import com.yql.biz.constraint.OrderNo;
+import com.yql.biz.enums.PayType;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.response.Response;
@@ -84,12 +85,14 @@ public class PayOrderController {
     }
 
     /**
-     * 获取移动端信息
+     * 移动端获取微信预支护信息
      * @param orderNo 订单号
      * @param spbillCreateIp 用户ip
      */
     @RequestMapping("/wx_prepay")
-    public ResponseModel prepay(@OrderNo String orderNo,@NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp){
+    public ResponseModel prepay(@OrderNo String orderNo,
+                                @NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp,
+                                @NotNull(message = "")PayType payType){
         AppPrepayInfo appPrepayInfo =   payOrderAccountService.prepay(orderNo,spbillCreateIp);
         return ResponseModel.SUCCESS(appPrepayInfo);
     }

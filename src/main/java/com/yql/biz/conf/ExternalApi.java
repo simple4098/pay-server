@@ -28,4 +28,16 @@ public interface ExternalApi {
      * 关闭微信订单
      */
     String getWxCloseOrder();
+
+    /**
+     * 获取富友验证银行卡信息
+     * @return
+     */
+    String getFyCheckCardUrl();
+
+    /**
+     * 代付url
+     * @return
+     */
+    String getFyPayForUrl();
 }

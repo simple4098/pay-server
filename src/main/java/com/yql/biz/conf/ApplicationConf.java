@@ -151,6 +151,16 @@ public class ApplicationConf implements ExternalApi {
         return kunlun.getWxHost()+kunlun.getWxQuneryUri();
     }
 
+    @Override
+    public String getFyCheckCardUrl() {
+        return kunlun.getFyCheckHost()+kunlun.getCheckCardUri();
+    }
+
+    @Override
+    public String getFyPayForUrl() {
+        return kunlun.getFyPayForHost()+kunlun.getPayForUri();
+    }
+
     public boolean getOpenSendMessage() {
         return openSendMessage;
     }
@@ -172,6 +182,46 @@ public class ApplicationConf implements ExternalApi {
         private String wxQuneryUri;
         //微信关闭订单
         private String wxCloseUri;
+        //富友host
+        private String fyCheckHost;
+        //富友验证银行卡uri
+        private String checkCardUri;
+        //代付host
+        private String fyPayForHost;
+        //代付uti
+        private String payForUri;
+
+        public String getFyCheckHost() {
+            return fyCheckHost;
+        }
+
+        public void setFyCheckHost(String fyCheckHost) {
+            this.fyCheckHost = fyCheckHost;
+        }
+
+        public String getFyPayForHost() {
+            return fyPayForHost;
+        }
+
+        public void setFyPayForHost(String fyPayForHost) {
+            this.fyPayForHost = fyPayForHost;
+        }
+
+        public String getPayForUri() {
+            return payForUri;
+        }
+
+        public void setPayForUri(String payForUri) {
+            this.payForUri = payForUri;
+        }
+
+        public String getCheckCardUri() {
+            return checkCardUri;
+        }
+
+        public void setCheckCardUri(String checkCardUri) {
+            this.checkCardUri = checkCardUri;
+        }
 
         public String getWxCloseUri() {
             return wxCloseUri;

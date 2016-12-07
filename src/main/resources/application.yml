@@ -81,6 +81,10 @@ yql:
       prepayUri: /pay/unifiedorder
       wxQuneryUri: /pay/orderquery
       wxCloseUri: /pay/closeorder
+      fyCheckHost: http://www-1.fuiou.com:18670
+      fyPayForHost: http://www-1.fuiou.com:8992/fuMer
+      checkCardUri: /mobile_pay/payFor/checkCard01.pay
+      payForUri: /req.do
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
