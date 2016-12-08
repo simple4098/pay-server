@@ -11,15 +11,11 @@ import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.AccountVo;
 import com.yql.biz.vo.pay.Param;
-import com.yql.biz.vo.pay.fy.CheckCardRequest;
-import com.yql.biz.vo.pay.fy.CheckCardResponse;
-import com.yql.biz.vo.pay.fy.FyPayForRequest;
-import com.yql.biz.vo.pay.fy.FyPayRequest;
+import com.yql.biz.vo.pay.fy.*;
 import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.response.Response;
-import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,37 +57,35 @@ public class DemoController {
     private IFyPayForClient fyPayForClient;
 
     @RequestMapping(value = "/index")
-    public ResponseModel index(WeiXinOrderVo weiXinOrderVo) throws Exception {
+    public ResponseModel index() throws Exception {
         CheckCardRequest checkCardRequest = new CheckCardRequest();
         checkCardRequest.setMchntCd("0002900F0096235");
-        checkCardRequest.setMno("15198003270");
-        checkCardRequest.setOcerNo("513721199008187775");
-        checkCardRequest.setOno("6217711002734000");
+        //checkCardRequest.setMno("15198003270");
+        checkCardRequest.setOcerNo("510321199105252693");
+        checkCardRequest.setOno("4033920022692893");
         checkCardRequest.setoCerTp("0");
-        checkCardRequest.setOnm("马龙");
+        checkCardRequest.setOnm("谢宗明");
         checkCardRequest.setoSsn(PayUtil.randomCode(30));
         String md5String = checkCardRequest.toMd5String("5old71wihg2tqjug9kkpxnhx9hiujoqj");
         checkCardRequest.setSign(md5String);
         String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
-        logger.debug(xml+"==========sign:"+md5String);
-        String checkCardResponse = fyPayClient.checkCard(xml);
-
-        CheckCardResponse checkCardResponse1 = (CheckCardResponse) PlatformPayUtil.convertXmlStrToObject(CheckCardResponse.class,checkCardResponse);
+        logger.debug(xml+"====sign======"+md5String);
+        CheckCardResponse checkCardResponse1 = fyPayClient.checkCard(xml);
        return ResponseModel.SUCCESS(checkCardResponse1);
     }
 
     @RequestMapping(value = "/payFor")
     public ResponseModel indexFor() throws Exception {
-        FyPayForRequest request = new FyPayForRequest("0302","6510","6217711002734000","ml",200,"15198003270");
+        FyPayForRequest request = new FyPayForRequest("0302","6510","6217711002734000","马龙",200,"15198003270");
         String payRequestXml = PlatformPayUtil.payRequestXml(request);
         FyPayRequest fyPayRequest = new FyPayRequest("0002900F0345178", FyRequestType.payforreq,payRequestXml);
         String md5String = fyPayRequest.toMd5String("123456");
         fyPayRequest.setMac(md5String);
         System.out.println("发送报文"+ payRequestXml);
         System.out.println("请求参数"+ JSON.toJSONString(fyPayRequest));
-        String s = fyPayForClient.payFor(fyPayRequest.getReqType(),fyPayRequest.getXml(),fyPayRequest.getMac(),fyPayRequest.getMerid());
-        System.out.println(s);
-       return ResponseModel.SUCCESS();
+        //String s = fyPayForClient.payFor(reqType,xml,mac,merid);
+        FyPayForResponse s1 = fyPayForClient.payFor(fyPayRequest);
+       return ResponseModel.SUCCESS(s1);
     }
 
     @RequestMapping(value = "/index1")

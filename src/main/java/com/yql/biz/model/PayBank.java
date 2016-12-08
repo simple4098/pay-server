@@ -54,6 +54,8 @@ public class PayBank extends Domain  {
     private Integer cvn2;
     //是否删除
     private boolean deleted;
+    //银行卡所在城市code
+    private String cityNo;
 
 
     public Integer getBangStatus() {
@@ -206,5 +208,13 @@ public class PayBank extends Domain  {
 
     public void setSettlementFlag(String settlementFlag) {
         this.settlementFlag = settlementFlag;
+    }
+
+    public String getCityNo() {
+        return cityNo;
+    }
+
+    public void setCityNo(String cityNo) {
+        this.cityNo = cityNo;
     }
 }

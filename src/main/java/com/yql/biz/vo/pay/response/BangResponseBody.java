@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class BangResponseBody extends BaseBody {
     //绑定流水号
     private String txSNBinding;
-
     /**
      * 发卡机构代码 <b>银联返回，不是 Request 中的 BankID</b>
      */

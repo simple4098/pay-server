@@ -36,6 +36,8 @@ public class PayBankVo {
     private String txCode;
     //排序字段
     private int sort;
+    //银行卡所在城市code
+    private String cityNo;
 
     public String getCardholder() {
         return cardholder;
@@ -115,6 +117,14 @@ public class PayBankVo {
 
     public void setTxCode(String txCode) {
         this.txCode = txCode;
+    }
+
+    public String getCityNo() {
+        return cityNo;
+    }
+
+    public void setCityNo(String cityNo) {
+        this.cityNo = cityNo;
     }
 
     public static void voToDomain(PayBank payBank, PayBankVo payBankVo, PayAccount payAccount){

@@ -1,6 +1,6 @@
 package com.yql.biz.vo;
 
-import java.util.Date;
+import com.yql.biz.enums.CardType;
 
 /**
  * <p> 绑定银行卡 返回对象 </p>
@@ -10,11 +10,14 @@ import java.util.Date;
 public class ResultBangBank {
     //10=绑定处理中 20=绑定失败 30=绑定成功
     private Integer status;
-    //银行处理时间
-    private Date bankTxTime;
-    //响应代码
-    private String responseCode;
-    private String responseMessage;
+    private CardType cardType;
+
+    public ResultBangBank(Integer status) {
+        this.status = status;
+    }
+
+    public ResultBangBank() {
+    }
 
     public Integer getStatus() {
         return status;
@@ -24,27 +27,12 @@ public class ResultBangBank {
         this.status = status;
     }
 
-    public Date getBankTxTime() {
-        return bankTxTime;
+
+    public CardType getCardType() {
+        return cardType;
     }
 
-    public void setBankTxTime(Date bankTxTime) {
-        this.bankTxTime = bankTxTime;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 }

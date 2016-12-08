@@ -5,6 +5,7 @@ import com.yql.biz.model.PayBank;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ProblemAnswerVo;
+import com.yql.biz.vo.ResultBangBank;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 
@@ -22,10 +23,10 @@ public interface IPayAccountServiceHelper {
 
 
     /**
-     * 创建快捷支付
+     * 绑定银行卡
      * 绑定银行卡必要的参数：
      */
-    Param crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak);
+    ResultBangBank crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak);
 
     /**
      * 根据userCode 查询payAccount。如果查询不到，就初始化一个

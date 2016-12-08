@@ -31,13 +31,12 @@ public class CheckCardRequest extends FyPay {
     public CheckCardRequest() {
     }
 
-    public CheckCardRequest(String mchntCd, String ono, String onm, String oCerTp, String ocerNo, String mno) {
+    public CheckCardRequest(String mchntCd, String ono, String onm, String oCerTp, String ocerNo) {
         this.mchntCd = mchntCd;
         this.ono = ono;
         this.onm = onm;
         this.oCerTp = oCerTp;
         this.ocerNo = ocerNo;
-        this.mno = mno;
     }
 
     @XmlElement(name = "MchntCd")
@@ -105,9 +104,7 @@ public class CheckCardRequest extends FyPay {
         stringBuffer.append(this.mchntCd).append("|").append(getVer()).append("|").append(this.oSsn).append("|");
         stringBuffer.append(this.ono).append("|").append(this.oCerTp).append("|").append(this.ocerNo);
         stringBuffer.append("|").append(key);
-        System.out.println("temp:"+stringBuffer.toString());
-        String md5Encode = PayUtil.MD5Encode(stringBuffer.toString(), "UTF-8");
-        return  md5Encode;
+        return  PayUtil.MD5Encode(stringBuffer.toString(), "UTF-8");
     }
 
 }

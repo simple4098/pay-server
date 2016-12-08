@@ -10,16 +10,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "FM")
 public class CheckCardResponse extends FyPay {
-
+    //响应代码
     private String rcd;
+    //中文描述
     private String rdesc;
+    //商户流水号
     private String ossn;
+    //银行卡号
     private String cardNo;
+    //商户代码
     private String mchntCd;
     //银行名称
     private String cnm;
     //银行机构号
     private String insCd;
+    //卡类型
+    private String ctp;
 
     @XmlElement(name = "Rcd")
     public String getRcd() {
@@ -76,5 +82,13 @@ public class CheckCardResponse extends FyPay {
 
     public void setInsCd(String insCd) {
         this.insCd = insCd;
+    }
+    @XmlElement(name = "Ctp")
+    public String getCtp() {
+        return ctp;
+    }
+
+    public void setCtp(String ctp) {
+        this.ctp = ctp;
     }
 }

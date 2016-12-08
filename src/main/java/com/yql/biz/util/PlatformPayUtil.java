@@ -59,7 +59,7 @@ public class PlatformPayUtil<T extends DjPay> {
             JAXBContext context = JAXBContext.newInstance(t.getClass());
             Marshaller marshaller = context.createMarshaller();
             // 是否省略xm头声明信
-            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, false);
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
             //是否标准格式输出
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,Boolean.FALSE);
             StringWriter fw = new StringWriter();

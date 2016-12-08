@@ -3,30 +3,25 @@ package com.yql.biz.support.helper;
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.IAccountClient;
 import com.yql.biz.client.IFyCheckCardPayClient;
-import com.yql.biz.client.IFyPayForClient;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
-import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.BankCodeType;
+import com.yql.biz.enums.CardType;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.RealNameAuthType;
-import com.yql.biz.enums.fy.FyRequestType;
+import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.exception.MessageRuntimeException;
-import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
-import com.yql.biz.util.PayUtil;
+import com.yql.biz.support.constants.PayConstants;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.fy.CheckCardRequest;
 import com.yql.biz.vo.pay.fy.CheckCardResponse;
-import com.yql.biz.vo.pay.fy.FyPayForRequest;
-import com.yql.biz.vo.pay.fy.FyPayRequest;
-import com.yql.biz.vo.pay.request.BangBody;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.UninstallBangBody;
@@ -34,7 +29,6 @@ import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -58,8 +52,6 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     @Resource
     private OrderNoGenerator orderNoGenerator;
     @Resource
-    private IBankInfoDao bankInfoDao;
-    @Resource
     private IUserCenterClient userCenterClient;
     @Resource
     private IPayBankDao payBankDao;
@@ -69,9 +61,10 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IFyCheckCardPayClient fyCheckCardPayClient;
 
     @Override
-    public Param crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
+    public ResultBangBank crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
         PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
         if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
+        ResultBangBank resuleBangBangk = new ResultBangBank(30);
         PayBankVo.voToDomain(newPayBak,payBankVo, payAccount);
         PayBank payBank = payBankDao.findByPayAccountIdAndBankCardAndDeleted(payAccount.getId(), payBankVo.getBankCard(),false);
         if (payBank != null)  throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
@@ -79,14 +72,23 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         if (!CollectionUtils.isEmpty(list)) {
             newPayBak.setSort(list.size());
         }
-        CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),payBankVo.getBankCard(),payBankVo.getCardholder(),"0",payAccount.getIdentificationNumber(),payBankVo.getPhoneNumber());
+        Integer value = payAccount.getIdentificationType().getValue();
+        CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),payBankVo.getBankCard(),payBankVo.getCardholder(),value.toString(),payAccount.getIdentificationNumber());
         String md5String = checkCardRequest.toMd5String(applicationConf.getFyKey());
         checkCardRequest.setSign(md5String);
         String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
-        logger.debug("发送报文xml:"+xml);
-        String checkCardResponse = fyCheckCardPayClient.checkCard(xml);
-        CheckCardResponse cardResponse = (CheckCardResponse) PlatformPayUtil.convertXmlStrToObject(CheckCardResponse.class,checkCardResponse);
-        Request<BangBody> request = new Request<>();
+        CheckCardResponse cardResponse = fyCheckCardPayClient.checkCard(xml);
+        if (cardResponse!=null && PayConstants.FY_RESULT_SUCCESS.equals(cardResponse.getRcd())){
+            newPayBak.setBankName(cardResponse.getCnm());
+            newPayBak.setBankId(cardResponse.getInsCd());
+            if (PayConstants.CTP01.equals(cardResponse.getCtp())){
+                newPayBak.setCardType(CardType.BANK_CARD);
+            }else {
+                newPayBak.setCardType(CardType.CREDIT);
+            }
+        }else {
+            throw  new RuntimeException(cardResponse.getRdesc());
+        }
         String txSNBinding = orderNoGenerator.generateBankCode(newPayBak, BankCodeType.SN_BINDING);
         String txCode = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.TX_CODE);
         String settlementFlag = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.SETTLEMENTFLAG);
@@ -96,20 +98,9 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         newPayBak.setTxSNBinding(txSNBinding);
         newPayBak.setTxCode(txCode);
-        if (cardResponse!=null){
-            newPayBak.setBankName(cardResponse.getCnm());
-            newPayBak.setBankId(cardResponse.getInsCd());
-        }
         newPayBak.setSettlementFlag(settlementFlag);
-        Head head = new Head() ;
-        head.setInstitutionID(applicationConf.getInstitutionId());
-        head.setTxCode(txCode);
-        request.setHead(head);
-        try {
-            return  PlatformPayUtil.payRequest(request);
-        } catch (Exception e) {
-            throw  new MessageRuntimeException("error.payserver.payServer.DJ");
-        }
+        resuleBangBangk.setCardType(newPayBak.getCardType());
+        return resuleBangBangk;
     }
 
     @Override

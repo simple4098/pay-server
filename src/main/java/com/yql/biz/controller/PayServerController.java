@@ -2,12 +2,10 @@ package com.yql.biz.controller;
 
 import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.constraint.UserCode;
-import com.yql.biz.service.IPayBankService;
-import com.yql.biz.service.IPayOrderAccountService;
+import com.yql.biz.model.FyBankCityCode;
+import com.yql.biz.service.*;
 import com.yql.biz.vo.*;
 import com.yql.biz.model.PayAccount;
-import com.yql.biz.service.IPayAccountService;
-import com.yql.biz.service.IPayProblemService;
 import com.yql.biz.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +34,8 @@ public class PayServerController {
     private IPayBankService payBankService;
     @Resource
     private IPayOrderAccountService payOrderAccountService;
+    @Resource
+    private IFyBankCityCodeService fyBankCityCodeService;
 
 
 
@@ -152,5 +152,14 @@ public class PayServerController {
     public ResponseModel queryOrder(@OrderNo String orderNo){
         ResultPayOrder resultPayOrder =   payOrderAccountService.findOrderInfo(orderNo);
         return ResponseModel.SUCCESS(resultPayOrder);
+    }
+
+    /**
+     * 查询所有的城市列表
+     */
+    @RequestMapping("/query/all_city")
+    public ResponseModel queryAllCityCode(){
+        List<FyBankCityCode> allCityCode = fyBankCityCodeService.findAllCityCode();
+        return ResponseModel.SUCCESS(allCityCode);
     }
 }

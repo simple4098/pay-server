@@ -1,7 +1,7 @@
 package com.yql.biz.client;
 
 
-import com.yql.biz.util.HttpClientUtil;
+import com.yql.biz.util.PayHttpClientUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -203,8 +203,8 @@ public class TenpayHttpClient {
 	protected void callHttp() throws IOException {
 
 		if("POST".equals(this.method.toUpperCase())) {
-			String url = HttpClientUtil.getURL(this.reqContent);
-			String queryString = HttpClientUtil.getQueryString(this.reqContent);
+			String url = PayHttpClientUtil.getURL(this.reqContent);
+			String queryString = PayHttpClientUtil.getQueryString(this.reqContent);
 			byte[] postData = queryString.getBytes(this.charset);
 			this.httpPostMethod(url, postData);
 
@@ -225,13 +225,13 @@ public class TenpayHttpClient {
 		File jksCAFile = new File(caPath + "/"
 				+ TenpayHttpClient.JKS_CA_FILENAME);
 		if (!jksCAFile.isFile()) {
-			X509Certificate cert = (X509Certificate) HttpClientUtil
+			X509Certificate cert = (X509Certificate) PayHttpClientUtil
 					.getCertificate(this.caFile);
 
 			FileOutputStream out = new FileOutputStream(jksCAFile);
 
 			// store jks file
-			HttpClientUtil.storeCACert(cert, TenpayHttpClient.JKS_CA_ALIAS,
+			PayHttpClientUtil.storeCACert(cert, TenpayHttpClient.JKS_CA_ALIAS,
 					TenpayHttpClient.JKS_CA_PASSWORD, out);
 
 			out.close();
@@ -241,7 +241,7 @@ public class TenpayHttpClient {
 		FileInputStream trustStream = new FileInputStream(jksCAFile);
 		FileInputStream keyStream = new FileInputStream(this.certFile);
 
-		SSLContext sslContext = HttpClientUtil.getSSLContext(trustStream,
+		SSLContext sslContext = PayHttpClientUtil.getSSLContext(trustStream,
 				TenpayHttpClient.JKS_CA_PASSWORD, keyStream, this.certPasswd);
 
 		//关闭流
@@ -249,8 +249,8 @@ public class TenpayHttpClient {
 		trustStream.close();
 
 		if("POST".equals(this.method.toUpperCase())) {
-			String url = HttpClientUtil.getURL(this.reqContent);
-			String queryString = HttpClientUtil.getQueryString(this.reqContent);
+			String url = PayHttpClientUtil.getURL(this.reqContent);
+			String queryString = PayHttpClientUtil.getQueryString(this.reqContent);
 			byte[] postData = queryString.getBytes(this.charset);
 
 			this.httpsPostMethod(url, postData, sslContext);
@@ -284,7 +284,7 @@ public class TenpayHttpClient {
 	protected void httpPostMethod(String url, byte[] postData)
 			throws IOException {
 
-		HttpURLConnection conn = HttpClientUtil.getHttpURLConnection(url);
+		HttpURLConnection conn = PayHttpClientUtil.getHttpURLConnection(url);
 
 		this.doPost(conn, postData);
 	}
@@ -298,7 +298,7 @@ public class TenpayHttpClient {
 	protected void httpGetMethod(String url) throws IOException {
 
 		HttpURLConnection httpConnection =
-				HttpClientUtil.getHttpURLConnection(url);
+				PayHttpClientUtil.getHttpURLConnection(url);
 
 		this.setHttpRequest(httpConnection);
 
@@ -321,7 +321,7 @@ public class TenpayHttpClient {
 
 		SSLSocketFactory sf = sslContext.getSocketFactory();
 
-		HttpsURLConnection conn = HttpClientUtil.getHttpsURLConnection(url);
+		HttpsURLConnection conn = PayHttpClientUtil.getHttpsURLConnection(url);
 
 		conn.setSSLSocketFactory(sf);
 
@@ -334,7 +334,7 @@ public class TenpayHttpClient {
 
 		SSLSocketFactory sf = sslContext.getSocketFactory();
 
-		HttpsURLConnection conn = HttpClientUtil.getHttpsURLConnection(url);
+		HttpsURLConnection conn = PayHttpClientUtil.getHttpsURLConnection(url);
 
 		conn.setSSLSocketFactory(sf);
 
@@ -374,7 +374,7 @@ public class TenpayHttpClient {
 			return;
 		}
 		//获取应答内容
-		this.resContent=HttpClientUtil.InputStreamTOString(this.inputStream,this.charset);
+		this.resContent=PayHttpClientUtil.InputStreamTOString(this.inputStream,this.charset);
 		//关闭输入流
 		this.inputStream.close();
 
@@ -397,7 +397,7 @@ public class TenpayHttpClient {
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		BufferedOutputStream out = new BufferedOutputStream(conn .getOutputStream());
 		final int len = 1024; // 1KB
-		HttpClientUtil.doOutput(out, postData, len);
+		PayHttpClientUtil.doOutput(out, postData, len);
 		// 关闭流
 		out.close();
 		// 获取响应返回状态码
