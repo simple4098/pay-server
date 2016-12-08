@@ -56,6 +56,8 @@ public class PayBank extends Domain  {
     private boolean deleted;
     //银行卡所在城市code
     private String cityNo;
+    //银行机构号 '0801020000' - 中国工商银行 '0801030000' - 中国农业银行 '0801040000' –中国银行 '0801050000' - 中国建设银行
+    private String insCd;
 
 
     public Integer getBangStatus() {
@@ -216,5 +218,13 @@ public class PayBank extends Domain  {
 
     public void setCityNo(String cityNo) {
         this.cityNo = cityNo;
+    }
+
+    public String getInsCd() {
+        return insCd;
+    }
+
+    public void setInsCd(String insCd) {
+        this.insCd = insCd;
     }
 }

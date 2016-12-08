@@ -46,7 +46,7 @@ public class DrawMoneyCreator implements IPayOrderCreator{
         payAccountServiceHelper.validateDrawMoney(payOrderVo);
         String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayNo(payNo);
-        payOrderVo.setPayStatus(PayStatus.DRAW_MONEY_HANDLING.getValue());
+        payOrderVo.setPayStatus(PayStatus.HANDLING.getValue());
         sendMessageHelper.sendDrawMoney(payOrderVo);
         return payOrderVo;
     }

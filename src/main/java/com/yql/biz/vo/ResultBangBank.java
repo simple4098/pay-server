@@ -11,6 +11,7 @@ public class ResultBangBank {
     //10=绑定处理中 20=绑定失败 30=绑定成功
     private Integer status;
     private CardType cardType;
+    private String bankName;
 
     public ResultBangBank(Integer status) {
         this.status = status;
@@ -34,5 +35,13 @@ public class ResultBangBank {
 
     public void setCardType(CardType cardType) {
         this.cardType = cardType;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

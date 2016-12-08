@@ -18,6 +18,7 @@ import com.yql.biz.model.PayBank;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.model.PayOrderAccountDetail;
 import com.yql.biz.service.IPayOrderAccountService;
+import com.yql.biz.support.constants.PayConstants;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
@@ -29,6 +30,7 @@ import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.fy.FyPayForRequest;
+import com.yql.biz.vo.pay.fy.FyPayForResponse;
 import com.yql.biz.vo.pay.fy.FyPayRequest;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
@@ -173,7 +175,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     public List<DrawMoneyVo> findDrawMoneyList() {
         Date startTime = PayDateUtil.getStartTime();
         Date endTime = PayDateUtil.getEndTime();
-        List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.DRAW_MONEY_HANDLING.getValue(),startTime,endTime);
+        List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.HANDLING.getValue(),startTime,endTime);
         List<DrawMoneyVo> drawMoneyVos = new ArrayList<>();
         DrawMoneyVo drawMoneyVo = null;
         for (PayOrderAccount order: list) {
@@ -192,21 +194,24 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     public void updateDrawMoney() {
-
         Date startTime = PayDateUtil.getStartTime();
         Date endTime = PayDateUtil.getEndTime();
-        List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.DRAW_MONEY_HANDLING.getValue(),startTime,endTime);
+        List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.HANDLING.getValue(),startTime,endTime);
         FyPayForRequest fyPayForRequest = null;
         for (PayOrderAccount order: list) {
             PayBank p = payBankDao.findByTxCode(order.getTxCode());
             int cent = PayUtil.priceToCent(order.getTotalPrice());
-            fyPayForRequest = new FyPayForRequest(p.getBankId(),"6510",p.getBankCard(),p.getCardholder(),cent,p.getPhoneNumber());
+            fyPayForRequest = new FyPayForRequest(p.getBankId(),p.getCityNo(),p.getBankCard(),p.getCardholder(),cent,p.getPhoneNumber());
             String payRequestXml = PlatformPayUtil.payRequestXml(fyPayForRequest);
             FyPayRequest fyPayRequest = new FyPayRequest(applicationConf.getFyMerid(), FyRequestType.payforreq,payRequestXml);
             String md5String = fyPayRequest.toMd5String(applicationConf.getFyKey());
             fyPayRequest.setMac(md5String);
-            String s = fyPayForClient.payFor(fyPayRequest.getReqType(),fyPayRequest.getXml(),fyPayRequest.getMac(),fyPayRequest.getMerid());
-            //// TODO: 2016/12/7 0007   执行成功改变状态
+            FyPayForResponse fyPayForResponse = fyPayForClient.payFor(fyPayRequest);
+            int payStatus = PayStatus.PAY_UNSUCCESS.getValue();
+            if (PayConstants.FY_PAY_FOR_SUCCESS.equals(fyPayForResponse.getRet())){
+                payStatus = PayStatus.PAY_SUCCESS.getValue();
+            }
+            updateDrawMoneyStatus(order.getOrderNo(),payStatus);
         }
     }
 

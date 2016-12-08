@@ -43,6 +43,7 @@ public class PayOrderController {
     /**
      * 提现状态修改
      * @param orderNo 订单号
+     *
      * @param payStatus 订单状态
      * @see ( com.yql.biz.enums.pay.PayStatus  )  订单状态参考
      *
@@ -55,8 +56,19 @@ public class PayOrderController {
     }
 
     /**
+     * 提现操作
+     * @return
+     */
+    @RequestMapping("/draw_money")
+    public ResponseModel drawMoney(){
+        payOrderAccountService.updateDrawMoney();
+        return ResponseModel.SUCCESS();
+    }
+
+    /**
      * 提现列表
      * @return
+     *
      */
     @RequestMapping("/draw_money_list")
     public ResponseModel drawMoneyList(){
@@ -90,9 +102,7 @@ public class PayOrderController {
      * @param spbillCreateIp 用户ip
      */
     @RequestMapping("/wx_prepay")
-    public ResponseModel prepay(@OrderNo String orderNo,
-                                @NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp,
-                                @NotNull(message = "")PayType payType){
+    public ResponseModel prepay(@OrderNo String orderNo, @NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp){
         AppPrepayInfo appPrepayInfo =   payOrderAccountService.prepay(orderNo,spbillCreateIp);
         return ResponseModel.SUCCESS(appPrepayInfo);
     }

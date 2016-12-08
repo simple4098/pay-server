@@ -5,14 +5,15 @@ import com.yql.biz.client.IAccountClient;
 import com.yql.biz.client.IFyCheckCardPayClient;
 import com.yql.biz.client.IUserCenterClient;
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.CardType;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.RealNameAuthType;
-import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.exception.MessageRuntimeException;
+import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.support.OrderNoGenerator;
@@ -59,6 +60,8 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IAccountClient accountClient;
     @Resource
     private IFyCheckCardPayClient fyCheckCardPayClient;
+    @Resource
+    private IBankInfoDao bankInfoDao;
 
     @Override
     public ResultBangBank crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
@@ -78,9 +81,13 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         checkCardRequest.setSign(md5String);
         String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
         CheckCardResponse cardResponse = fyCheckCardPayClient.checkCard(xml);
-        if (cardResponse!=null && PayConstants.FY_RESULT_SUCCESS.equals(cardResponse.getRcd())){
+        if (cardResponse!=null && PayConstants.FY_CHECK_CARD_SUCCESS.equals(cardResponse.getRcd())){
+            BankInfo bankInfo = bankInfoDao.findByBankName(cardResponse.getCnm());
+            if (bankInfo==null) throw  new MessageRuntimeException("error.payserver.bangBanke.notsupport");
             newPayBak.setBankName(cardResponse.getCnm());
-            newPayBak.setBankId(cardResponse.getInsCd());
+            newPayBak.setBankId(bankInfo.getBankCode());
+            newPayBak.setInsCd(cardResponse.getInsCd());
+            resuleBangBangk.setBankName(cardResponse.getCnm());
             if (PayConstants.CTP01.equals(cardResponse.getCtp())){
                 newPayBak.setCardType(CardType.BANK_CARD);
             }else {
@@ -100,6 +107,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         newPayBak.setTxCode(txCode);
         newPayBak.setSettlementFlag(settlementFlag);
         resuleBangBangk.setCardType(newPayBak.getCardType());
+
         return resuleBangBangk;
     }
 
