@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
@@ -47,6 +48,7 @@ public class PayPasswordSecurityHelper {
 
 
     public void validateOldPassword(String password, PayAccount payAccount)  {
+        if (StringUtils.isEmpty(password)) throw new MessageRuntimeException("error.payserver.param.paypassword");
         String passwordMd5Str = applicationConf.getPasswordMd5Str();
         try{
             byte[] bytes = new BASE64Decoder().decodeBuffer(password);

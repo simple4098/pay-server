@@ -16,6 +16,7 @@ public class PayAccountVo {
     @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     //支付密码
+    @NotNull(message = "{com.yql.validation.constraints.payPassword.notnull}")
     private String payPassword;
     //旧的支付密码
     private String oldPayPassword;

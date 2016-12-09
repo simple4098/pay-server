@@ -122,7 +122,7 @@ public class PayServerController {
     /**
      * 验证支付密码是否成功
      */
-    @RequestMapping(value = "/pay_password",method = RequestMethod.POST)
+    @RequestMapping(value = "/pay-password",method = RequestMethod.POST)
     public ResponseModel payPassword(@Validated PayAccount payAccount){
         payAccountService.validatePassword(payAccount);
         return ResponseModel.SUCCESS();

@@ -46,7 +46,9 @@ spring:
         min-idle: 5
   messages:
       basename: ValidationMessages,errors,messages_zh
-
+  cloud:
+      bus:
+        enabled: false
 logging:
   log4j.appender.file.encoding: UTF-8
   log4j.appender.A1.File: /home/logs/pay-server.log
