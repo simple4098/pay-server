@@ -21,7 +21,7 @@ public class CheckIDCardResponse extends DjPay {
     private String responseMsg;
     //商户流水号
     private String mchntorderId = PayUtil.randomCode(16);
-    //用户身份证号
+    //身份证图片
     private String userId;
     //MD5摘要数据
     private String sign;

@@ -7,12 +7,14 @@ import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.vo.PayAccountVo;
+import com.yql.biz.vo.ResultPayPassword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -33,10 +35,19 @@ public class PayAccountService implements IPayAccountService {
     private IPayAccountServiceHelper payAccountServiceHelper;
     @Resource
     private PayPasswordSecurityHelper payPasswordSecurityHelper;
+
     @Override
     @Transactional(readOnly = true)
     public PayAccount findByUserCode(String userCode) {
         return payAccountDao.findByUserCode(userCode);
+    }
+
+    @Override
+    @Transactional
+    public ResultPayPassword isPayPassword(String userCode) {
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(userCode);
+        boolean sign = !StringUtils.isEmpty(payAccount.getPayPassword());
+        return new ResultPayPassword(sign,userCode);
     }
 
     @Override

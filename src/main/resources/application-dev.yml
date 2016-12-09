@@ -65,11 +65,11 @@ yql:
   #微信key
   wxKey: wOdzXgWwbwjPEEZoMXWKudytfYvq6iLo
   #微信异步通知
-  wxNotifyUrl: http://localhost:8081/pay/wx
+  wxNotifyUrl: http://171.221.202.60:99999/pay/wx
   #微信支付 body
   wxBody: 零享购-消费
   #阿里异步通知
-  aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
+  aliPayNotifyUrl:
   institution-id: 158974554
   #商户编码
   fyMerid: 0002900F0345178
@@ -93,12 +93,12 @@ yql:
       fyCheckHost: http://www-1.fuiou.com:18670/mobile_pay
       #富友代付host
       fyPayForHost: http://www-1.fuiou.com:8992/fuMer
+      #富友代付uri
+      payForUri: /req.do
       #富友检查银行卡uri
       checkCardUri: /checkCard/checkCardFour.pay
       #验证身份证rui
       checkIdUri: /checkInfo/checkIdentity.pay
-      #富友代付uri
-      payForUri: /req.do
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf

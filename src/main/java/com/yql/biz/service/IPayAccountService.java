@@ -2,6 +2,7 @@ package com.yql.biz.service;
 
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.vo.PayAccountVo;
+import com.yql.biz.vo.ResultPayPassword;
 
 /**
  * creator simple
@@ -15,6 +16,12 @@ public interface IPayAccountService {
      * @param userCode 用户code
      */
     PayAccount findByUserCode(String userCode);
+
+    /**
+     * 是否设置过支付密码
+     * @param userCode 用户code
+     */
+    ResultPayPassword isPayPassword(String userCode);
 
     /**
      * 保存账户信息

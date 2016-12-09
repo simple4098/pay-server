@@ -85,6 +85,8 @@ yql:
       fyPayForHost: https://fht.fuiou.com
       #富友代付uri
       payForUri: /req.do
+      #验证身份证rui
+      checkIdUri: /checkInfo/checkIdentity.pay
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf

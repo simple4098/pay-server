@@ -49,7 +49,7 @@ public class PayOrderController {
      *
      * @return
      */
-    @RequestMapping("/draw_money_status")
+    @RequestMapping("/draw-money-status")
     public ResponseModel drawMoneyStatus(@OrderNo String orderNo, @NotNull(message = "com.yql.validation.constraints.payStatus.message") Integer payStatus){
         payOrderAccountService.updateDrawMoneyStatus(orderNo,payStatus);
         return ResponseModel.SUCCESS();
@@ -59,7 +59,7 @@ public class PayOrderController {
      * 提现操作
      * @return
      */
-    @RequestMapping("/draw_money")
+    @RequestMapping("/draw-money")
     public ResponseModel drawMoney(){
         payOrderAccountService.updateDrawMoney();
         return ResponseModel.SUCCESS();
@@ -70,7 +70,7 @@ public class PayOrderController {
      * @return
      *
      */
-    @RequestMapping("/draw_money_list")
+    @RequestMapping("/draw-money-list")
     public ResponseModel drawMoneyList(){
         List<DrawMoneyVo>  list = payOrderAccountService.findDrawMoneyList();
         return ResponseModel.SUCCESS(list);
@@ -80,7 +80,7 @@ public class PayOrderController {
      * 查询微信订单的支付平台信息
      * @param orderNo 订单号
      */
-    @RequestMapping("/query_order")
+    @RequestMapping("/query-order")
     public ResponseModel queryWxOrder(@OrderNo String orderNo){
         ResultWxQueryOrder resultWxQueryOrder =   payOrderAccountService.findWxOrderInfo(orderNo);
         return ResponseModel.SUCCESS(resultWxQueryOrder);
@@ -90,7 +90,7 @@ public class PayOrderController {
      * 关闭订单
      * @param orderNo 订单号
      */
-    @RequestMapping("/close_order")
+    @RequestMapping("/close-order")
     public ResponseModel closeOrder(@OrderNo String orderNo){
         WeiXinCloseOrderResponse weiXinCloseOrderResponse =   payOrderAccountService.closeOrder(orderNo);
         return ResponseModel.SUCCESS(weiXinCloseOrderResponse);
@@ -101,7 +101,7 @@ public class PayOrderController {
      * @param orderNo 订单号
      * @param spbillCreateIp 用户ip
      */
-    @RequestMapping("/wx_prepay")
+    @RequestMapping("/wx-prepay")
     public ResponseModel prepay(@OrderNo String orderNo, @NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp){
         AppPrepayInfo appPrepayInfo =   payOrderAccountService.prepay(orderNo,spbillCreateIp);
         return ResponseModel.SUCCESS(appPrepayInfo);

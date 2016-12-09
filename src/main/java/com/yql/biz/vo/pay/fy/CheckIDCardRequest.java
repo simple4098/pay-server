@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class CheckIDCardRequest extends DjPay {
     //版本号
     private String version;
-    //业务号
-    private String typeId = "YY";
+    //业务号 NN:不返回照片  YY：要返回照片
+    private String typeId = "NN";
     //商户id
     private String mchntCd;
     //商户流水号

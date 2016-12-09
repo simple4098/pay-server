@@ -43,13 +43,13 @@ public class PayServerController {
      * 开关小额支付并且小额支付金额
      * @return
      */
-    @RequestMapping("/open_close/small_money_pay")
+    @RequestMapping("/open-close/small-money-pay")
     public ResponseModel openClose(@Validated  PayAccount payAccount){
         payAccountService.updatePayAccountSmallMoney(payAccount);
         return ResponseModel.SUCCESS();
     }
 
-    @RequestMapping("/real_name_auth")
+    @RequestMapping("/real-name-auth")
     public ResponseModel realNameAuth(@Validated PayAccount payAccount){
         payAccountService.updateRealNameAuth(payAccount);
         return ResponseModel.SUCCESS();
@@ -57,7 +57,7 @@ public class PayServerController {
     /**
      * 支付系统问题集合
      */
-    @RequestMapping("/problem_list")
+    @RequestMapping("/problem-list")
     public ResponseModel securityProblem(){
         List<PayProblemDto> payProblemList = payProblemService.findPayProblemList();
         return ResponseModel.SUCCESS(payProblemList);
@@ -97,15 +97,24 @@ public class PayServerController {
     /**
      * 设置支付密码
      */
-    @RequestMapping(value = "/set/pay_password",method = RequestMethod.POST)
+    @RequestMapping(value = "/set/pay-password",method = RequestMethod.POST)
     public ResponseModel setPayPassword(@Validated  PayAccountVo payAccount){
         payAccountService.setPayPassword(payAccount);
         return ResponseModel.SUCCESS();
     }
+
+    /**
+     * 判断是否支付过密码
+     */
+    @RequestMapping(value = "/get/pay-password",method = RequestMethod.GET)
+    public ResponseModel getPayPassword(@UserCode  String userCode){
+        ResultPayPassword payPassword = payAccountService.isPayPassword(userCode);
+        return ResponseModel.SUCCESS(payPassword);
+    }
     /**
      * 更新支付密码
      */
-    @RequestMapping(value = "/update/pay_password",method = RequestMethod.POST)
+    @RequestMapping(value = "/update/pay-password",method = RequestMethod.POST)
     public ResponseModel updatePayPassword(@Validated  PayAccountVo payAccount){
         payAccountService.updatePayPassword(payAccount);
         return ResponseModel.SUCCESS();
@@ -122,7 +131,7 @@ public class PayServerController {
     /**
      * 添加支付银行卡
      */
-    @RequestMapping(value = "/set/bank_card" ,method = RequestMethod.POST)
+    @RequestMapping(value = "/set/bank-card" ,method = RequestMethod.POST)
     public ResponseModel setBankCard(@Validated PayBankVo payBankVo){
         ResultBangBank resultBangBank = payBankService.savePayBank(payBankVo);
         return ResponseModel.SUCCESS(resultBangBank);
@@ -130,7 +139,7 @@ public class PayServerController {
     /**
      * 删除支付银行卡
      */
-    @RequestMapping(value = "/del/bank_card" ,method = RequestMethod.POST)
+    @RequestMapping(value = "/del/bank-card" ,method = RequestMethod.POST)
     public ResponseModel delBankCard(@Validated DelBankCardVo delBankCardVo){
          payBankService.delBangBank(delBankCardVo);
         return ResponseModel.SUCCESS();
@@ -138,7 +147,7 @@ public class PayServerController {
     /**
      * 获取用户银行卡列表信息
      */
-    @RequestMapping(value = "/get/bank_card" ,method = RequestMethod.POST)
+    @RequestMapping(value = "/get/bank-card" ,method = RequestMethod.POST)
     public ResponseModel obtBankCard(@UserCode  String userCode){
         List<PayBankVo> list = payBankService.findByUserCode(userCode);
         return ResponseModel.SUCCESS(list);
@@ -157,7 +166,7 @@ public class PayServerController {
     /**
      * 查询所有的城市列表
      */
-    @RequestMapping("/query/all_city")
+    @RequestMapping("/query/all-city")
     public ResponseModel queryAllCityCode(){
         List<FyBankCityCode> allCityCode = fyBankCityCodeService.findAllCityCode();
         return ResponseModel.SUCCESS(allCityCode);

@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConf implements ExternalApi {
     private String passwordMd5Str;
-    private String orderNumKey;
     //应用ID
     private String appid;
     //商户号
@@ -55,13 +54,7 @@ public class ApplicationConf implements ExternalApi {
         this.passwordMd5Str = passwordMd5Str;
     }
 
-    public String getOrderNumKey() {
-        return orderNumKey;
-    }
 
-    public void setOrderNumKey(String orderNumKey) {
-        this.orderNumKey = orderNumKey;
-    }
 
     public Kunlun getKunlun() {
         return kunlun;
