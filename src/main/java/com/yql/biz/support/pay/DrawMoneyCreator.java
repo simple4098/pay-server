@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.pay.PayStatus;
+import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -40,6 +42,7 @@ public class DrawMoneyCreator implements IPayOrderCreator{
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
         log.debug("提现申请json:"+JSON.toJSONString(payOrderVo));
+        if (StringUtils.isEmpty(payOrderVo.getTxCode())) throw new MessageRuntimeException("com.yql.validation.constraints.txCode.notnull");
         //支付验证支付密码
         PayAccount payAccount = payAccountDao.findByUserCode(payOrderVo.getUserCode());
         payPasswordSecurityHelper.validateOldPassword(payOrderVo.getPayPassword(),payAccount);
