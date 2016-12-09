@@ -106,6 +106,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         payOrderAccountDetailDao.save(payOrderAccountDetail);
         //ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
         ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
+        log.debug("支付下单返回data:"+JSON.toJSONString(payOrder));
         return payOrder;
     }
 

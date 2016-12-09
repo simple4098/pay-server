@@ -1,7 +1,7 @@
 package com.yql.biz.client;
 
 import com.yql.biz.vo.pay.fy.CheckCardResponse;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.yql.biz.vo.pay.fy.CheckIDCardResponse;
 
 /**
  * 富友支付客户端
@@ -12,10 +12,12 @@ public interface IFyCheckCardPayClient {
 
     /**
      * 验证银行卡信息
-     * @param FM
+     * @param fm
      * @return
      */
 /*    @RequestMapping(value = "/mobile_pay/checkCard/checkCard01.pay",method = RequestMethod.GET)*/
-    CheckCardResponse checkCard(@RequestParam(name = "FM") String FM);
+    CheckCardResponse checkCard( String fm);
+
+    CheckIDCardResponse checkIDCard(String fm);
 
 }

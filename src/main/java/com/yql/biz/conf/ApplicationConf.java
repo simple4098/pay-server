@@ -182,6 +182,11 @@ public class ApplicationConf implements ExternalApi {
         return kunlun.getFyPayForHost()+kunlun.getPayForUri();
     }
 
+    @Override
+    public String getFyCheckIdUrl() {
+        return kunlun.getFyCheckHost()+kunlun.getCheckIdUri();
+    }
+
     public boolean getOpenSendMessage() {
         return openSendMessage;
     }
@@ -211,6 +216,16 @@ public class ApplicationConf implements ExternalApi {
         private String fyPayForHost;
         //代付uti
         private String payForUri;
+        //验证身份证uri
+        private String checkIdUri;
+
+        public String getCheckIdUri() {
+            return checkIdUri;
+        }
+
+        public void setCheckIdUri(String checkIdUri) {
+            this.checkIdUri = checkIdUri;
+        }
 
         public String getFyCheckHost() {
             return fyCheckHost;

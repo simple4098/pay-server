@@ -90,11 +90,13 @@ yql:
       #微信关闭订单uri
       wxCloseUri: /pay/closeorder
       #富友检验银行卡host
-      fyCheckHost: http://www-1.fuiou.com:18670
+      fyCheckHost: http://www-1.fuiou.com:18670/mobile_pay
       #富友代付host
       fyPayForHost: http://www-1.fuiou.com:8992/fuMer
       #富友检查银行卡uri
-      checkCardUri: /mobile_pay/checkCard/checkCardFour.pay
+      checkCardUri: /checkCard/checkCardFour.pay
+      #验证身份证rui
+      checkIdUri: /checkInfo/checkIdentity.pay
       #富友代付uri
       payForUri: /req.do
   mq:

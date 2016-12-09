@@ -59,7 +59,7 @@ public class PayOrderBalanceCreator implements IPayOrderCreator {
             BigDecimal cashFee = data.getCashFee();
             BigDecimal totalPrice = payOrderVo.getTotalPrice();
             String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
-            String diamondCode = orderNoGenerator.generateBalanceDiamondCode(payAccount, PayType.DIAMOND);
+            String diamondCode = orderNoGenerator.generateBalanceDiamondCode(payAccount, PayType.ACCOUNT);
             payOrderVo.setTxCode(diamondCode);
             payOrderVo.setPayNo(payNo);
             ResultPayOrder resultPayOrder = new ResultPayOrder();
@@ -70,6 +70,7 @@ public class PayOrderBalanceCreator implements IPayOrderCreator {
             TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo() ,JSON.toJSONString(resultPayOrder));
             if (cashFee!=null && cashFee.compareTo(totalPrice)>-1){
                 resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
+                resultPayOrder.setTxCode(diamondCode);
                 payOrderVo.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                 textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(),JSON.toJSONString(resultPayOrder));
                 sendMessageHelper.sendMessage(textMessage);

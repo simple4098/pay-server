@@ -40,4 +40,10 @@ public interface ExternalApi {
      * @return
      */
     String getFyPayForUrl();
+
+    /**
+     * 验证身份证接口
+     * @return
+     */
+    String getFyCheckIdUrl();
 }

@@ -41,7 +41,7 @@ logging:
   level:
     org.springframework : ERROR
     org.apache.catalina: ERROR
-    com.yql.biz: info
+    com.yql.biz: debug
 
 yql:
   password-md5-str: yql-payserver-1221
@@ -60,9 +60,9 @@ yql:
   aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
   institution-id: 158974554
   #商户编码
-  fyMerid: 0002900F0345178
+  fyMerid: 0006510F0344064
   #商户密钥
-  fyKey: 123456
+  fyKey: lcdri7e5j5itaqt41ckbixjgkkri6gay
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER
   openSendMessage: true
@@ -78,11 +78,11 @@ yql:
       #微信关闭订单uri
       wxCloseUri: /pay/closeorder
       #富友检验银行卡host
-      fyCheckHost: http://www-1.fuiou.com:18670
-      #富友代付host
-      fyPayForHost: http://www-1.fuiou.com:8992/fuMer
+      fyCheckHost: https://mpay.fuiou.com:16128
       #富友检查银行卡uri
-      checkCardUri: /mobile_pay/checkCard/checkCardFour.pay
+      checkCardUri: /checkCard/checkCardFour.pay
+      #富友代付host
+      fyPayForHost: https://fht.fuiou.com
       #富友代付uri
       payForUri: /req.do
   mq:
