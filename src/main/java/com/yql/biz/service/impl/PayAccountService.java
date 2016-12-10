@@ -83,14 +83,14 @@ public class PayAccountService implements IPayAccountService {
     }
 
     @Override
-    public void validatePassword(PayAccount payAccount) {
+    public void validatePassword(PayAccountVo payAccount) {
         logger.debug("验证密码 userCode:"+payAccount.getUserCode());
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());
         payPasswordSecurityHelper.validateOldPassword(payAccount.getPayPassword(),one);
     }
 
     @Override
-    public void updatePayAccountSmallMoney(PayAccount payAccount) {
+    public void updatePayAccountSmallMoney(PayAccountVo payAccount) {
         //验证支付密码
         validatePassword(payAccount);
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccount.getUserCode());

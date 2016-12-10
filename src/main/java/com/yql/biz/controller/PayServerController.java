@@ -44,7 +44,7 @@ public class PayServerController {
      * @return
      */
     @RequestMapping("/open-close/small-money-pay")
-    public ResponseModel openClose(@Validated  PayAccount payAccount){
+    public ResponseModel openClose(@Validated  PayAccountVo payAccount){
         payAccountService.updatePayAccountSmallMoney(payAccount);
         return ResponseModel.SUCCESS();
     }
@@ -123,7 +123,7 @@ public class PayServerController {
      * 验证支付密码是否成功
      */
     @RequestMapping(value = "/pay-password",method = RequestMethod.POST)
-    public ResponseModel payPassword(@Validated PayAccount payAccount){
+    public ResponseModel payPassword(@Validated PayAccountVo payAccount){
         payAccountService.validatePassword(payAccount);
         return ResponseModel.SUCCESS();
     }

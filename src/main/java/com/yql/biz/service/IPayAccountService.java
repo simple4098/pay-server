@@ -40,13 +40,13 @@ public interface IPayAccountService {
      * 验证支付密码是否正确
      * @param payAccount
      */
-    void validatePassword(PayAccount payAccount);
+    void validatePassword(PayAccountVo payAccount);
 
     /**
      * 小额支付开关
      * @param payAccount
      */
-    void updatePayAccountSmallMoney(PayAccount payAccount);
+    void updatePayAccountSmallMoney(PayAccountVo payAccount);
 
     /**
      * 更新实名认证

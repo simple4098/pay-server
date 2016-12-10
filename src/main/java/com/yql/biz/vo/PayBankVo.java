@@ -26,7 +26,7 @@ public class PayBankVo {
     //银行卡名称
     private String bankName;
     //持卡人
-    @NotNull(message = "{com.yql.validation.constraints.cardholder.message}")
+   /* @NotNull(message = "{com.yql.validation.constraints.cardholder.message}")*/
     private String cardholder;
     //快捷支付金额
     private BigDecimal quickPaymentAmount;

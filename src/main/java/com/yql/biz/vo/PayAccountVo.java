@@ -1,5 +1,6 @@
 package com.yql.biz.vo;
 
+import com.yql.biz.constraint.Password;
 import com.yql.biz.enums.SmallPayMoney;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.util.PayUtil;
@@ -16,7 +17,8 @@ public class PayAccountVo {
     @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
     private String userCode;
     //支付密码
-    @NotNull(message = "{com.yql.validation.constraints.payPassword.notnull}")
+    //@NotNull(message = "{com.yql.validation.constraints.payPassword.notnull}")
+    @Password
     private String payPassword;
     //旧的支付密码
     private String oldPayPassword;

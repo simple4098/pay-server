@@ -1,5 +1,7 @@
 package com.yql.biz.vo;
 
+import com.yql.biz.constraint.Password;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -13,7 +15,8 @@ public class DelBankCardVo {
     private String txCode;
     @NotNull(message = "{com.yql.validation.constraints.payAccountId.notnull}")
     private Integer payAccountId;
-    @NotNull(message = "{com.yql.validation.constraints.payPassword.notnull}")
+    //@NotNull(message = "{com.yql.validation.constraints.payPassword.notnull}")
+    @Password
     private String payPassword;
 
     public String getTxCode() {
