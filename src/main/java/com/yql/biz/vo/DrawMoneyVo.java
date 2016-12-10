@@ -1,5 +1,8 @@
 package com.yql.biz.vo;
 
+import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
+
 import java.math.BigDecimal;
 
 /**
@@ -67,5 +70,15 @@ public class DrawMoneyVo {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public static DrawMoneyVo toVo(PayOrderAccount order, PayBank p) {
+        DrawMoneyVo drawMoneyVo = new DrawMoneyVo();
+        drawMoneyVo.setOrderNo(order.getOrderNo());
+        drawMoneyVo.setCardholder(p.getCardholder());
+        drawMoneyVo.setTotalPrice(order.getTotalPrice());
+        drawMoneyVo.setBankCard(p.getBankCard());
+        drawMoneyVo.setBankName(p.getBankName());
+        return drawMoneyVo;
     }
 }

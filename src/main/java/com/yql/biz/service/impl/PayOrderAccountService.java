@@ -179,15 +179,10 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.HANDLING.getValue(),startTime,endTime);
         List<DrawMoneyVo> drawMoneyVos = new ArrayList<>();
         DrawMoneyVo drawMoneyVo = null;
+        PayBank bank = null;
         for (PayOrderAccount order: list) {
-            drawMoneyVo = new DrawMoneyVo();
-            PayBank p = payBankDao.findByTxCode(order.getTxCode());
-            //BeanUtils.copyProperties(order,drawMoneyVo);
-            drawMoneyVo.setOrderNo(order.getOrderNo());
-            drawMoneyVo.setCardholder(p.getCardholder());
-            drawMoneyVo.setTotalPrice(order.getTotalPrice());
-            drawMoneyVo.setBankCard(p.getBankCard());
-            drawMoneyVo.setBankName(p.getBankName());
+            bank = payBankDao.findByTxCode(order.getTxCode());
+            drawMoneyVo = DrawMoneyVo.toVo(order,bank);
             drawMoneyVos.add(drawMoneyVo);
         }
         return drawMoneyVos;
