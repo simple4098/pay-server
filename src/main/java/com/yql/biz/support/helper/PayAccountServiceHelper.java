@@ -63,31 +63,31 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     @Resource
     private IBankInfoDao bankInfoDao;
 
-    @Override
-    public ResultBangBank crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
-        PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
-        if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
-        ResultBangBank resuleBangBangk = new ResultBangBank(30);
-        PayBankVo.voToDomain(newPayBak,payBankVo, payAccount);
-        PayBank payBank = payBankDao.findByPayAccountIdAndBankCardAndDeleted(payAccount.getId(), payBankVo.getBankCard(),false);
-        if (payBank != null)  throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
-        List<PayBank> list = payBankDao.findByPayAccountIdOrderBySort(payAccount.getId());
-        if (!CollectionUtils.isEmpty(list)) {
-            newPayBak.setSort(list.size());
-        }
+    /**
+     * 组装验证银行卡 请求的xml数据
+     * @param payAccount 支付账号信息
+     * @param payBankVo 前端/移动端 请求参数
+     */
+    private String checkBankCardXml(PayAccount payAccount,PayBankVo payBankVo){
         Integer value = payAccount.getIdentificationType().getValue();
         CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),payBankVo.getBankCard(),payBankVo.getCardholder(),value.toString(),payAccount.getIdentificationNumber());
         String md5String = checkCardRequest.toMd5String(applicationConf.getFyKey());
         checkCardRequest.setSign(md5String);
-        String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
-        CheckCardResponse cardResponse = fyCheckCardPayClient.checkCard(xml);
+        return PlatformPayUtil.payRequestXml(checkCardRequest);
+    }
+
+    /**
+     *  富友返回对象转化成持久化对象 并且验证
+     * @param cardResponse 富友验证银行卡返回数据
+     * @param newPayBak 要持久化对象
+     */
+    private void  checkBankCardResult( CheckCardResponse cardResponse,PayBank newPayBak){
         if (cardResponse!=null && PayConstants.FY_CHECK_CARD_SUCCESS.equals(cardResponse.getRcd())){
             BankInfo bankInfo = bankInfoDao.findByBankName(cardResponse.getCnm());
             if (bankInfo==null) throw  new MessageRuntimeException("error.payserver.bangBanke.notsupport");
             newPayBak.setBankName(cardResponse.getCnm());
             newPayBak.setBankId(bankInfo.getBankCode());
             newPayBak.setInsCd(cardResponse.getInsCd());
-            resuleBangBangk.setBankName(cardResponse.getCnm());
             if (PayConstants.CTP01.equals(cardResponse.getCtp())){
                 newPayBak.setCardType(CardType.BANK_CARD);
             }else {
@@ -96,19 +96,45 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         }else {
             throw  new RuntimeException(cardResponse.getRdesc());
         }
+    }
+
+    /**
+     * 绑定的银行卡 生成 绑定code，结算标识，交易号，并验证这些号码是否重复
+     */
+    private void checkBank(PayBank newPayBak){
+        PayBank payBank = payBankDao.findByPayAccountIdAndBankCardAndDeleted(newPayBak.getPayAccountId(), newPayBak.getBankCard(),false);
+        if (payBank != null)  throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         String txSNBinding = orderNoGenerator.generateBankCode(newPayBak, BankCodeType.SN_BINDING);
         String txCode = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.TX_CODE);
         String settlementFlag = orderNoGenerator.generateBankCode(newPayBak,BankCodeType.SETTLEMENTFLAG);
         payBank = payBankDao.findByPayAccountIdAndTxCodeAndDeleted(newPayBak.getPayAccountId(), newPayBak.getTxCode(),false);
+        if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         payBank = payBankDao.findByPayAccountIdAndTxSNBindingAndDeleted(newPayBak.getPayAccountId(), txSNBinding,false);
+        if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         payBank = payBankDao.findByPayAccountIdAndSettlementFlagAndDeleted(newPayBak.getPayAccountId(), settlementFlag,false);
         if (payBank !=null) throw new MessageRuntimeException("error.payserver.paybankCard.repeat");
         newPayBak.setTxSNBinding(txSNBinding);
         newPayBak.setTxCode(txCode);
         newPayBak.setSettlementFlag(settlementFlag);
-        resuleBangBangk.setCardType(newPayBak.getCardType());
+    }
 
-        return resuleBangBangk;
+    @Override
+    public ResultBangBank crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
+        PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
+        if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
+        ResultBangBank resultBangBank = new ResultBangBank(30);
+        PayBankVo.voToDomain(newPayBak,payBankVo, payAccount);
+        checkBank(newPayBak);
+        List<PayBank> list = payBankDao.findByPayAccountIdOrderBySort(payAccount.getId());
+        if (!CollectionUtils.isEmpty(list)) {
+            newPayBak.setSort(list.size());
+        }
+        String xml = checkBankCardXml(payAccount, payBankVo);
+        CheckCardResponse cardResponse = fyCheckCardPayClient.checkCard(xml);
+        checkBankCardResult(cardResponse,newPayBak);
+        resultBangBank.setBankName(cardResponse.getCnm());
+        resultBangBank.setCardType(newPayBak.getCardType());
+        return resultBangBank;
     }
 
     @Override

@@ -147,7 +147,7 @@ public class PayServerController {
     /**
      * 获取用户银行卡列表信息
      */
-    @RequestMapping(value = "/get/bank-card" ,method = RequestMethod.POST)
+    @RequestMapping("/get/bank-card")
     public ResponseModel obtBankCard(@UserCode  String userCode){
         List<PayBankVo> list = payBankService.findByUserCode(userCode);
         return ResponseModel.SUCCESS(list);
