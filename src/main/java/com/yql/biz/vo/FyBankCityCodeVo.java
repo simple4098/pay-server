@@ -15,14 +15,24 @@ public class FyBankCityCodeVo{
     private String cityName;
     private String provinceId;
     private String provinceName;
-    private List<FyBankCityCode> fyBankCityCodeList;
+    private List<FyBankCityCodeVo> fyBankCityCodeListVo;
 
-    public List<FyBankCityCode> getFyBankCityCodeList() {
-        return fyBankCityCodeList;
+    public FyBankCityCodeVo() {
     }
 
-    public void setFyBankCityCodeList(List<FyBankCityCode> fyBankCityCodeList) {
-        this.fyBankCityCodeList = fyBankCityCodeList;
+    public FyBankCityCodeVo(String cityId, String cityName, String provinceId, String provinceName) {
+        this.cityId = cityId;
+        this.cityName = cityName;
+        this.provinceId = provinceId;
+        this.provinceName = provinceName;
+    }
+
+    public List<FyBankCityCodeVo> getFyBankCityCodeListVo() {
+        return fyBankCityCodeListVo;
+    }
+
+    public void setFyBankCityCodeListVo(List<FyBankCityCodeVo> fyBankCityCodeListVo) {
+        this.fyBankCityCodeListVo = fyBankCityCodeListVo;
     }
 
     public String getCityId() {

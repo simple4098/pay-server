@@ -33,10 +33,13 @@ public class FyBankCityCodeService implements IFyBankCityCodeService {
         Optional.ofNullable(provinceList).ifPresent(stringListMap -> stringListMap.forEach((provinceId, fyBankCityCodes) -> {
             FyBankCityCodeVo fyBankCityCodeVo = new FyBankCityCodeVo();
             fyBankCityCodeVo.setProvinceId(provinceId);
-            fyBankCityCodeVo.setFyBankCityCodeList(fyBankCityCodes);
+            List<FyBankCityCodeVo> fyBankCityCodeVoList = new ArrayList<>();
+            Optional.ofNullable(fyBankCityCodes).filter(Objects::nonNull).ifPresent(fyBankCityCodes1 -> fyBankCityCodes1.forEach(fyBankCityCode -> fyBankCityCodeVoList.add(new FyBankCityCodeVo(fyBankCityCode.getCityId(),fyBankCityCode.getCityName(),fyBankCityCode.getProvinceId(),fyBankCityCode.getProvinceName()))));
             Optional.ofNullable(fyBankCityCodes).filter(Objects::nonNull).ifPresent(fyBankCityCodes1 -> fyBankCityCodeVo.setProvinceName(fyBankCityCodes1.get(0).getProvinceName()));
+            fyBankCityCodeVo.setFyBankCityCodeListVo(fyBankCityCodeVoList);
             list.add(fyBankCityCodeVo);
         }));
+
         return list;
     }
 }
