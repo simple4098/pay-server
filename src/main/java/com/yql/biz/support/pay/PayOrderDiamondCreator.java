@@ -69,6 +69,7 @@ public class PayOrderDiamondCreator implements IPayOrderCreator {
             resultPayOrder.setPayNo(payNo);
             resultPayOrder.setOrderNo(payOrderVo.getOrderNo());
             resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
+            resultPayOrder.setTxCode(diamondCode);
             TextMessage textMessage = new TextMessage(applicationConf.getSendMsgTopic(), SendMsgTag.PAY_SERVER_STATUS.name(), payOrderVo.getOrderNo(), JSON.toJSONString(resultPayOrder));
             if (cashFee!=null && cashFee.compareTo(totalPrice)>-1){
                 resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());

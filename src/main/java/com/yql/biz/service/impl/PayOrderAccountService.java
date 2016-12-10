@@ -42,6 +42,7 @@ import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,23 +89,17 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         log.info("pay-server param:" + JSON.toJSONString(payOrderVo));
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payOrderVo.getUserCode());
         PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(payOrderVo.getOrderNo());
-        PayOrderAccount payOrderAccount = PayOrderVo.toDomain(payOrderVo);
-        payOrderAccount.setPayAccountId(payAccount.getId());
         PayOrderVo orderVo = payOrderCreator.transform(payOrderVo);
-        payOrderAccount.setPayStatus(orderVo.getPayStatus());
-        payOrderAccount.setPayOrder(orderVo.getPayOrder());
-        payOrderAccount.setMsg(orderVo.getMsg());
-        payOrderAccount.setPayNo(orderVo.getPayNo());
-        payOrderAccount.setPayBankId(orderVo.getPayBankId());
-        PayOrderAccountDetail payOrderAccountDetail = PayOrderAccountDetailVo.toDomain(payOrderAccount);
+        PayOrderAccount payOrderAccount = PayOrderVo.toDomain(orderVo);
         if (orderAccount != null) {
             payOrderAccount.setId(orderAccount.getId());
             payOrderAccount.setVersion(orderAccount.getVersion());
         }
+        payOrderAccount.setPayAccountId(payAccount.getId());
+        PayOrderAccountDetail payOrderAccountDetail = PayOrderAccountDetailVo.toDomain(payOrderAccount);
         PayOrderAccount result = payOrderAccountDao.save(payOrderAccount);
         payOrderAccountDetail.setPayOrderAccountId(result.getId());
         payOrderAccountDetailDao.save(payOrderAccountDetail);
-        //ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
         ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
         log.debug("支付下单返回data:"+JSON.toJSONString(payOrder));
         return payOrder;

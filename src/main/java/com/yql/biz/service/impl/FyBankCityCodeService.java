@@ -34,13 +34,9 @@ public class FyBankCityCodeService implements IFyBankCityCodeService {
             FyBankCityCodeVo fyBankCityCodeVo = new FyBankCityCodeVo();
             fyBankCityCodeVo.setProvinceId(provinceId);
             fyBankCityCodeVo.setFyBankCityCodeList(fyBankCityCodes);
-            Optional.ofNullable(fyBankCityCodes).ifPresent(fyBankCityCodes1 -> fyBankCityCodes1.forEach(fyBankCityCode -> fyBankCityCodeVo.setProvinceName(fyBankCityCode.getProvinceName())));
+            Optional.ofNullable(fyBankCityCodes).filter(Objects::nonNull).ifPresent(fyBankCityCodes1 -> fyBankCityCodeVo.setProvinceName(fyBankCityCodes1.get(0).getProvinceName()));
             list.add(fyBankCityCodeVo);
         }));
-       /* for (FyBankCityCode fyBankCityCode:all){
-            FyBankCityCodeVo fyBankCityCodeVo =  FyBankCityCodeVo.toVo(fyBankCityCode);
-            list.add(fyBankCityCodeVo);
-        }*/
         return list;
     }
 }

@@ -15,12 +15,9 @@ import java.util.List;
  * data 2016/12/8 0008.
  */
 @Repository
-@CacheConfig(cacheNames = "fy_bank_city_code")
 public interface IFyBankCityCodeDao  extends JpaRepository<FyBankCityCode,Integer>{
 
-    @Cacheable
     List<FyBankCityCode> findAll();
 
-    @Cacheable
     FyBankCityCode findByCityName(String cityName);
 }
