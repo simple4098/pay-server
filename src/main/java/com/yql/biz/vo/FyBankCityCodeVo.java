@@ -1,20 +1,29 @@
-package com.yql.biz.model;
+package com.yql.biz.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.yql.biz.model.FyBankCityCode;
+import org.springframework.beans.BeanUtils;
+
+import java.util.List;
 
 /**
  * <p> 富友城市编码 </p>
  * @auther simple
  * data 2016/12/8 0008.
  */
-@Entity
-@Table(name = "fy_bank_city_code")
-public class FyBankCityCode extends Domain{
+public class FyBankCityCodeVo{
     private String cityId;
     private String cityName;
     private String provinceId;
     private String provinceName;
+    private List<FyBankCityCodeVo> fyBankCityCodeVoList;
+
+    public List<FyBankCityCodeVo> getFyBankCityCodeVoList() {
+        return fyBankCityCodeVoList;
+    }
+
+    public void setFyBankCityCodeVoList(List<FyBankCityCodeVo> fyBankCityCodeVoList) {
+        this.fyBankCityCodeVoList = fyBankCityCodeVoList;
+    }
 
     public String getCityId() {
         return cityId;
@@ -46,5 +55,11 @@ public class FyBankCityCode extends Domain{
 
     public void setProvinceName(String provinceName) {
         this.provinceName = provinceName;
+    }
+
+    public static FyBankCityCodeVo toVo(FyBankCityCode fyBankCityCode) {
+        FyBankCityCodeVo fyBankCityCodeVo = new FyBankCityCodeVo();
+        BeanUtils.copyProperties(fyBankCityCode,fyBankCityCodeVo);
+        return fyBankCityCodeVo;
     }
 }

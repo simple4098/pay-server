@@ -1,6 +1,7 @@
 package com.yql.biz.service;
 
 import com.yql.biz.model.FyBankCityCode;
+import com.yql.biz.vo.FyBankCityCodeVo;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface IFyBankCityCodeService {
     /**
      * 查询所有的城市编码
      */
-    List<FyBankCityCode> findAllCityCode();
+    List<FyBankCityCodeVo> findAllCityCode();
 }

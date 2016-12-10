@@ -168,7 +168,7 @@ public class PayServerController {
      */
     @RequestMapping("/query/all-city")
     public ResponseModel queryAllCityCode(){
-        List<FyBankCityCode> allCityCode = fyBankCityCodeService.findAllCityCode();
+        List<FyBankCityCodeVo> allCityCode = fyBankCityCodeService.findAllCityCode();
         return ResponseModel.SUCCESS(allCityCode);
     }
 }
