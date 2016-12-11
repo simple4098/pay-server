@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 账户中心客户端
  * @author simple
  */
-@FeignClient(value = "pay-accounting")
+@FeignClient(value = "pay-accounting",fallback = AccountClientHystrix.class)
 public interface IAccountClient {
 
 
