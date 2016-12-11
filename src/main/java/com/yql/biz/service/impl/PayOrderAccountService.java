@@ -11,7 +11,6 @@ import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.fy.FyRequestType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
-import com.yql.biz.enums.pay.WxPayType;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
@@ -35,19 +34,21 @@ import com.yql.biz.vo.pay.fy.FyPayRequest;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
-import com.yql.biz.vo.pay.wx.ResponseHandler;
 import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
 import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>支付订单号</p>
@@ -67,8 +68,6 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private ApplicationConf applicationConf;
     @Resource(name ="payOrderCreatorComposition")
     private PayOrderCreatorComposition payOrderCreator;
-    @Resource
-    private IPayOrderParamHelper payOrderParamHelper;
     @Resource
     private SendMessageHelper sendMessageHelper;
     @Resource
@@ -108,24 +107,27 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     @Transactional
-    public WeiXinResponseResult callPayNotify(ResponseHandler responseHandler) {
-        log.debug("==============callPayNotify==========");
+    public String callPayNotify(HttpServletRequest request) {
+        String notityXml = PayUtil.toXml(request);
+        log.debug("callPayNotify:"+notityXml);
         WeiXinResponseResult weiXinResponse = new WeiXinResponseResult(WxPayResult.SUCCESS);
-        responseHandler.setKey(applicationConf.getWxKey());
-        SortedMap allParameters = responseHandler.getAllParameters();
-        WeiXinNotifyVo weiXinNotifyVo = payOrderParamHelper.getWxCallBackParam(allParameters);
+        WeiXinNotifyVo weiXinNotifyVo = (WeiXinNotifyVo)PlatformPayUtil.convertXmlStrToObject(WeiXinNotifyVo.class, notityXml);
         PayOrderAccount orderAccount = payOrderAccountDao.findByPayNo(weiXinNotifyVo.getOutTradeNo());
         if (orderAccount!=null){
             //订单已经成功处理,直接返回给微信成功状态
             if (PayStatus.PAY_SUCCESS.getValue().equals(orderAccount.getPayStatus())){
-                return  weiXinResponse;
+                return PlatformPayUtil.payRequestXml(weiXinResponse);
             }else {
                 ResultPayOrder resultPayOrder = new ResultPayOrder();
-                //sendMessageHelper.sendWxNotify(resultPayOrder,orderAccount.getOrderNo());
                 if (WxPayResult.SUCCESS.name().equals(weiXinNotifyVo.getResultCode())){
-                    boolean tenpaySign = responseHandler.isTenpaySign();
-                    log.debug(" 微信异步通知: "+responseHandler.getDebugInfo());
-                    if (tenpaySign){
+                    String wxSign = weiXinNotifyVo.getSign();
+                    log.debug("微信异步通知sign:"+wxSign);
+                    weiXinNotifyVo.setSign(null);
+                    String paySign = payOrderCardParamHelper.getSign(weiXinNotifyVo);
+                    log.debug("微信异步通知sign【pay-server sigin】:"+paySign);
+                    boolean sign = wxSign.equals(paySign);
+                    log.debug("sign 是否成功:"+sign);
+                    if (sign){
                         if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
                             orderAccount.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
                             Date date = PayUtil.dataFormat(weiXinNotifyVo.getTimeEnd());
@@ -135,7 +137,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
                             orderAccount.setPayOrder(weiXinNotifyVo.getTransactionId());
                             payOrderAccountDao.save(orderAccount);
                         }
-                        weiXinNotifyVo.setOutTradeNo(orderAccount.getOrderNo());
+                        resultPayOrder.setPayNo(orderAccount.getPayNo());
+                        resultPayOrder.setOrderNo(orderAccount.getOrderNo());
                         sendMessageHelper.sendWxNotifyResult(weiXinResponse,resultPayOrder,weiXinNotifyVo);
                     }else {
                         weiXinResponse.setReturnCode(WxPayResult.FAIL);
@@ -150,7 +153,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
             weiXinResponse.setReturnCode(WxPayResult.FAIL);
             weiXinResponse.setReturnMsg("查询不到此商户订单");
         }
-        return weiXinResponse;
+        String payRequestXml = PlatformPayUtil.payRequestXml(weiXinResponse);
+        return payRequestXml;
     }
 
     @Override

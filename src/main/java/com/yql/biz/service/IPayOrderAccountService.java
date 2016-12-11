@@ -7,6 +7,7 @@ import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.ResponseHandler;
 import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -24,9 +25,9 @@ public interface IPayOrderAccountService {
 
     /**
      * 微信回调
-     * @param responseHandler
+     * @param request
      */
-    WeiXinResponseResult callPayNotify(ResponseHandler responseHandler);
+    String callPayNotify(HttpServletRequest request);
 
     /**
      * 更新提现状态

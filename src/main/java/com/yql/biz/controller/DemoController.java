@@ -37,10 +37,10 @@ import javax.annotation.Resource;
 @RestController
 public class DemoController {
     private static final Logger logger = LoggerFactory.getLogger(DemoController.class);
-    @Resource
-    private ComputeClient computeClient;
-    @Autowired
-    private DiscoveryClient discoveryClient;
+   /* @Resource
+    private ComputeClient computeClient;*/
+    /*@Autowired
+    private DiscoveryClient discoveryClient;*/
     @Resource
     private IUserCenterClient userCenterClient;
     @Resource
@@ -117,7 +117,7 @@ public class DemoController {
         return jaq85s2n;
     }
 
-    @RequestMapping("/add-feign")
+   /* @RequestMapping("/add-feign")
     public ResponseModel addTest(){
         Request<BangBody> request1 = new Request<>();
         Head head = new Head() ;
@@ -134,18 +134,18 @@ public class DemoController {
         //Response response = computeClient.add1(param);
         Response response1 = computeClient.add2("hello","zhangLin");
         System.out.println("==========="+response1);
-     /*   Integer add = computeClient.add(1, 10);
-        System.out.println("=========="+add);*/
+     *//*   Integer add = computeClient.add(1, 10);
+        System.out.println("=========="+add);*//*
         return ResponseModel.SUCCESS(response1);
-    }
-
+    }*/
+/*
     @RequestMapping(value = "/add" ,method = RequestMethod.GET)
     public Integer add(@RequestParam Integer a, @RequestParam Integer b) {
         ServiceInstance instance = discoveryClient.getLocalServiceInstance();
         Integer r = a + b;
         logger.info("/add, host:" + instance.getHost() + ", service_id:" + instance.getServiceId() + ", result:" + r);
         return r;
-    }
+    }*/
 
     @RequestMapping(value = "/send" ,method = RequestMethod.GET)
     public Integer send() {

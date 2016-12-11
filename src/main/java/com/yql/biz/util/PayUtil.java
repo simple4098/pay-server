@@ -2,8 +2,11 @@ package com.yql.biz.util;
 
 import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.text.ParseException;
@@ -16,7 +19,7 @@ import java.util.Date;
  * data 2016/11/7 0007.
  */
 public class PayUtil {
-
+   private static  final Logger log = LoggerFactory.getLogger(PayUtil.class);
     private PayUtil(){}
 
 
@@ -108,6 +111,22 @@ public class PayUtil {
             return sdf.parse(timeEnd);
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static String toXml(HttpServletRequest request){
+        String inputLine;
+        String notityXml = "";
+        try{
+            BufferedReader reader = request.getReader();
+            while ((inputLine =reader.readLine()) != null) {
+                notityXml += inputLine;
+            }
+            return notityXml;
+        }catch (Exception e){
+            log.error("wx 异步通知xml:",e);
         }
         return null;
     }

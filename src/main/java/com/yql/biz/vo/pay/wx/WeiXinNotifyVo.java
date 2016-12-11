@@ -1,15 +1,19 @@
 package com.yql.biz.vo.pay.wx;
 
+import com.yql.biz.vo.pay.request.DjPay;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p> 微信异步通知 接受的对象信息 </p>
  * @auther simple
  * data 2016/11/29 0029.
  */
-public class WeiXinNotifyVo {
+@XmlRootElement(name = "xml")
+public class WeiXinNotifyVo extends DjPay{
     //应用ID
     private String appId ;
     //商户号
@@ -63,6 +67,17 @@ public class WeiXinNotifyVo {
     //交易类型
     @Enumerated(value = EnumType.STRING)
     private String tradeType ;
+    //是否关注
+    private String isSubscribe;
+
+    @XmlElement(name = "is_subscribe")
+    public String getIsSubscribe() {
+        return isSubscribe;
+    }
+
+    public void setIsSubscribe(String isSubscribe) {
+        this.isSubscribe = isSubscribe;
+    }
 
     @XmlElement(name = "appid")
     public String getAppId() {

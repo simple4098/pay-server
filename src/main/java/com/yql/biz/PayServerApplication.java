@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ServletComponentScan
 @EnableFeignClients
 @EnableDiscoveryClient
-@EnableCaching
+/*@EnableCaching*/
 public class PayServerApplication {
 
 	public static void main(String[] args) {

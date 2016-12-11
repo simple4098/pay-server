@@ -1,32 +1,40 @@
 server:
     port: 8081
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.0.38:11111/eureka/
+  instance:
+       prefer-ip-address: true
+
 spring:
+  application:
+    name: pay-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://192.168.0.35:3306/pay_server?characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&useNewIO=true&autoReconnectForPools=true
     username: root
     password: nidaye
     driver-class-name: com.mysql.jdbc.Driver
-    initial-size: 5
-    min-idle: 5
-    max-active: 50
-    max-wait: 60000
-    time-between-eviction-runsMillis: 60000
-    min-evictable-idle-time-millis: 300000
-    validation-query: SELECT 1 FROM DUAL
-    test-on-borrow: true
-    test-while-idle: true
-    test-on-return: false
-    pool-prepared-statements: true
-    max-pool-prepared-statement-per-connection-size: 20
-    filters: stat,wall,log4j
-    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 50
+      max-wait: 60000
+      time-between-eviction-runsMillis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-on-borrow: true
+      test-while-idle: true
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   jpa:
     hibernate:
       ddl-auto: update
-      cache:
-        use_query_cache: true
       naming:
         strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -50,8 +58,6 @@ spring:
       bus:
         enabled: false
 logging:
-  log4j.appender.file.encoding: UTF-8
-  log4j.appender.A1.File: /home/logs/pay-server.log
   level:
     org.springframework : ERROR
     org.apache.catalina: ERROR
@@ -67,7 +73,7 @@ yql:
   #微信key
   wxKey: wOdzXgWwbwjPEEZoMXWKudytfYvq6iLo
   #微信异步通知
-  wxNotifyUrl: http://171.221.202.60:99999/pay/wx
+  wxNotifyUrl: http://171.221.202.60:3838/pay-server/pay/wx
   #微信支付 body
   wxBody: 零享购-消费
   #阿里异步通知

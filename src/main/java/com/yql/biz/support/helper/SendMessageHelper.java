@@ -71,13 +71,13 @@ public class SendMessageHelper {
             resultPayOrder.setPayPrice(totalFee);
             resultPayOrder.setTxCode(weiXinNotifyVo.getOpenid());
             resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
-            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),weiXinNotifyVo.getOutTradeNo(),resultPayOrder);
+            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),resultPayOrder.getOrderNo(),resultPayOrder);
         }else {
             weiXinResponse.setReturnCode(WxPayResult.FAIL);
             weiXinResponse.setReturnMsg("微信异步通知,处理业务失败");
             resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
             weiXinResponse.setReturnCode(WxPayResult.FAIL);
-            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),weiXinNotifyVo.getOutTradeNo(),resultPayOrder);
+            textMessage = new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),resultPayOrder.getOrderNo(),resultPayOrder);
         }
         sendMessage(textMessage);
     }

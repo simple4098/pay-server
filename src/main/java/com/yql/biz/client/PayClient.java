@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 调用大金支付平台接口
  * @author simple
  */
-@FeignClient(value = "pay-platform",url = "${pay-server.url}",fallback = PayClientHystrix.class)
+@FeignClient(value = "pay-platform",fallback = PayClientHystrix.class)
 public interface PayClient {
 
     /**
