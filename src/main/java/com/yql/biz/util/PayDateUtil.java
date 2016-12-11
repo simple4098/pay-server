@@ -46,10 +46,4 @@ public class PayDateUtil {
         Date formatDate = getFormatDate();
         return DateUtils.addSeconds(formatDate, -1);
     }
-
-    public static void main(String[] args) {
-        System.out.println(getFormatDate());
-        System.out.println(getStartTime());
-        System.out.println(getEndTime());
-    }
 }

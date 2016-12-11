@@ -7,75 +7,37 @@
 	<artifactId>pay-server</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
-
 	<name>pay-server</name>
 	<description>Demo project for Spring Boot</description>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
+		<version>1.4.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-	<distributionManagement>
-		<repository>
-			<id>nexus-release</id>
-			<url>http://192.168.0.35:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-snapshots</id>
-			<url>http://192.168.0.35:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<dependencies>
-        <!-- Swagger -->
-       <!-- <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.2.2</version>
-			&lt;!&ndash;<exclusions>
-				<exclusion>
-					<groupId>org.springframework.hateoas</groupId>
-					<artifactId>spring-hateoas</artifactId>
-				</exclusion>
-			</exclusions>&ndash;&gt;
-        </dependency>
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.2.2</version>
-			&lt;!&ndash;<exclusions>
-				<exclusion>
-					<groupId>org.springframework.hateoas</groupId>
-					<artifactId>spring-hateoas</artifactId>
-				</exclusion>
-			</exclusions>&ndash;&gt;
-		</dependency>-->
-		<!--<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spirng-boot-stater-devtools</artifactId>
-		</dependency>-->
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bus-kafka</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>4.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.3.2</version>
-		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
@@ -83,68 +45,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.okhttp</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>2.7.5</version>
-		</dependency>
-		<!--消息中心-->
-		<dependency>
-			<groupId>com.yql.framework</groupId>
-			<artifactId>mq-core</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.github.openfeign</groupId>
-			<artifactId>feign-core</artifactId>
-			<version>9.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.netflix.feign</groupId>
-			<artifactId>feign-jaxb</artifactId>
-			<version>8.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>4.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>1.0.24</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.yql.biz</groupId>
-			<artifactId>common-core</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<!-- 支持编译期织入-->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.8.9</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjtools</artifactId>
-			<version>1.8.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -170,23 +70,90 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 
+		<!--消息中心-->
+		<dependency>
+			<groupId>com.yql.framework</groupId>
+			<artifactId>mq-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>4.1.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.24</version>
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>com.yql.biz</groupId>
+			<artifactId>common-core</artifactId>
+			<version>3.0.0</version>
 		</dependency>
-		<!-- 支持自定义的元数据配置-->
+		<!-- 支持编译期织入-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>com.netflix.feign</groupId>-->
+		<!--<artifactId>feign-jaxb</artifactId>-->
+		<!--<version>8.7.0</version>-->
+		<!--</dependency>-->
+		<!-- Swagger -->
+		<!-- <dependency>
+             <groupId>io.springfox</groupId>
+             <artifactId>springfox-swagger-ui</artifactId>
+             <version>2.2.2</version>
+             &lt;!&ndash;<exclusions>
+                 <exclusion>
+                     <groupId>org.springframework.hateoas</groupId>
+                     <artifactId>spring-hateoas</artifactId>
+                 </exclusion>
+             </exclusions>&ndash;&gt;
+         </dependency>
+         <dependency>
+             <groupId>io.springfox</groupId>
+             <artifactId>springfox-swagger2</artifactId>
+             <version>2.2.2</version>
+             &lt;!&ndash;<exclusions>
+                 <exclusion>
+                     <groupId>org.springframework.hateoas</groupId>
+                     <artifactId>spring-hateoas</artifactId>
+                 </exclusion>
+             </exclusions>&ndash;&gt;
+         </dependency>-->
+		<!--<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spirng-boot-stater-devtools</artifactId>
+		</dependency>-->
 	</dependencies>
 
 	<dependencyManagement>
@@ -194,7 +161,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Camden.SR1</version>
+				<version>Camden.SR2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -206,10 +173,31 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<fork>true</fork>
-				</configuration>
 			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>org.apache.maven.plugins</groupId>-->
+				<!--<artifactId>maven-compiler-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<source>${java.version}</source>-->
+					<!--<target>${java.version}</target>-->
+					<!--<proc>none</proc>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>default-compile</id>-->
+						<!--<phase>none</phase>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
+			<!--<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>-->
+
 			<!--
              使用aspectj-maven-plugin 插件编译springboot 可能会出现下面的错误
              java.lang.IllegalStateException: Failed to write metadata at org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor.writeMetaData(ConfigurationMetadataAnnotationProcessor.java:394)

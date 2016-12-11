@@ -111,9 +111,4 @@ public class PayUtil {
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        String s = randomCode(32);
-        System.out.println(s);
-    }
 }
