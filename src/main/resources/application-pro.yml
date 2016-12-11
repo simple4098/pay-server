@@ -1,51 +1,90 @@
 server:
-    port: 8081
+  port: 38888
+  tomcat:
+    accesslog:
+      enabled: false
+    max-threads: 600
+    min-spare-threads: 64
+eureka:
+  client:
+    service-url:
+      defaultZone: http://peer1:11111/eureka/,http://peer2:11111/eureka,http://peer3:11111/eureka
+logging:
+  level:
+    root: off
+    org.springframework: off
+    org.apache.catalina: off
+    org.apache.tomcat: off
+    com.yql: debug
+ons:
+  client:
+    logRoot: ~/apps/pay-server/ons.log
+    logFileMaxIndex: 5
+    logLevel: error
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
 
 spring:
+  application:
+    name: pay-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.0.35:3306/pay_server?characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&useNewIO=true&autoReconnectForPools=true
-    username: root
-    password: nidaye
+    url: jdbc:mysql://yqlpay-db.mysql.rds.aliyuncs.com:3306/pay_server?characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&useNewIO=true&autoReconnectForPools=true
+    username: sys_pay_server
+    password: pay_server01
     driver-class-name: com.mysql.jdbc.Driver
-    initial-size: 5
-    min-idle: 5
-    max-active: 50
-    max-wait: 60000
-    time-between-eviction-runsMillis: 60000
-    min-evictable-idle-time-millis: 300000
-    validation-query: SELECT 1 FROM DUAL
-    test-on-borrow: true
-    test-while-idle: true
-    test-on-return: false
-    pool-prepared-statements: true
-    max-pool-prepared-statement-per-connection-size: 20
-    filters: stat,wall,log4j
-    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-
-  redis:
-      host: 192.168.0.35
-      password:
-      database: 3
-      port: 6379
-      pool:
-        max-active: 50
-        max-idle: 15
-        min-idle: 5
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 50
+      max-wait: 60000
+      time-between-eviction-runsMillis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-on-borrow: true
+      test-while-idle: true
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  jpa:
+    hibernate:
+      cache:
+        use_query_cache: true
+      naming:
+        strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+  #redis:
+  #    host: 192.168.0.35
+  #    password:
+  #    database: 3
+  #    port: 6379
+  #    pool:
+  #      max-active: 50
+  #      max-idle: 15
+  #      min-idle: 5
   messages:
       basename: ValidationMessages,errors,messages_zh
-
-logging:
-  log4j.appender.file.encoding: UTF-8
-  log4j.appender.A1.File: /home/logs/pay-server.log
-  level:
-    org.springframework : ERROR
-    org.apache.catalina: ERROR
-    com.yql.biz: debug
-
+  cloud:
+      bus:
+        enabled: false
+      stream:
+        kafka:
+          binder:
+            brokers: zk1:9092,zk2:9092,zk3:9092
+            zk-nodes: zk1:2181,zk2:2181,zk3:2181
 yql:
   password-md5-str: yql-payserver-1221
-  order-num-key: order_center:order:number
   #微信appId
   appid: wxd36dd408cb79ea6b
   #商户号
@@ -53,22 +92,24 @@ yql:
   #微信key
   wxKey: wOdzXgWwbwjPEEZoMXWKudytfYvq6iLo
   #微信异步通知
-  wxNotifyUrl: http://localhost:8081/pay/wx
+  wxNotifyUrl: https://www.yqlpay.com/pay-server/pay/wx
   #微信支付 body
   wxBody: 零享购-消费
   #阿里异步通知
-  aliPayNotifyUrl: http://localhost:8081/pay/ali_pay
+  aliPayNotifyUrl:
   institution-id: 158974554
   #商户编码
   fyMerid: 0006510F0344064
   #商户密钥
   fyKey: lcdri7e5j5itaqt41ckbixjgkkri6gay
-  listenerTopic: TEST_USER_REGISTER
-  sendMsgTopic: TEST_PAY_SERVER
+  listenerTopic: YQL_USER_CENTER
+  sendMsgTopic: YQL_PAY_SERVER
   openSendMessage: true
   kunlun:
-      host: http://localhost:8080
-      pay-uri: /test?id={id}
+      #支付host
+      host:
+      #支付uri；
+      pay-uri:
       #微信host
       wxHost: https://api.mch.weixin.qq.com
       #微信预付订单uri
@@ -90,10 +131,10 @@ yql:
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
-    ONSAddr: http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet
+    ONSAddr: http://onsaddr-internal.aliyun.com:8080/rocketmq/nsaddr4client-internal
     producer:
-      ProducerId: PID_YQL_PAY_SERVER
+      ProducerId: PID_YQL_PUBLISHER
     consumer:
-      ConsumerId: CID_YQL_PAY_SERVER
+      ConsumerId: CID_YQL_PAY_SERVICE
 
 
