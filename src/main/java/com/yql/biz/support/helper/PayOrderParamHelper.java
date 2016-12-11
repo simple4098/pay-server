@@ -1,8 +1,11 @@
 package com.yql.biz.support.helper;
 
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.enums.PayType;
+import com.yql.biz.enums.pay.WxPayType;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
@@ -66,12 +69,20 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
     }
 
     @Override
-    public String getWxPayParam(PayOrderVo payOrderVo,WeiXinOrderVo weiXinOrderVo) {
+    public String getWxPayParam(WeiXinOrderVo weiXinOrderVo, PayOrderAccount payOrderAccount) {
+        int priceToCent = PayUtil.priceToCent(payOrderAccount.getTotalPrice());
+        weiXinOrderVo.setNotifyUrl(applicationConf.getWxNotifyUrl());
+        weiXinOrderVo.setTotalFee(priceToCent);
+        weiXinOrderVo.setBody(applicationConf.getWxBody());
+        weiXinOrderVo.setAppId(applicationConf.getAppid());
+        weiXinOrderVo.setMchId(applicationConf.getMchid());
+        weiXinOrderVo.setTradeType(WxPayType.APP);
+        weiXinOrderVo.setOutTradeNo(payOrderAccount.getPayNo());
         try {
             String sign = getSign(weiXinOrderVo);
             weiXinOrderVo.setSign(sign);
             String payRequestXml = PlatformPayUtil.payRequestXml(weiXinOrderVo);
-            log.debug("最终的提交xml:\n"+payRequestXml);
+            log.debug("微信统一下单,最终的提交xml:\n"+payRequestXml);
             return payRequestXml;
         } catch (Exception e) {
             e.printStackTrace();

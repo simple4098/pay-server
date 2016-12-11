@@ -224,19 +224,9 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     public AppPrepayInfo prepay(String orderNo,String spbillCreateIp) {
         PayOrderAccount payOrderAccount = payOrderAccountDao.findByOrderNoAndPayType(orderNo,PayType.WX_PAY);
         if (payOrderAccount==null) throw  new MessageRuntimeException("error.payserver.param.order.notnull");
-        int priceToCent = PayUtil.priceToCent(payOrderAccount.getTotalPrice());
         WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();
-        weiXinOrderVo.setNotifyUrl(applicationConf.getWxNotifyUrl());
-        weiXinOrderVo.setTotalFee(priceToCent);
         weiXinOrderVo.setSpbillCreateIp(spbillCreateIp);
-        weiXinOrderVo.setBody(applicationConf.getWxBody());
-        weiXinOrderVo.setAppId(applicationConf.getAppid());
-        weiXinOrderVo.setMchId(applicationConf.getMchid());
-        weiXinOrderVo.setTradeType(WxPayType.APP);
-        weiXinOrderVo.setOutTradeNo(payOrderAccount.getPayNo());
-        PayOrderVo payOrderVo = new PayOrderVo();
-        payOrderVo.setPayType(PayType.WX_PAY);
-        String wxPayParam = payOrderCardParamHelper.getWxPayParam(payOrderVo,weiXinOrderVo);
+        String wxPayParam = payOrderCardParamHelper.getWxPayParam(weiXinOrderVo,payOrderAccount);
         ResponseModel<WeiXinResponse> weiXinResponseResponseModel = wxPayClient.sendPrepay(wxPayParam);
         if (weiXinResponseResponseModel!=null && weiXinResponseResponseModel.getData()!=null){
             WeiXinAppRequest weiXinAppRequest = new WeiXinAppRequest();

@@ -1,6 +1,7 @@
 package com.yql.biz.support.helper;
 
 import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.DjPay;
@@ -30,7 +31,7 @@ public interface IPayOrderParamHelper {
      * @param weiXinOrderVo
      * @return
      */
-    String getWxPayParam(PayOrderVo payOrderVo,WeiXinOrderVo weiXinOrderVo);
+    String getWxPayParam( WeiXinOrderVo weiXinOrderVo, PayOrderAccount payOrderAccount);
 
     /**
      * 根据不同对象生成签名值
