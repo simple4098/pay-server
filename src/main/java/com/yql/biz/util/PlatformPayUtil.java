@@ -72,6 +72,7 @@ public class PlatformPayUtil<T extends DjPay> {
     }
 
     public static Object convertXmlStrToObject(Class clazz, String xmlStr) {
+        if (StringUtils.isEmpty(xmlStr)) return null;
         Object xmlObject = null;
         try {
             JAXBContext context = JAXBContext.newInstance(clazz);

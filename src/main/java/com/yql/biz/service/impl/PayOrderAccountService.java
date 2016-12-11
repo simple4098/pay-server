@@ -112,6 +112,11 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         log.debug("callPayNotify:"+notityXml);
         WeiXinResponseResult weiXinResponse = new WeiXinResponseResult(WxPayResult.SUCCESS);
         WeiXinNotifyVo weiXinNotifyVo = (WeiXinNotifyVo)PlatformPayUtil.convertXmlStrToObject(WeiXinNotifyVo.class, notityXml);
+        if (weiXinNotifyVo==null){
+            weiXinResponse.setReturnCode(WxPayResult.FAIL);
+            weiXinResponse.setReturnMsg("查询不到此商户订单");
+            return PlatformPayUtil.payRequestXml(weiXinResponse);
+        }
         PayOrderAccount orderAccount = payOrderAccountDao.findByPayNo(weiXinNotifyVo.getOutTradeNo());
         if (orderAccount!=null){
             //订单已经成功处理,直接返回给微信成功状态
