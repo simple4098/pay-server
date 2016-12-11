@@ -16,7 +16,7 @@ public class AccountClientHystrix  implements IAccountClient {
 
     @Override
     public ResponseModel<AccountVo> getAccount(String userCode) {
-        logger.debug("==========================bangBank支付断路器==========================");
+        logger.debug("==========================accounting支付断路器==========================");
         return ResponseModel.ERROR();
     }
 }

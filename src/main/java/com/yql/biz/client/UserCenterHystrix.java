@@ -18,7 +18,7 @@ public class UserCenterHystrix implements IUserCenterClient {
 
     @Override
     public ResponseModel<UserBasicInfoVo> getBaseUserInfo(@RequestParam(name = "userCode") String userCode) {
-        logger.debug("==========================getBaseUserInfo支付断路器==========================");
+        logger.debug("==========================getBaseUserInfo断路器==========================");
         return null;
     }
 

@@ -38,6 +38,8 @@ CREATE TABLE `fy_bank_city_code` (
   `id` int(32) NOT NULL AUTO_INCREMENT,
   `city_id` varchar(5) DEFAULT NULL,
   `city_name` varchar(20) DEFAULT NULL,
+  `province_id` varchar(10) DEFAULT NULL COMMENT '省份id',
+  `province_name` varchar(20) DEFAULT NULL COMMENT '省份名称',
   `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `version` int(11) DEFAULT '0',
@@ -227,8 +229,8 @@ INSERT INTO `bank_info` VALUES ('34', '2016-12-08 19:24:53', '2016-12-08 19:24:5
 INSERT INTO `bank_info` VALUES ('35', '2016-12-08 19:24:54', '2016-12-08 19:24:54', '0', '0497', '莱芜市商业银行');
 INSERT INTO `bank_info` VALUES ('36', '2016-12-08 19:24:55', '2016-12-08 19:24:55', '0', '0450', '青岛市商业银行');
 INSERT INTO `bank_info` VALUES ('37', '2016-12-08 19:25:00', '2016-12-08 19:25:00', '0', '0319', '徽商银行');
-INSERT INTO `bank_info` VALUES ('38', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0322', ' 上海农村商业银行');
-INSERT INTO `bank_info` VALUES ('39', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0402', ' 其他农村信用合作社');
+INSERT INTO `bank_info` VALUES ('38', '2016-12-08 19:25:00', '2016-12-08 19:25:00', '0', '0322', ' 上海农村商业银行');
+INSERT INTO `bank_info` VALUES ('39', '2016-12-08 19:25:00', '2016-12-08 19:25:00', '0', '0402', ' 其他农村信用合作社');
 
 
 INSERT INTO `fy_bank_city_code` VALUES ('343', '1000', '北京市', '110000', '北京', '2016-12-10 16:09:13', '2016-12-10 16:09:13', '0');
