@@ -8,14 +8,12 @@ import com.yql.biz.model.PayBank;
 import com.yql.biz.service.IPayBankService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
-import com.yql.biz.vo.DelBankCardVo;
-import com.yql.biz.vo.PayBankVo;
-import com.yql.biz.vo.ResultBangBank;
-import com.yql.biz.vo.ResultUnBangBank;
+import com.yql.biz.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -78,5 +76,15 @@ public class PayBankService implements IPayBankService {
             throw new RuntimeException(response.getHead().getMessage());
         }*/
         return resultUnBangBank;
+    }
+
+    @Override
+    public PayBankNumVo findBankNumByUserCode(String userCode) {
+        List<PayBank> list = payBankDao.findByUserCodeAndDeleted(userCode,false);
+        int num = 0;
+        if (!CollectionUtils.isEmpty(list)){
+            num = list.size();
+        }
+        return new PayBankNumVo(userCode,num);
     }
 }

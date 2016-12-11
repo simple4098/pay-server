@@ -154,6 +154,15 @@ public class PayServerController {
     }
 
     /**
+     * 获取用户银行卡列表信息
+     */
+    @RequestMapping("/get/bank-num")
+    public ResponseModel obtBankNum(@UserCode  String userCode){
+        PayBankNumVo PayBankNumVo = payBankService.findBankNumByUserCode(userCode);
+        return ResponseModel.SUCCESS(PayBankNumVo);
+    }
+
+    /**
      * 查询订单状态
      * @param orderNo 订单号
      */

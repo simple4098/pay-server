@@ -142,21 +142,28 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         PayAccount payAccount = payAccountDao.findByUserCode(userCode);
         if (payAccount == null){
             payAccount = new PayAccount();
-            ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
-            logger.debug("user-center client:"+JSON.toJSONString(baseUserInfo));
-            if (baseUserInfo!=null && baseUserInfo.getData()!=null){
-                UserBasicInfoVo baseUserInfoData = baseUserInfo.getData();
-                payAccount.setUserCode(userCode);
-                relNameInfo(payAccount,baseUserInfoData);
-            }else {
-                throw  new MessageRuntimeException("error.payserver.saveySecurity.userCode");
-            }
+            comon(payAccount,userCode);
+        }
+        if (!payAccount.isRealNameAuth()){
+            comon(payAccount,userCode);
         }
         return payAccount;
     }
 
+    private void comon(PayAccount payAccount,String userCode){
+        ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
+        logger.debug("user-center client:"+JSON.toJSONString(baseUserInfo));
+        if (baseUserInfo!=null && baseUserInfo.getData()!=null){
+            UserBasicInfoVo baseUserInfoData = baseUserInfo.getData();
+            payAccount.setUserCode(userCode);
+            relNameInfo(payAccount,baseUserInfoData);
+        }else {
+            throw  new MessageRuntimeException("error.payserver.saveySecurity.userCode");
+        }
+    }
+
     private void  relNameInfo(PayAccount payAccount,UserBasicInfoVo data){
-        boolean weatherAuth = data.getWeatherAuth() == 1;
+        boolean weatherAuth = data.isWeatherAuth();
         payAccount.setRealNameAuth(weatherAuth);
         if (weatherAuth){
             RealNameAuthType authType = data.getAuthType();

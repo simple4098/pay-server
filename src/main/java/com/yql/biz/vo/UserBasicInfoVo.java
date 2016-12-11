@@ -40,7 +40,7 @@ public class UserBasicInfoVo {
     private String address;
 
     //是否实名认证:1:认证；0：未认证
-    private int weatherAuth;
+    private boolean weatherAuth;
 
     //实名认证类型
     private RealNameAuthType authType;
@@ -95,7 +95,7 @@ public class UserBasicInfoVo {
         this.userName = userName;
     }
 
-    public UserBasicInfoVo(String userCode, String userName, String email, int gender, String provinceName, String provinceCode, String cityName, String cityCode, String areaName, String areaCode, String address, int weatherAuth, RealNameAuthType authType, String imgUrl, String idCardUrl, String idCard, String realName) {
+    public UserBasicInfoVo(String userCode, String userName, String email, int gender, String provinceName, String provinceCode, String cityName, String cityCode, String areaName, String areaCode, String address, boolean weatherAuth, RealNameAuthType authType, String imgUrl, String idCardUrl, String idCard, String realName) {
         this.userCode = userCode;
         this.userName = userName;
         this.email = email;
@@ -206,11 +206,11 @@ public class UserBasicInfoVo {
         this.address = address;
     }
 
-    public int getWeatherAuth() {
+    public boolean isWeatherAuth() {
         return weatherAuth;
     }
 
-    public void setWeatherAuth(int weatherAuth) {
+    public void setWeatherAuth(boolean weatherAuth) {
         this.weatherAuth = weatherAuth;
     }
 

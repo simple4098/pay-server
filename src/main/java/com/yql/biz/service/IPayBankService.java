@@ -1,10 +1,7 @@
 package com.yql.biz.service;
 
 import com.yql.biz.model.PayBank;
-import com.yql.biz.vo.DelBankCardVo;
-import com.yql.biz.vo.PayBankVo;
-import com.yql.biz.vo.ResultBangBank;
-import com.yql.biz.vo.ResultUnBangBank;
+import com.yql.biz.vo.*;
 
 import java.util.List;
 
@@ -32,4 +29,10 @@ public interface IPayBankService {
      * @param delBankCard 移除银行卡参数对象
      */
     ResultUnBangBank delBangBank(DelBankCardVo delBankCard);
+
+    /**
+     * 获取银行卡数量
+     * @param userCode userCode
+     */
+    PayBankNumVo findBankNumByUserCode(String userCode);
 }

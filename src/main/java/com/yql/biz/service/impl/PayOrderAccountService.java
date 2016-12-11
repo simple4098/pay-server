@@ -222,7 +222,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     public AppPrepayInfo prepay(String orderNo,String spbillCreateIp) {
-        PayOrderAccount payOrderAccount = payOrderAccountDao.findByOrderNo(orderNo);
+        PayOrderAccount payOrderAccount = payOrderAccountDao.findByOrderNoAndPayType(orderNo,PayType.WX_PAY);
         if (payOrderAccount==null) throw  new MessageRuntimeException("error.payserver.param.order.notnull");
         int priceToCent = PayUtil.priceToCent(payOrderAccount.getTotalPrice());
         WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();

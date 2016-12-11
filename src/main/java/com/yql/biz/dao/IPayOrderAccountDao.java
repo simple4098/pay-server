@@ -37,4 +37,11 @@ public interface IPayOrderAccountDao  extends JpaRepository<PayOrderAccount,Inte
      * @param endTime 结束时间
      */
     List<PayOrderAccount> findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType drawMoney, Integer value, Date startTime, Date endTime);
+
+    /**
+     *
+     * @param orderNo 订单号
+     * @param wxPay 支付类型
+     */
+    PayOrderAccount findByOrderNoAndPayType(String orderNo, PayType wxPay);
 }
