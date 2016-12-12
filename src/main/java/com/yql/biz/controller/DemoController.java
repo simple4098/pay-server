@@ -59,14 +59,14 @@ public class DemoController {
     @RequestMapping(value = "/index")
     public ResponseModel index() throws Exception {
         CheckCardRequest checkCardRequest = new CheckCardRequest();
-        checkCardRequest.setMchntCd("0002900F0096235");
+        checkCardRequest.setMchntCd("0006510F0344064");
         //checkCardRequest.setMno("15198003270");
         checkCardRequest.setOcerNo("510321199105252693");
         checkCardRequest.setOno("4033920022692893");
         checkCardRequest.setoCerTp("0");
         checkCardRequest.setOnm("谢宗明");
         checkCardRequest.setoSsn(PayUtil.randomCode(30));
-        String md5String = checkCardRequest.toMd5String("5old71wihg2tqjug9kkpxnhx9hiujoqj");
+        String md5String = checkCardRequest.toMd5String("fncp8kegggup2d7zuekw6gkp9dapzthc");
         checkCardRequest.setSign(md5String);
         String xml = PlatformPayUtil.payRequestXml(checkCardRequest);
         logger.debug(xml+"====sign======"+md5String);
