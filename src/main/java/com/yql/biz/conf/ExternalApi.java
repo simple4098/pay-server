@@ -46,4 +46,21 @@ public interface ExternalApi {
      * @return
      */
     String getFyCheckIdUrl();
+
+    /**
+     * 富友支付url
+     *
+     * @return
+     */
+    String getFyB2CPayUrl();
+
+    /**
+     * 富友H5支付
+     */
+    String getFyH5PayUrl();
+
+    /**
+     * 富友下单接口
+     */
+    String getFyCreateOrder();
 }

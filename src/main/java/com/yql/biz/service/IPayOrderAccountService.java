@@ -73,4 +73,11 @@ public interface IPayOrderAccountService {
      * @return
      */
     ResultPayOrder findOrderInfo(String orderNo);
+
+    /**
+     * 富友回调
+     *
+     * @param request
+     */
+    String callFyPayNotify(HttpServletRequest request);
 }

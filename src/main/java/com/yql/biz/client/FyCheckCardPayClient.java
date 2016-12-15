@@ -5,6 +5,7 @@ import com.yql.biz.util.PayHttpClientUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.pay.fy.CheckCardResponse;
 import com.yql.biz.vo.pay.fy.CheckIDCardResponse;
+import com.yql.biz.vo.pay.fy.FyOrderResponse;
 import com.yql.biz.vo.pay.fy.FyPayForResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,22 @@ public class FyCheckCardPayClient implements IFyCheckCardPayClient {
             return (CheckIDCardResponse) PlatformPayUtil.convertXmlStrToObject(CheckIDCardResponse.class,httpGets);
         } catch (IOException e) {
             log.error("验证身份证卡异常",e);
+        }
+        return null;
+    }
+
+    @Override
+    public FyOrderResponse fyCreatedOrder(String fm) {
+        try {
+            log.debug("富友下单request :" + fm);
+            String encode = URLEncoder.encode(fm, "utf-8");
+            StringBuffer stringBuffer = new StringBuffer(applicationConf.getFyCreateOrder()).append("?FM=").append(encode);
+            log.debug("富友下单request URLEncoder:" + stringBuffer.toString());
+            String httpGets = PayHttpClientUtil.httpGets(stringBuffer.toString());
+            log.debug("富友下单response:" + httpGets);
+            return (FyOrderResponse) PlatformPayUtil.convertXmlStrToObject(FyOrderResponse.class, httpGets);
+        } catch (IOException e) {
+            log.error("验证身份证卡异常", e);
         }
         return null;
     }

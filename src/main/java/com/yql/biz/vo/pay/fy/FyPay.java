@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class FyPay extends DjPay {
     //版本号
-    private String ver = FyVersion.VERSION_130.getValue();
+    private String ver = FyVersion.CHECK_BANK_VERSION_130.getValue();
     //MD5摘要数据
     private String sign;
     @XmlElement(name = "Ver")

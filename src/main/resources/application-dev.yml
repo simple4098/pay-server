@@ -78,14 +78,24 @@ yql:
   wxBody: 零享购-消费
   #阿里异步通知
   aliPayNotifyUrl:
+  #富友支付异步通知
+  fyPayNotifyUrl: http://171.221.202.60:3838/pay-server/pay/fy
+  #页面跳转URL
+  pageNotifyUrl: http://171.221.202.60:3838/pay-server/pay/fy/page-notify-url
+  #支付失败URL
+  h5reurl: http://171.221.202.60:3838/pay-server/pay/fy/h5reurl
   institution-id: 158974554
   #商户编码
-  fyMerid: 0002900F0345178
-  #商户密钥
-  fyKey: 123456
+  fyMerid: 0006510F0344064
+  #商户B2C/B2B网关支付交易密钥
+  fyTradeKey: lcdri7e5j5itaqt41ckbixjgkkri6gay
+  #手机快捷支付/银行卡验证/身份认证/企业认证交易密钥
+  fyCheckKey: fncp8kegggup2d7zuekw6gkp9dapzthc
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER
   openSendMessage: true
+  accountListenerTopic: YQL-ORDER-CENTER
+  accountListenerTag: PAY-ORDER-RETURN-STATUS
   kunlun:
       host: http://localhost:8080
       pay-uri: /test?id={id}
@@ -99,14 +109,22 @@ yql:
       wxCloseUri: /pay/closeorder
       #富友检验银行卡host
       fyCheckHost: http://www-1.fuiou.com:18670/mobile_pay
+      #富友检验银行卡host
+      #fyCheckHost: https://mpay.fuiou.com:16128
       #富友代付host
-      fyPayForHost: http://www-1.fuiou.com:8992/fuMer
+      #fyPayForHost: http://www-1.fuiou.com:8992/fuMer
+      fyPayForHost: https://fht.fuiou.com
+      #富友B2C支付
+      fyB2CPayHost: http://www-1.fuiou.com:8888/wg1_run
       #富友代付uri
       payForUri: /req.do
       #富友检查银行卡uri
       checkCardUri: /checkCard/checkCardFour.pay
       #验证身份证rui
       checkIdUri: /checkInfo/checkIdentity.pay
+      fyPayUri: /smpGate.do
+      fyH5PayUri: /h5pay/payAction.pay
+      fyCreateOrderUri: /findPay/createOrder.pay
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf

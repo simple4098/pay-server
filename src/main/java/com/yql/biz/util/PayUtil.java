@@ -4,6 +4,7 @@ import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -12,6 +13,9 @@ import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>支付工具类</p>
@@ -126,8 +130,26 @@ public class PayUtil {
             }
             return notityXml;
         }catch (Exception e){
-            log.error("wx 异步通知xml:",e);
+            log.error("支付异步通知xml:", e);
         }
         return null;
     }
+
+    public static Map<String, String> toMap(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        Set<String> strings = parameterMap.keySet();
+        for (String s : strings) {
+            String[] strings1 = parameterMap.get(s);
+            if (!StringUtils.isEmpty(strings1)) {
+                result.put(s, strings1[0]);
+            }
+        }
+        return result;
+    }
+
+    public static String h5PayUrl(String responseProxyStr) {
+        return responseProxyStr.substring(responseProxyStr.indexOf(", Location:") + 12, responseProxyStr.indexOf(", Content-Length"));
+    }
+
 }

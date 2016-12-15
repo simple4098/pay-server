@@ -197,15 +197,9 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         Date startTime = PayDateUtil.getStartTime();
         Date endTime = PayDateUtil.getEndTime();
         List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.HANDLING.getValue(),startTime,endTime);
-        FyPayForRequest fyPayForRequest = null;
+        FyPayRequest fyPayRequest = null;
         for (PayOrderAccount order: list) {
-            PayBank p = payBankDao.findByTxCode(order.getTxCode());
-            int cent = PayUtil.priceToCent(order.getTotalPrice());
-            fyPayForRequest = new FyPayForRequest(p.getBankId(),p.getCityNo(),p.getBankCard(),p.getCardholder(),cent,p.getPhoneNumber());
-            String payRequestXml = PlatformPayUtil.payRequestXml(fyPayForRequest);
-            FyPayRequest fyPayRequest = new FyPayRequest(applicationConf.getFyMerid(), FyRequestType.payforreq,payRequestXml);
-            String md5String = fyPayRequest.toMd5String(applicationConf.getFyKey());
-            fyPayRequest.setMac(md5String);
+            fyPayRequest = payAccountServiceHelper.createDrawMoneyParam(order);
             FyPayForResponse fyPayForResponse = fyPayForClient.payFor(fyPayRequest);
             int payStatus = PayStatus.PAY_UNSUCCESS.getValue();
             if (PayConstants.FY_PAY_FOR_SUCCESS.equals(fyPayForResponse.getRet())){
@@ -270,5 +264,12 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         PayOrderVo payOrderVo = PayOrderVo.domainToVo(byOrderNo);
         ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
         return payOrder;
+    }
+
+    @Override
+    public String callFyPayNotify(HttpServletRequest request) {
+        Map<String, String> notityXml = PayUtil.toMap(request);
+        log.debug("=============fy callPayNotify==============:" + notityXml);
+        return null;
     }
 }

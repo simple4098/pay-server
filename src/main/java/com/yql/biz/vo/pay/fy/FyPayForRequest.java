@@ -16,7 +16,7 @@ import java.util.Date;
 @XmlRootElement(name = "payforreq")
 public class FyPayForRequest {
     //版本号
-    private String ver = FyVersion.VERSION_100.getValue();
+    private String ver = FyVersion.PAY_FOR_VERSION_100.getValue();
     //请求日期
     private String merdt = DateFormatUtils.format(new Date(),"yyyyMMdd");
     //请求流水

@@ -2,12 +2,12 @@ package com.yql.biz.client;
 
 import com.yql.biz.vo.pay.fy.CheckCardResponse;
 import com.yql.biz.vo.pay.fy.CheckIDCardResponse;
+import com.yql.biz.vo.pay.fy.FyOrderResponse;
 
 /**
  * 富友支付客户端
  * @author simple
  */
-/*@FeignClient(name = "fy-server",url = "${yql.kunlun.fyCheckHost}")*/
 public interface IFyCheckCardPayClient {
 
     /**
@@ -15,9 +15,20 @@ public interface IFyCheckCardPayClient {
      * @param fm
      * @return
      */
-/*    @RequestMapping(value = "/mobile_pay/checkCard/checkCard01.pay",method = RequestMethod.GET)*/
     CheckCardResponse checkCard( String fm);
 
+    /**
+     * 身份证验证
+     *
+     * @param fm 提交xml数据
+     */
     CheckIDCardResponse checkIDCard(String fm);
+
+    /**
+     * 富友下单接口
+     *
+     * @param fm 下单xml数据
+     */
+    FyOrderResponse fyCreatedOrder(String fm);
 
 }

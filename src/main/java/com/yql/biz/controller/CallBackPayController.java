@@ -29,6 +29,31 @@ public class CallBackPayController {
     }
 
     /**
+     * 富友回调
+     */
+    @RequestMapping("/fy")
+    public ResponseModel fy(HttpServletRequest request) {
+        payOrderAccountService.callFyPayNotify(request);
+        return ResponseModel.SUCCESS();
+    }
+
+    /**
+     * fy页面跳转
+     */
+    @RequestMapping("/fy/page-notify-url")
+    public String payNotify(HttpServletRequest request) {
+        return "支付成功:success";
+    }
+
+    /**
+     * fy支付失败
+     */
+    @RequestMapping("/fy/h5reurl")
+    public String h5reurl(HttpServletRequest request) {
+        return "支付失败";
+    }
+
+    /**
      * 支付宝回调
      * @return
      */

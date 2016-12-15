@@ -158,8 +158,8 @@ public class PayServerController {
      */
     @RequestMapping("/get/bank-num")
     public ResponseModel obtBankNum(@UserCode  String userCode){
-        PayBankNumVo PayBankNumVo = payBankService.findBankNumByUserCode(userCode);
-        return ResponseModel.SUCCESS(PayBankNumVo);
+        PayBankNumVo payBankNumVo = payBankService.findBankNumByUserCode(userCode);
+        return ResponseModel.SUCCESS(payBankNumVo);
     }
 
     /**

@@ -26,16 +26,26 @@ public class ApplicationConf implements ExternalApi {
     private String aliPayNotifyUrl;
     //监听类的topic
     private String listenerTopic;
+    private String accountListenerTopic;
+    private String accountListenerTag;
     //发送消息的topic
     private String sendMsgTopic;
     //机构代码
     private String institutionId;
     //商户code
     private String fyMerid;
-    //商户秘钥
-    private String fyKey;
+    //手机快捷支付/银行卡验证/身份认证/企业认证交易密钥
+    private String fyCheckKey;
+    //商户B2C/B2B网关支付交易密钥秘钥
+    private String fyTradeKey;
     //发送消息开关
     private boolean openSendMessage;
+    //后台通知URL
+    private String fyPayNotifyUrl;
+    //页面跳转URL
+    private String pageNotifyUrl;
+    //hH5支付失败
+    private String h5reurl;
     private Kunlun kunlun;
 
     public String getInstitutionId() {
@@ -137,12 +147,20 @@ public class ApplicationConf implements ExternalApi {
         this.fyMerid = fyMerid;
     }
 
-    public String getFyKey() {
-        return fyKey;
+    public String getFyCheckKey() {
+        return fyCheckKey;
     }
 
-    public void setFyKey(String fyKey) {
-        this.fyKey = fyKey;
+    public void setFyCheckKey(String fyCheckKey) {
+        this.fyCheckKey = fyCheckKey;
+    }
+
+    public String getFyTradeKey() {
+        return fyTradeKey;
+    }
+
+    public void setFyTradeKey(String fyTradeKey) {
+        this.fyTradeKey = fyTradeKey;
     }
 
     @Override
@@ -180,12 +198,67 @@ public class ApplicationConf implements ExternalApi {
         return kunlun.getFyCheckHost()+kunlun.getCheckIdUri();
     }
 
+    @Override
+    public String getFyB2CPayUrl() {
+        return kunlun.getFyB2CPayHost() + kunlun.getFyPayUri();
+    }
+
+    @Override
+    public String getFyH5PayUrl() {
+        return kunlun.getFyCheckHost() + kunlun.getFyH5PayUri();
+    }
+
+    @Override
+    public String getFyCreateOrder() {
+        return kunlun.getFyCheckHost() + kunlun.getFyCreateOrderUri();
+    }
+
     public boolean getOpenSendMessage() {
         return openSendMessage;
     }
 
     public void setOpenSendMessage(boolean openSendMessage) {
         this.openSendMessage = openSendMessage;
+    }
+
+    public String getFyPayNotifyUrl() {
+        return fyPayNotifyUrl;
+    }
+
+    public void setFyPayNotifyUrl(String fyPayNotifyUrl) {
+        this.fyPayNotifyUrl = fyPayNotifyUrl;
+    }
+
+    public String getPageNotifyUrl() {
+        return pageNotifyUrl;
+    }
+
+    public void setPageNotifyUrl(String pageNotifyUrl) {
+        this.pageNotifyUrl = pageNotifyUrl;
+    }
+
+    public String getH5reurl() {
+        return h5reurl;
+    }
+
+    public void setH5reurl(String h5reurl) {
+        this.h5reurl = h5reurl;
+    }
+
+    public String getAccountListenerTopic() {
+        return accountListenerTopic;
+    }
+
+    public void setAccountListenerTopic(String accountListenerTopic) {
+        this.accountListenerTopic = accountListenerTopic;
+    }
+
+    public String getAccountListenerTag() {
+        return accountListenerTag;
+    }
+
+    public void setAccountListenerTag(String accountListenerTag) {
+        this.accountListenerTag = accountListenerTag;
     }
 
     public static class Kunlun {
@@ -211,6 +284,30 @@ public class ApplicationConf implements ExternalApi {
         private String payForUri;
         //验证身份证uri
         private String checkIdUri;
+        //支付host
+        private String fyB2CPayHost;
+        //富友支付uri
+        private String fyPayUri;
+        //h5支付uri
+        private String fyH5PayUri;
+        //富友下单uri
+        private String fyCreateOrderUri;
+
+        public String getFyCreateOrderUri() {
+            return fyCreateOrderUri;
+        }
+
+        public void setFyCreateOrderUri(String fyCreateOrderUri) {
+            this.fyCreateOrderUri = fyCreateOrderUri;
+        }
+
+        public String getFyH5PayUri() {
+            return fyH5PayUri;
+        }
+
+        public void setFyH5PayUri(String fyH5PayUri) {
+            this.fyH5PayUri = fyH5PayUri;
+        }
 
         public String getCheckIdUri() {
             return checkIdUri;
@@ -298,6 +395,22 @@ public class ApplicationConf implements ExternalApi {
 
         public void setPrepayUri(String prepayUri) {
             this.prepayUri = prepayUri;
+        }
+
+        public String getFyB2CPayHost() {
+            return fyB2CPayHost;
+        }
+
+        public void setFyB2CPayHost(String fyB2CPayHost) {
+            this.fyB2CPayHost = fyB2CPayHost;
+        }
+
+        public String getFyPayUri() {
+            return fyPayUri;
+        }
+
+        public void setFyPayUri(String fyPayUri) {
+            this.fyPayUri = fyPayUri;
         }
     }
 }

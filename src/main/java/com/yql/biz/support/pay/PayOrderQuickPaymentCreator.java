@@ -1,6 +1,7 @@
 package com.yql.biz.support.pay;
 
 import com.alibaba.fastjson.JSON;
+import com.yql.biz.client.IFyCheckCardPayClient;
 import com.yql.biz.client.PayClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IPayAccountDao;
@@ -17,6 +18,8 @@ import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
 import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.fy.FyCreatedOrderRequest;
+import com.yql.biz.vo.pay.fy.FyOrderResponse;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponse;
 import com.yql.biz.vo.pay.response.PayMessageValidateResponseBody;
 import com.yql.framework.mq.model.TextMessage;
@@ -49,6 +52,8 @@ public class PayOrderQuickPaymentCreator implements IPayOrderCreator {
     private PayPasswordSecurityHelper payPasswordSecurityHelper;
     @Resource
     private IPayAccountDao payAccountDao;
+    @Resource
+    private IFyCheckCardPayClient fyCreatedOrder;
 
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
@@ -57,6 +62,13 @@ public class PayOrderQuickPaymentCreator implements IPayOrderCreator {
         payPasswordSecurityHelper.validateOldPassword(payOrderVo.getPayPassword(),payAccount);
         if (StringUtils.isEmpty(payOrderVo.getTxCode())) throw new MessageRuntimeException("com.yql.validation.constraints.txCode.notnull");
         PayBank payBank = payBankDao.findByUserCodeAndTxCode(payOrderVo.getUserCode(),payOrderVo.getTxCode());
+
+        FyCreatedOrderRequest fyCreatedOrderRequest = new FyCreatedOrderRequest("0002900F0096235", "200", "5old71wihg2tqjug9kkpxnhx9hiujoqj");
+        fyCreatedOrderRequest.toMd5();
+        String xml = PlatformPayUtil.payRequestXml(fyCreatedOrderRequest);
+        FyOrderResponse fyOrderResponse = fyCreatedOrder.fyCreatedOrder(xml);
+
+        //之前的快捷支付
         Param payParam = payOrderCardParamHelper.getPayParam(payOrderVo,payBank);
         PayMessageValidateResponse pay = payClient.pay(payParam.getMessage(), payParam.getSignature());
         log.debug("银行卡快捷支付返回:"+ JSON.toJSONString(pay));

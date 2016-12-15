@@ -27,8 +27,6 @@ public class PayOrderController {
     @Resource
     private IPayOrderAccountService payOrderAccountService;
 
-
-
     /**
      * <p>账单支付</p>
      * <p>余额提现</p>

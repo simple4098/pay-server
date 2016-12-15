@@ -2,6 +2,7 @@ package com.yql.biz.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.*;
+import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.conf.SecurityConfiguration;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.enums.fy.FyRequestType;
@@ -22,12 +23,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 
 /**
  * <p> 模拟调用第三方支付接口 </p>
@@ -55,6 +61,8 @@ public class DemoController {
     private IFyCheckCardPayClient fyPayClient;
     @Resource
     private IFyPayForClient fyPayForClient;
+    @Resource
+    private ApplicationConf applicationConf;
 
     @RequestMapping(value = "/index")
     public ResponseModel index() throws Exception {
@@ -91,10 +99,11 @@ public class DemoController {
 
     @RequestMapping(value = "/payFor")
     public ResponseModel indexFor() throws Exception {
-        FyPayForRequest request = new FyPayForRequest("0302","6510","6217711002734000","马龙",200,"15198003270");
+        FyPayForRequest request = new FyPayForRequest("0102", "6510", "6222084402012623980", "张林", 200, "15281017068");
         String payRequestXml = PlatformPayUtil.payRequestXml(request);
-        FyPayRequest fyPayRequest = new FyPayRequest("0002900F0345178", FyRequestType.payforreq,payRequestXml);
-        String md5String = fyPayRequest.toMd5String("123456");
+        FyPayRequest fyPayRequest = new FyPayRequest("0006510F0344064", FyRequestType.payforreq, payRequestXml);
+        //String md5String = fyPayRequest.toMd5String("fncp8kegggup2d7zuekw6gkp9dapzthc");
+        String md5String = fyPayRequest.toMd5String("lcdri7e5j5itaqt41ckbixjgkkri6gay");
         fyPayRequest.setMac(md5String);
         System.out.println("发送报文"+ payRequestXml);
         System.out.println("请求参数"+ JSON.toJSONString(fyPayRequest));
@@ -103,6 +112,43 @@ public class DemoController {
        return ResponseModel.SUCCESS(s1);
     }
 
+    @RequestMapping(value = "/b2cPay")
+    public void b2cPay(HttpServletResponse response) throws Exception {
+        FyB2CPayRequest fyB2CPayRequest = new FyB2CPayRequest("0001000F0040992", "200", applicationConf.getFyPayNotifyUrl(), applicationConf.getFyPayNotifyUrl(), "0801020000");
+        fyB2CPayRequest.toMd5String("vau6p7ldawpezyaugc0kopdrrwm4gkpu");
+        String param = fyB2CPayRequest.toParam("vau6p7ldawpezyaugc0kopdrrwm4gkpu");
+        //String pay = fyPayForClient.pay(fyB2CPayRequest);
+        String pay = fyPayForClient.pay(fyB2CPayRequest);
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter p = response.getWriter();
+        p.println(pay);
+        p.close();
+        //return ResponseModel.SUCCESS(pay);
+    }
+
+    @RequestMapping(value = "/h5Pay")
+    public String h5Pay(HttpServletResponse response) throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
+        FyH5OrderRequest fyH5OrderRequest = new FyH5OrderRequest("0003050F0363796", "xxxusercode", "200", "6222084402012623980", applicationConf.getFyPayNotifyUrl(),
+                applicationConf.getH5reurl(), applicationConf.getPageNotifyUrl(), "张林", "510922198812304098", "mht0zrefxyyspytctz9hdj3bcqzx6orw");
+        fyH5OrderRequest.setType("11");
+        String toMd5 = fyH5OrderRequest.toMd5();
+        fyH5OrderRequest.setSign(toMd5);
+        String payRequestXml = PlatformPayUtil.payRequestXml(fyH5OrderRequest);
+        String md5Encode1 = PayUtil.MD5Encode(payRequestXml, "UTF-8");
+        FyH5PayRequest fyH5PayRequest = new FyH5PayRequest("0003050F0363796", payRequestXml);
+        String pay = fyPayForClient.h5Pay(fyH5PayRequest);
+        return "redirect:" + pay;
+    }
+
+    @RequestMapping(value = "/order")
+    public ResponseModel order() {
+        FyCreatedOrderRequest fyCreatedOrderRequest = new FyCreatedOrderRequest("0002900F0096235", "200", "5old71wihg2tqjug9kkpxnhx9hiujoqj");
+        fyCreatedOrderRequest.toMd5();
+        String xml = PlatformPayUtil.payRequestXml(fyCreatedOrderRequest);
+        FyOrderResponse fyOrderResponse = fyPayClient.fyCreatedOrder(xml);
+        return ResponseModel.SUCCESS(fyOrderResponse);
+    }
     @RequestMapping(value = "/index1")
     public ResponseModel index1() throws Exception {
         BankInfo one = bankInfoDao.getOne(1);

@@ -2,11 +2,13 @@ package com.yql.biz.support.helper;
 
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ProblemAnswerVo;
 import com.yql.biz.vo.ResultBangBank;
 import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.fy.FyPayRequest;
 import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 
 import java.util.List;
@@ -17,10 +19,6 @@ import java.util.List;
  * data 2016/11/10 0010.
  */
 public interface IPayAccountServiceHelper {
-
-
-
-
 
     /**
      * 绑定银行卡
@@ -69,5 +67,10 @@ public interface IPayAccountServiceHelper {
      */
     void validateDrawMoney(PayOrderVo payOrderVo);
 
-
+    /**
+     * 体现金额到用户，组装富友参数
+     *
+     * @param order 支付订单参数
+     */
+    FyPayRequest createDrawMoneyParam(PayOrderAccount order);
 }

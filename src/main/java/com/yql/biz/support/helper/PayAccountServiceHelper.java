@@ -12,17 +12,22 @@ import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.CardType;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.RealNameAuthType;
+import com.yql.biz.enums.fy.FyRequestType;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.support.constants.PayConstants;
+import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.fy.CheckCardRequest;
 import com.yql.biz.vo.pay.fy.CheckCardResponse;
+import com.yql.biz.vo.pay.fy.FyPayForRequest;
+import com.yql.biz.vo.pay.fy.FyPayRequest;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.UninstallBangBody;
@@ -35,7 +40,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -71,7 +75,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private String checkBankCardXml(PayAccount payAccount,PayBankVo payBankVo){
         Integer value = payAccount.getIdentificationType().getValue();
         CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),payBankVo.getBankCard(),payBankVo.getCardholder(),value.toString(),payAccount.getIdentificationNumber());
-        String md5String = checkCardRequest.toMd5String(applicationConf.getFyKey());
+        String md5String = checkCardRequest.toMd5String(applicationConf.getFyCheckKey());
         checkCardRequest.setSign(md5String);
         return PlatformPayUtil.payRequestXml(checkCardRequest);
     }
@@ -92,6 +96,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
                 newPayBak.setCardType(CardType.BANK_CARD);
             }else {
                 newPayBak.setCardType(CardType.CREDIT);
+                throw new MessageRuntimeException("error.payserver.bangBank.credit");
             }
         }else {
             throw  new RuntimeException(cardResponse.getRdesc());
@@ -238,17 +243,27 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
 
     @Override
     public void validateDrawMoney(PayOrderVo payOrderVo) {
-        ResponseModel<AccountVo> account = accountClient.getAccount(payOrderVo.getUserCode());
-        AccountVo data = account.getData();
-        if (data==null){
-           throw new MessageRuntimeException("error.payserver.account.cashFee");
+        ResponseModel requestMethod = accountClient.withdrawCash(payOrderVo.getTotalPrice(), payOrderVo.getUserCode(), payOrderVo.getOrderNo(), payOrderVo.getTxCode());
+        if (!requestMethod.isSuccess()) {
+            throw new RuntimeException(requestMethod.getMessage());
         }else{
-            BigDecimal cashFee = data.getCashFee();
-            int i = payOrderVo.getTotalPrice().compareTo(cashFee);
-            if (i==1){
-                throw new MessageRuntimeException("error.payserver.account.balance");
+            boolean b = PayConstants.SUCCESS.equals(requestMethod.getStatus());
+            if (!b) {
+                throw new RuntimeException(requestMethod.getMessage());
             }
         }
+    }
+
+    @Override
+    public FyPayRequest createDrawMoneyParam(PayOrderAccount order) {
+        PayBank p = payBankDao.findByTxCode(order.getTxCode());
+        int cent = PayUtil.priceToCent(order.getTotalPrice());
+        FyPayForRequest fyPayForRequest = new FyPayForRequest(p.getBankId(), p.getCityNo(), p.getBankCard(), p.getCardholder(), cent, p.getPhoneNumber());
+        String payRequestXml = PlatformPayUtil.payRequestXml(fyPayForRequest);
+        FyPayRequest fyPayRequest = new FyPayRequest(applicationConf.getFyMerid(), FyRequestType.payforreq, payRequestXml);
+        String md5String = fyPayRequest.toMd5String(applicationConf.getFyTradeKey());
+        fyPayRequest.setMac(md5String);
+        return fyPayRequest;
     }
 
 

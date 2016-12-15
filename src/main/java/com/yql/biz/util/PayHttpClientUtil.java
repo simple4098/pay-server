@@ -1,6 +1,8 @@
 package com.yql.biz.util;
 
+import com.yql.biz.vo.pay.fy.FyH5PayRequest;
 import com.yql.biz.vo.pay.fy.FyPayRequest;
+import com.yql.biz.vo.pay.request.DjPay;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -77,7 +79,7 @@ public class PayHttpClientUtil {
      * @param fyPayRequest 请求对象
      * @throws Exception
      */
-    public static String httpKvPost(String url, FyPayRequest fyPayRequest) throws Exception {
+    public static <T extends DjPay> String httpKvPost(String url, T fyPayRequest) throws Exception {
         HttpClient httpClient = obtHttpClient();
         HttpPost httpPost = new HttpPost(url);
         Map<String, Object> param = PlatformPayUtil.obtObjParm(fyPayRequest);
@@ -87,6 +89,17 @@ public class PayHttpClientUtil {
         HttpEntity entity = response.getEntity();
         String value = EntityUtils.toString(entity, Charset.defaultCharset());
         return value;
+    }
+
+    public static <T extends DjPay> String httpKvPostUrl(String url, T fyPayRequest) throws Exception {
+        HttpClient httpClient = obtHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        Map<String, Object> param = PlatformPayUtil.obtObjParm(fyPayRequest);
+        List<NameValuePair> nameValuePairs = commonParam(param);
+        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, Charset.defaultCharset()));
+        HttpResponse response = httpClient.execute(httpPost);
+        String payUrl = PayUtil.h5PayUrl(response.toString());
+        return payUrl;
     }
 
     public static List<NameValuePair> commonParam(Map<String, Object> map) {

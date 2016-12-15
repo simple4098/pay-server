@@ -1,16 +1,19 @@
 package com.yql.biz.support.pay;
 
 import com.alibaba.fastjson.JSON;
+import com.yql.biz.client.IAccountClient;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.support.OrderNoGenerator;
+import com.yql.biz.support.constants.PayConstants;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.vo.PayOrderVo;
+import com.yql.biz.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,9 +34,7 @@ public class DrawMoneyCreator implements IPayOrderCreator{
     @Resource
     private OrderNoGenerator orderNoGenerator;
     @Resource
-    private SendMessageHelper sendMessageHelper;
-    @Resource
-    private IPayAccountServiceHelper payAccountServiceHelper;
+    private IAccountClient accountClient;
     @Resource
     private PayPasswordSecurityHelper payPasswordSecurityHelper;
     @Resource
@@ -46,11 +47,15 @@ public class DrawMoneyCreator implements IPayOrderCreator{
         //支付验证支付密码
         PayAccount payAccount = payAccountDao.findByUserCode(payOrderVo.getUserCode());
         payPasswordSecurityHelper.validateOldPassword(payOrderVo.getPayPassword(),payAccount);
-        payAccountServiceHelper.validateDrawMoney(payOrderVo);
+        //payAccountServiceHelper.validateDrawMoney(payOrderVo);
         String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayNo(payNo);
         payOrderVo.setPayStatus(PayStatus.HANDLING.getValue());
-        sendMessageHelper.sendDrawMoney(payOrderVo);
+        ResponseModel requestMethod = accountClient.withdrawCash(payOrderVo.getTotalPrice(), payOrderVo.getUserCode(), payOrderVo.getOrderNo(), payOrderVo.getTxCode());
+        if (!requestMethod.isSuccess()) {
+            throw new RuntimeException(requestMethod.getMessage());
+        }
+        //sendMessageHelper.sendDrawMoney(payOrderVo);
         return payOrderVo;
     }
 

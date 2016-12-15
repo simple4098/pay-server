@@ -72,9 +72,4 @@ public class FyPayRequest extends DjPay{
         return  md5Encode;
     }
 
-    public String toRequestStr(){
-        StringBuffer stringBuffer = new StringBuffer("&merid=");
-        stringBuffer.append(this.merid).append("&reqtype=").append(this.getReqType()).append("&xml=").append(this.xml).append("&mac=").append(this.mac);
-        return stringBuffer.toString();
-    }
 }
