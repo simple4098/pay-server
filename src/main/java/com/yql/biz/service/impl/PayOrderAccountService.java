@@ -204,7 +204,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
             fyPayForRequest = new FyPayForRequest(p.getBankId(),p.getCityNo(),p.getBankCard(),p.getCardholder(),cent,p.getPhoneNumber());
             String payRequestXml = PlatformPayUtil.payRequestXml(fyPayForRequest);
             FyPayRequest fyPayRequest = new FyPayRequest(applicationConf.getFyMerid(), FyRequestType.payforreq,payRequestXml);
-            String md5String = fyPayRequest.toMd5String(applicationConf.getFyKey());
+            String md5String = fyPayRequest.toMd5String(applicationConf.getFyTradeKey());
             fyPayRequest.setMac(md5String);
             FyPayForResponse fyPayForResponse = fyPayForClient.payFor(fyPayRequest);
             int payStatus = PayStatus.PAY_UNSUCCESS.getValue();

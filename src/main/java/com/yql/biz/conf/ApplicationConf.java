@@ -32,8 +32,10 @@ public class ApplicationConf implements ExternalApi {
     private String institutionId;
     //商户code
     private String fyMerid;
-    //商户秘钥
-    private String fyKey;
+    //手机快捷支付/银行卡验证/身份认证/企业认证交易密钥
+    private String fyCheckKey;
+    //商户B2C/B2B网关支付交易密钥秘钥
+    private String fyTradeKey;
     //发送消息开关
     private boolean openSendMessage;
     private Kunlun kunlun;
@@ -137,12 +139,20 @@ public class ApplicationConf implements ExternalApi {
         this.fyMerid = fyMerid;
     }
 
-    public String getFyKey() {
-        return fyKey;
+    public String getFyCheckKey() {
+        return fyCheckKey;
     }
 
-    public void setFyKey(String fyKey) {
-        this.fyKey = fyKey;
+    public void setFyCheckKey(String fyCheckKey) {
+        this.fyCheckKey = fyCheckKey;
+    }
+
+    public String getFyTradeKey() {
+        return fyTradeKey;
+    }
+
+    public void setFyTradeKey(String fyTradeKey) {
+        this.fyTradeKey = fyTradeKey;
     }
 
     @Override
