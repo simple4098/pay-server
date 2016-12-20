@@ -232,7 +232,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     public AppPrepayInfo prepay(String orderNo,String spbillCreateIp) {
-        if (StringUtils.isEmpty(spbillCreateIp)) spbillCreateIp="171.221.202.60";
+        if (!PayUtil.validatedIp(spbillCreateIp)) spbillCreateIp="171.221.202.60";
         PayOrderAccount payOrderAccount = payOrderAccountDao.findByOrderNoAndPayType(orderNo,PayType.WX_PAY);
         if (payOrderAccount==null) throw  new MessageRuntimeException("error.payserver.param.order.notnull");
         WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();

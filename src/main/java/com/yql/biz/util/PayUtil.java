@@ -4,6 +4,7 @@ import com.yql.biz.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -129,5 +130,13 @@ public class PayUtil {
             log.error("wx 异步通知xml:",e);
         }
         return null;
+    }
+
+    public static boolean validatedIp(String ip){
+        if (StringUtils.hasText(ip)){
+            boolean matches = ip.matches("^(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])$");
+            return  matches;
+        }
+        return false;
     }
 }
