@@ -77,8 +77,8 @@ public class PayOrderBalanceCreator implements IPayOrderCreator {
                 logger.debug("余额成功:"+ payOrderVo.getOrderNo());
             }else {
                 sendMessageHelper.sendMessage(textMessage);
-                logger.info("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
-                throw new RuntimeException("余额失败 订单号【"+payOrderVo.getOrderNo()+"】");
+                logger.error("余额不足 订单号【"+payOrderVo.getOrderNo()+"】");
+                throw new RuntimeException("余额不足");
             }
             return payOrderVo;
         }else {

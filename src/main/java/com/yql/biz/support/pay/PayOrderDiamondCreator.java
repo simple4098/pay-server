@@ -80,7 +80,7 @@ public class PayOrderDiamondCreator implements IPayOrderCreator {
             }else {
                 sendMessageHelper.sendMessage(textMessage);
                 logger.info("钻石支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
-                throw new RuntimeException(" 钻石支付失败 订单号【"+payOrderVo.getOrderNo()+"】");
+                throw new RuntimeException("钻石余额不足");
             }
             return payOrderVo;
         }else {
