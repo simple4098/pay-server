@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -231,6 +232,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     public AppPrepayInfo prepay(String orderNo,String spbillCreateIp) {
+        if (StringUtils.isEmpty(spbillCreateIp)) spbillCreateIp="171.221.202.60";
         PayOrderAccount payOrderAccount = payOrderAccountDao.findByOrderNoAndPayType(orderNo,PayType.WX_PAY);
         if (payOrderAccount==null) throw  new MessageRuntimeException("error.payserver.param.order.notnull");
         WeiXinOrderVo weiXinOrderVo = new WeiXinOrderVo();

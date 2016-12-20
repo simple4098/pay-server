@@ -102,7 +102,7 @@ public class PayOrderController {
      * @param spbillCreateIp 用户ip
      */
     @RequestMapping("/wx-prepay")
-    public ResponseModel prepay(@OrderNo String orderNo, @NotNull(message = "{com.yql.validation.constraints.txCode.spbillCreateIp}") String spbillCreateIp){
+    public ResponseModel prepay(@OrderNo String orderNo, String spbillCreateIp){
         AppPrepayInfo appPrepayInfo =   payOrderAccountService.prepay(orderNo,spbillCreateIp);
         return ResponseModel.SUCCESS(appPrepayInfo);
     }
