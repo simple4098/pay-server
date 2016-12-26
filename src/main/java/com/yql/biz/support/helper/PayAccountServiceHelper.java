@@ -84,7 +84,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
      */
     private void  checkBankCardResult( CheckCardResponse cardResponse,PayBank newPayBak){
         if (cardResponse!=null && PayConstants.FY_CHECK_CARD_SUCCESS.equals(cardResponse.getRcd())){
-            BankInfo bankInfo = bankInfoDao.findByBankName(cardResponse.getCnm());
+            BankInfo bankInfo = bankInfoDao.findByBankNameLike("%"+cardResponse.getCnm()+"%");
             if (bankInfo==null) throw  new MessageRuntimeException("error.payserver.bangBanke.notsupport");
             newPayBak.setBankName(cardResponse.getCnm());
             newPayBak.setBankId(bankInfo.getBankCode());

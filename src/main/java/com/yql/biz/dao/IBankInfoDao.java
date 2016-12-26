@@ -20,4 +20,10 @@ public interface IBankInfoDao extends JpaRepository<BankInfo,Integer> {
      */
     @Cacheable
     BankInfo findByBankName(String bankName);
+
+    /**
+     * 模糊查询银行信息
+     * @param bankName 银行卡信息
+     */
+    BankInfo findByBankNameLike(String bankName);
 }
