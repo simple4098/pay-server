@@ -1,8 +1,11 @@
 package com.yql.biz.constraint;
 
-import com.yql.biz.dao.IPayAccountDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.yql.biz.model.PayAccount;
+import com.yql.biz.support.helper.IPayAccountServiceHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Resource;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -10,8 +13,9 @@ import javax.validation.ConstraintValidatorContext;
  * @author simple
  */
 public class UserCodeValidator implements ConstraintValidator<UserCode, String> {
-    @Autowired
-    private IPayAccountDao payAccountDao;
+    private static final  Logger logger = LoggerFactory.getLogger(UserCodeValidator.class);
+    @Resource
+    private IPayAccountServiceHelper payAccountServiceHelper;
 
 
 
@@ -22,6 +26,8 @@ public class UserCodeValidator implements ConstraintValidator<UserCode, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return value != null && payAccountDao.findByUserCode(value) != null;
+        logger.debug("UserCodeValidator验证userCode:"+value);
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(value);
+        return value != null && payAccount != null;
     }
 }
