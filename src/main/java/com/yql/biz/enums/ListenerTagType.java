@@ -7,7 +7,7 @@ package com.yql.biz.enums;
  */
 public enum ListenerTagType {
 
-    USER_CENTER_USER_REGISTER("用户注册"),USER_CENTER_USER_REAL_NAME_AUTH("用户实名认证");
+    USER_CENTER_USER_REGISTER("用户注册"),USER_CENTER_AUTH_REAL_NAME("用户实名认证");
 
     ListenerTagType(String value) {
         this.value = value;

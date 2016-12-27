@@ -39,6 +39,6 @@ public class ConsumerMsgListener implements MessageListener {
 
     @Override
     public String getTag() {
-        return ListenerTagType.USER_CENTER_USER_REAL_NAME_AUTH.name()+"||"+ListenerTagType.USER_CENTER_USER_REGISTER.name();
+        return ListenerTagType.USER_CENTER_AUTH_REAL_NAME.name()+"||"+ListenerTagType.USER_CENTER_USER_REGISTER.name();
     }
 }
