@@ -2,10 +2,6 @@ package com.yql.biz.service;
 
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
-import com.yql.biz.vo.pay.response.WeiXinResponse;
-import com.yql.biz.vo.pay.response.WeiXinResponseResult;
-import com.yql.biz.vo.pay.wx.ResponseHandler;
-import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,8 +28,10 @@ public interface IPayOrderAccountService {
     /**
      * 更新提现状态
      * @param payOrderNo 提现订单号
+     * @param payStatus 订单状态
+     * @param msg 失败消息
      */
-    void updateDrawMoneyStatus(String payOrderNo,Integer payStatus);
+    void updateDrawMoneyStatus(String payOrderNo,Integer payStatus,String msg);
 
     /**
      * 查询提现列表
@@ -50,7 +48,7 @@ public interface IPayOrderAccountService {
      * @param orderNo par-server 订单号
      * @return
      */
-    ResultWxQueryOrder findWxOrderInfo(String orderNo);
+    ResultQueryOrder findWxOrderInfo(String orderNo);
 
     /**
      * 关闭订单
@@ -73,4 +71,10 @@ public interface IPayOrderAccountService {
      * @return
      */
     ResultPayOrder findOrderInfo(String orderNo);
+
+    /**
+     * 定时更新wx订单
+     */
+    void updateWxOrder();
+
 }

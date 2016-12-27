@@ -2,11 +2,10 @@ package com.yql.biz.controller;
 
 import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.constraint.UserCode;
-import com.yql.biz.model.FyBankCityCode;
 import com.yql.biz.service.*;
 import com.yql.biz.vo.*;
 import com.yql.biz.model.PayAccount;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

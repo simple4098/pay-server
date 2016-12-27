@@ -6,19 +6,17 @@ import com.yql.biz.client.IWxPayClient;
 import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.dao.IPayOrderAccountDao;
-import com.yql.biz.dao.IPayOrderAccountDetailDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.fy.FyRequestType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
-import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.model.PayOrderAccount;
-import com.yql.biz.model.PayOrderAccountDetail;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.support.constants.PayConstants;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
+import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.support.pay.CloseOrderComposition;
@@ -37,12 +35,12 @@ import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.WeiXinAppRequest;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
 import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.exception.MessageRuntimeException;
+import com.yql.core.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +59,6 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private static final Logger log = LoggerFactory.getLogger(PayOrderAccountService.class);
     @Resource
     private IPayOrderAccountDao payOrderAccountDao;
-    @Resource
-    private IPayOrderAccountDetailDao payOrderAccountDetailDao;
     @Resource
     private IPayAccountServiceHelper payAccountServiceHelper;
     @Resource
@@ -83,6 +79,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private IWxPayClient wxPayClient;
     @Resource
     private IFyPayForClient fyPayForClient;
+    @Resource
+    private IPayOrderAccountHelper payOrderAccountHelper;
 
     @Override
     public ResultPayOrder order(PayOrderVo payOrderVo) {
@@ -96,10 +94,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
             payOrderAccount.setVersion(orderAccount.getVersion());
         }
         payOrderAccount.setPayAccountId(payAccount.getId());
-        PayOrderAccountDetail payOrderAccountDetail = PayOrderAccountDetailVo.toDomain(payOrderAccount);
-        PayOrderAccount result = payOrderAccountDao.save(payOrderAccount);
-        payOrderAccountDetail.setPayOrderAccountId(result.getId());
-        payOrderAccountDetailDao.save(payOrderAccountDetail);
+        payOrderAccountHelper.saveOrder(payOrderAccount);
         ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
         log.debug("支付下单返回data:"+JSON.toJSONString(payOrder));
         return payOrder;
@@ -141,7 +136,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
                             orderAccount.setTxCode(weiXinNotifyVo.getOpenid());
                             orderAccount.setBankCode(weiXinNotifyVo.getBankType());
                             orderAccount.setPayOrder(weiXinNotifyVo.getTransactionId());
-                            payOrderAccountDao.save(orderAccount);
+                            payOrderAccountHelper.saveOrder(orderAccount);
+                            //payOrderAccountDao.save(orderAccount);
                         }
                         resultPayOrder.setPayNo(orderAccount.getPayNo());
                         resultPayOrder.setOrderNo(orderAccount.getOrderNo());
@@ -165,11 +161,13 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     @Transactional
-    public void updateDrawMoneyStatus(String payOrderNo,Integer payStatus) {
+    public void updateDrawMoneyStatus(String payOrderNo,Integer payStatus,String msg) {
         PayOrderAccount byOrderNo = payOrderAccountDao.findByOrderNo(payOrderNo);
         if (!PayType.DRAW_MONEY.equals(byOrderNo.getPayType())) throw new MessageRuntimeException("error.payserver.payType.param");
         byOrderNo.setPayStatus(payStatus);
-        payOrderAccountDao.save(byOrderNo);
+        byOrderNo.setMsg(msg);
+        payOrderAccountHelper.saveOrder(byOrderNo);
+        //payOrderAccountDao.save(byOrderNo);
         PayOrderVo payOrderVo = new PayOrderVo();
         payOrderVo.setOrderNo(payOrderNo);
         payOrderVo.setPayStatus(payStatus);
@@ -179,7 +177,7 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     @Transactional(readOnly = true)
     @Override
     public List<DrawMoneyVo> findDrawMoneyList() {
-        Date startTime = PayDateUtil.getStartTime();
+        Date startTime = PayDateUtil.getStartBeforeDay();
         Date endTime = PayDateUtil.getEndTime();
         List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.HANDLING.getValue(),startTime,endTime);
         List<DrawMoneyVo> drawMoneyVos = new ArrayList<>();
@@ -195,9 +193,10 @@ public class PayOrderAccountService implements IPayOrderAccountService {
 
     @Override
     public void updateDrawMoney() {
-        Date startTime = PayDateUtil.getStartTime();
+        Date startTime = PayDateUtil.getStartBeforeDay();
         Date endTime = PayDateUtil.getEndTime();
         List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndPayStatusAndCreatedTimeBetween(PayType.DRAW_MONEY,PayStatus.HANDLING.getValue(),startTime,endTime);
+        log.debug("定时任务执行 提现操作:"+JSON.toJSONString(list));
         FyPayForRequest fyPayForRequest = null;
         for (PayOrderAccount order: list) {
             PayBank p = payBankDao.findByTxCode(order.getTxCode());
@@ -209,17 +208,18 @@ public class PayOrderAccountService implements IPayOrderAccountService {
             fyPayRequest.setMac(md5String);
             FyPayForResponse fyPayForResponse = fyPayForClient.payFor(fyPayRequest);
             int payStatus = PayStatus.PAY_UNSUCCESS.getValue();
+            String msg = fyPayForResponse.getRet();
             if (PayConstants.FY_PAY_FOR_SUCCESS.equals(fyPayForResponse.getRet())){
                 payStatus = PayStatus.PAY_SUCCESS.getValue();
             }
-            updateDrawMoneyStatus(order.getOrderNo(),payStatus);
+            updateDrawMoneyStatus(order.getOrderNo(),payStatus,msg);
         }
     }
 
     @Override
-    public ResultWxQueryOrder findWxOrderInfo(String orderNo) {
+    public ResultQueryOrder findWxOrderInfo(String orderNo) {
         PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(orderNo);
-        ResultWxQueryOrder wxQueryOrder = queryOrderComposition.transform(orderAccount);
+        ResultQueryOrder wxQueryOrder = queryOrderComposition.transform(orderAccount);
         return wxQueryOrder;
     }
 
@@ -272,5 +272,14 @@ public class PayOrderAccountService implements IPayOrderAccountService {
         PayOrderVo payOrderVo = PayOrderVo.domainToVo(byOrderNo);
         ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
         return payOrder;
+    }
+
+    @Override
+    @Transactional
+    public void updateWxOrder() {
+        Date startTime = PayDateUtil.getWxStartTime();
+        Date endTime = PayDateUtil.getWxEndTime();
+        List<PayOrderAccount> list = payOrderAccountDao.findByPayTypeAndCreatedTimeBetween(PayType.WX_PAY,startTime,endTime);
+        sendMessageHelper.timeCheckOrderStatus(list);
     }
 }

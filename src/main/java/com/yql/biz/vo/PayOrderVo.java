@@ -53,6 +53,26 @@ public class PayOrderVo {
     //private WeiXinAppRequest appRequest;
     //支付密码
     private String payPassword;
+    //收款人账户code
+    private String payeeCode;
+    //付款人账户code
+    private String payerCode;
+
+    public String getPayeeCode() {
+        return payeeCode;
+    }
+
+    public void setPayeeCode(String payeeCode) {
+        this.payeeCode = payeeCode;
+    }
+
+    public String getPayerCode() {
+        return payerCode;
+    }
+
+    public void setPayerCode(String payerCode) {
+        this.payerCode = payerCode;
+    }
 
     public String getSpbillCreateIp() {
         return spbillCreateIp;

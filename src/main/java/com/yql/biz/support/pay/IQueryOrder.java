@@ -1,7 +1,7 @@
 package com.yql.biz.support.pay;
 
 import com.yql.biz.model.PayOrderAccount;
-import com.yql.biz.vo.ResultWxQueryOrder;
+import com.yql.biz.vo.ResultQueryOrder;
 
 /**
  * <p>查询支付订单信息</p>
@@ -10,7 +10,7 @@ import com.yql.biz.vo.ResultWxQueryOrder;
  */
 public interface IQueryOrder {
 
-    ResultWxQueryOrder queryOrder(PayOrderAccount payOrderAccount);
+    ResultQueryOrder queryOrder(PayOrderAccount payOrderAccount);
 
     boolean supports(PayOrderAccount payOrderAccount);
 }

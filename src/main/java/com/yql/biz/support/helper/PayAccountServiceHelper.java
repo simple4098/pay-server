@@ -12,7 +12,6 @@ import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.CardType;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.RealNameAuthType;
-import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
@@ -27,7 +26,8 @@ import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.Request;
 import com.yql.biz.vo.pay.request.UninstallBangBody;
 import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.exception.MessageRuntimeException;
+import com.yql.core.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -121,6 +121,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
 
     @Override
     public ResultBangBank crateQuickBangBankParam(PayBankVo payBankVo, PayBank newPayBak) {
+        logger.debug("绑定银行卡userCode:"+payBankVo.getUserCode());
         PayAccount payAccount = findOrCratePayAccount(payBankVo.getUserCode());
         if (!payAccount.isRealNameAuth()) throw new MessageRuntimeException("error.payserver.isRealNameAuth");
         ResultBangBank resultBangBank = new ResultBangBank(30);
@@ -152,7 +153,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     }
 
     private void comon(PayAccount payAccount,String userCode){
-        ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
+        ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.checkUserExist(userCode);
         logger.debug("user-center client:"+JSON.toJSONString(baseUserInfo));
         if (baseUserInfo!=null && baseUserInfo.getData()!=null){
             UserBasicInfoVo baseUserInfoData = baseUserInfo.getData();
@@ -174,6 +175,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
                 payAccount.setIdentificationType(IdentificationType.HKMACTW);
             }
             payAccount.setIdentificationNumber(data.getIdCard());
+            logger.debug("保存 payAccountDao.save ========="+JSON.toJSONString(payAccount));
             payAccountDao.save(payAccount);
         }
     }
@@ -181,7 +183,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     @Override
     public void updatePayAccountRelName(String userCode) {
         PayAccount payAccount = payAccountDao.findByUserCode(userCode);
-        ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.getBaseUserInfo(userCode);
+        ResponseModel<UserBasicInfoVo> baseUserInfo = userCenterClient.checkUserExist(userCode);
         if (baseUserInfo!=null){
             UserBasicInfoVo data = baseUserInfo.getData();
             relNameInfo(payAccount,data);

@@ -4,6 +4,7 @@ import com.yql.biz.enums.pay.WxPayType;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import com.yql.core.model.Domain;
 
 /**
  * <p> 阿里订单对象 </p>

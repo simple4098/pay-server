@@ -1,5 +1,7 @@
 package com.yql.biz.model;
 
+import com.yql.core.model.Domain;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;

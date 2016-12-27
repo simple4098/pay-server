@@ -4,7 +4,7 @@ import com.yql.biz.conf.ExternalApi;
 import com.yql.biz.model.Order;
 import com.yql.biz.service.IPayService;
 import com.yql.biz.support.helper.RestTemplateHelper;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.web.ResponseModel;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

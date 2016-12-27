@@ -1,6 +1,7 @@
 package com.yql.biz.model;
 
 import com.yql.biz.enums.CardType;
+import com.yql.core.model.Domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import java.util.Date;
 @Entity
 @Table(name = "pay_bank")
 @Cacheable
-public class PayBank extends Domain  {
+public class PayBank extends Domain {
     private Integer payAccountId;
     private String userCode;
     //持卡人

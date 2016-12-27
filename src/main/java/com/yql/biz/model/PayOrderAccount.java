@@ -1,6 +1,7 @@
 package com.yql.biz.model;
 
 import com.yql.biz.enums.PayType;
+import com.yql.core.model.Domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,6 +48,26 @@ public class PayOrderAccount extends Domain {
     private String  bankCode;
     //支付通道标识 微信openid  快捷支付银行卡编码
     private String txCode;
+    //收款人账户code
+    private String payeeCode;
+    //付款人账户code
+    private String payerCode;
+
+    public String getPayeeCode() {
+        return payeeCode;
+    }
+
+    public void setPayeeCode(String payeeCode) {
+        this.payeeCode = payeeCode;
+    }
+
+    public String getPayerCode() {
+        return payerCode;
+    }
+
+    public void setPayerCode(String payerCode) {
+        this.payerCode = payerCode;
+    }
 
     public Integer getPayBankId() {
         return payBankId;

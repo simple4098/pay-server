@@ -1,18 +1,16 @@
 package com.yql.biz.controller;
 
 import com.yql.biz.constraint.OrderNo;
-import com.yql.biz.enums.PayType;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.web.ResponseModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -49,9 +47,19 @@ public class PayOrderController {
      *
      * @return
      */
-    @RequestMapping("/draw-money-status")
+    /*@RequestMapping("/draw-money-status")
     public ResponseModel drawMoneyStatus(@OrderNo String orderNo, @NotNull(message = "com.yql.validation.constraints.payStatus.message") Integer payStatus){
-        payOrderAccountService.updateDrawMoneyStatus(orderNo,payStatus);
+        payOrderAccountService.updateDrawMoneyStatus(orderNo,payStatus,null);
+        return ResponseModel.SUCCESS();
+    }*/
+
+    /**
+     * 更新wx订单状态
+     * @return
+     */
+    @RequestMapping("/update-wx-order")
+    public ResponseModel updateWxOrder(){
+        payOrderAccountService.updateWxOrder();
         return ResponseModel.SUCCESS();
     }
 
@@ -82,8 +90,8 @@ public class PayOrderController {
      */
     @RequestMapping("/query-order")
     public ResponseModel queryWxOrder(@OrderNo String orderNo){
-        ResultWxQueryOrder resultWxQueryOrder =   payOrderAccountService.findWxOrderInfo(orderNo);
-        return ResponseModel.SUCCESS(resultWxQueryOrder);
+        ResultQueryOrder resultQueryOrder =   payOrderAccountService.findWxOrderInfo(orderNo);
+        return ResponseModel.SUCCESS(resultQueryOrder);
     }
 
     /**

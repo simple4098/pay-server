@@ -1,6 +1,7 @@
 package com.yql.biz.model;
 
 import com.yql.biz.enums.PayType;
+import com.yql.core.model.Domain;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,6 +41,26 @@ public class PayOrderAccountDetail extends Domain {
     //支付信息
     private String msg;
     private Integer payBankId;
+    //收款人账户code
+    private String payeeCode;
+    //	付款人账户code
+    private String payerCode;
+
+    public String getPayeeCode() {
+        return payeeCode;
+    }
+
+    public void setPayeeCode(String payeeCode) {
+        this.payeeCode = payeeCode;
+    }
+
+    public String getPayerCode() {
+        return payerCode;
+    }
+
+    public void setPayerCode(String payerCode) {
+        this.payerCode = payerCode;
+    }
 
     public Integer getPayBankId() {
         return payBankId;

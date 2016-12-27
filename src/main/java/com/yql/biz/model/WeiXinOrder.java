@@ -1,6 +1,7 @@
 package com.yql.biz.model;
 
 import com.yql.biz.enums.pay.WxPayType;
+import com.yql.core.model.Domain;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

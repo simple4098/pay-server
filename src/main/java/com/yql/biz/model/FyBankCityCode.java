@@ -1,5 +1,7 @@
 package com.yql.biz.model;
 
+import com.yql.core.model.Domain;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -10,7 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "fy_bank_city_code")
-public class FyBankCityCode extends Domain{
+public class FyBankCityCode extends Domain {
     private String cityId;
     private String cityName;
     private String provinceId;

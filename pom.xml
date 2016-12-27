@@ -5,7 +5,7 @@
 
 	<groupId>com.yql.biz</groupId>
 	<artifactId>pay-server</artifactId>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
 	<packaging>jar</packaging>
 	<name>pay-server</name>
 	<description>Demo project for Spring Boot</description>
@@ -104,10 +104,15 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.yql.core</groupId>
+			<artifactId>common-core-spring-boot-starter</artifactId>
+			<version>4.1.0-SNAPSHOT</version>
+		</dependency>
+		<!--<dependency>
 			<groupId>com.yql.biz</groupId>
 			<artifactId>common-core</artifactId>
 			<version>3.0.0</version>
-		</dependency>
+		</dependency>-->
 		<!-- 支持编译期织入-->
 		<dependency>
 			<groupId>org.springframework</groupId>

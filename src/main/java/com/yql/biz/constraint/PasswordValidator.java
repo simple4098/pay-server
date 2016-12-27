@@ -1,6 +1,6 @@
 package com.yql.biz.constraint;
 
-import com.yql.biz.exception.MessageRuntimeException;
+import com.yql.core.exception.MessageRuntimeException;
 import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 

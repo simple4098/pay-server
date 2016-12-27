@@ -1,6 +1,6 @@
 package com.yql.biz.util;
 
-import com.yql.biz.exception.MessageRuntimeException;
+import com.yql.core.exception.MessageRuntimeException;
 import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

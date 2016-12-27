@@ -5,9 +5,14 @@ import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.enums.SendMsgTag;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
+import com.yql.biz.enums.pay.WxTradeState;
+import com.yql.biz.model.PayOrderAccount;
+import com.yql.biz.service.IPayOrderAccountService;
+import com.yql.biz.support.pay.QueryOrderComposition;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ResultPayOrder;
+import com.yql.biz.vo.ResultQueryOrder;
 import com.yql.biz.vo.pay.response.WeiXinResponseResult;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
 import com.yql.framework.mq.MessagePublisher;
@@ -15,9 +20,12 @@ import com.yql.framework.mq.model.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * <p> 发消息 </p>
@@ -31,6 +39,12 @@ public class SendMessageHelper {
     private ApplicationConf applicationConf;
     @Resource
     private MessagePublisher messagePublisher;
+    @Resource(name = "queryOrderComposition")
+    private QueryOrderComposition queryOrderComposition;
+    @Resource
+    private IPayOrderAccountService payOrderAccountService;
+    @Resource
+    private IPayOrderAccountHelper payOrderAccountHelper;
 
 
     /**
@@ -49,11 +63,9 @@ public class SendMessageHelper {
     /**
      *  微信异步通知发消息
      * @param resultPayOrder 订单基本数据
-     * @param outTradeNo 订单号
      */
-    public void sendWxNotify(ResultPayOrder resultPayOrder, String outTradeNo) {
-        resultPayOrder.setPayStatus(PayStatus.HANDLING.getValue());
-        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),outTradeNo,resultPayOrder);
+    public void sendWxNotify(ResultPayOrder resultPayOrder) {
+        TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),resultPayOrder.getOrderNo(),resultPayOrder);
         sendMessage(textMessage);
     }
 
@@ -91,5 +103,61 @@ public class SendMessageHelper {
         TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),payOrderVo.getOrderNo(),resultPayOrder);
         sendMessage(textMessage);
 
+    }
+
+    /**
+     * 定时发送第三方平台的订单状态
+     * @param list 订单集合
+     */
+    public  void timeCheckOrderStatus(List<PayOrderAccount> list){
+        if (!CollectionUtils.isEmpty(list)){
+            Integer threadNum = applicationConf.getThreadNum();
+            ExecutorService es = Executors.newFixedThreadPool(threadNum);
+            CompletionService cs = new ExecutorCompletionService(es);
+            for (PayOrderAccount payOrderAccount:list){
+                cs.submit(getTask(payOrderAccount));
+            }
+            es.shutdown();
+        }
+    }
+
+    private Callable getTask(PayOrderAccount orderAccount) {
+        return (Callable) () -> {
+            ResultQueryOrder wxQueryOrder = queryOrderComposition.transform(orderAccount);
+            log.debug("第三方支付平台订单信息:"+JSON.toJSONString(wxQueryOrder));
+            if (wxQueryOrder!=null && wxQueryOrder.getWxTradeState()!=null){
+                ResultPayOrder resultPayOrder = new ResultPayOrder();
+                resultPayOrder.setOrderNo(orderAccount.getOrderNo());
+                resultPayOrder.setPayNo(orderAccount.getPayNo());
+                resultPayOrder.setPayType(orderAccount.getPayType());
+                resultPayOrder.setTxCode(orderAccount.getTxCode());
+                resultPayOrder.setPayPrice(orderAccount.getTotalPrice());
+                //支付成功
+                if (wxQueryOrder.getWxTradeState().equals(WxTradeState.SUCCESS)){
+                    if (!orderAccount.getPayStatus().equals(PayStatus.PAY_SUCCESS.getValue())){
+                        //订单状态实际为成功，但是系统的订单状态不成功，要更新成支付成功 并发通知
+                        resultPayOrder.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
+                        orderAccount.setPayStatus(PayStatus.PAY_SUCCESS.getValue());
+                        payOrderAccountHelper.saveOrder(orderAccount);
+                        sendWxNotify(resultPayOrder);
+                    }
+                    //未支付
+                }else if (wxQueryOrder.getWxTradeState().equals(WxTradeState.NOTPAY)){
+                    orderAccount.setPayStatus(PayStatus.NOT_PAY.getValue());
+                    payOrderAccountHelper.saveOrder(orderAccount);
+                    resultPayOrder.setPayStatus(PayStatus.NOT_PAY.getValue());
+                    sendWxNotify(resultPayOrder);
+                    //支付失败
+                }else if (wxQueryOrder.getWxTradeState().equals(WxTradeState.PAYERROR)){
+                    if (!orderAccount.getPayStatus().equals(PayStatus.PAY_UNSUCCESS.getValue())){
+                        orderAccount.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
+                        payOrderAccountHelper.saveOrder(orderAccount);
+                        resultPayOrder.setPayStatus(PayStatus.PAY_UNSUCCESS.getValue());
+                        sendWxNotify(resultPayOrder);
+                    }
+                }
+            }
+            return null;
+        };
     }
 }

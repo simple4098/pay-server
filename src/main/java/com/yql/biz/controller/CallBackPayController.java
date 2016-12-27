@@ -1,7 +1,7 @@
 package com.yql.biz.controller;
 
 import com.yql.biz.service.IPayOrderAccountService;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.web.ResponseModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

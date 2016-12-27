@@ -1,13 +1,13 @@
 package com.yql.biz.service.impl;
 
 import com.yql.biz.dao.IPayAccountDao;
-import com.yql.biz.exception.MessageRuntimeException;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.vo.PayAccountVo;
 import com.yql.biz.vo.ResultPayPassword;
+import com.yql.core.exception.MessageRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -45,6 +45,7 @@ public class PayAccountService implements IPayAccountService {
     @Override
     @Transactional
     public ResultPayPassword isPayPassword(String userCode) {
+        logger.debug("是否设置过支付密码userCode:"+userCode);
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(userCode);
         boolean sign = !StringUtils.isEmpty(payAccount.getPayPassword());
         return new ResultPayPassword(sign,userCode);

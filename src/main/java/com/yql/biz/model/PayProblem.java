@@ -1,5 +1,7 @@
 package com.yql.biz.model;
 
+import com.yql.core.model.Domain;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +15,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "pay_problem")
-public class PayProblem extends Domain  {
+public class PayProblem extends Domain {
     //密保问题名称
     @Column(name = "problem_name")
     private String problemName;

@@ -1,6 +1,8 @@
 package com.yql.biz.model;
 
 
+import com.yql.core.model.Domain;
+
 public class Order extends Domain {
 
     private long orderNo; //订单号

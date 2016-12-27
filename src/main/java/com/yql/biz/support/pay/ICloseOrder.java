@@ -1,7 +1,6 @@
 package com.yql.biz.support.pay;
 
 import com.yql.biz.model.PayOrderAccount;
-import com.yql.biz.vo.ResultWxQueryOrder;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 
 /**

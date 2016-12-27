@@ -28,6 +28,8 @@ public class ApplicationConf implements ExternalApi {
     private String listenerTopic;
     //发送消息的topic
     private String sendMsgTopic;
+    private String accountListenerTopic;
+    private String accountListenerTag;
     //机构代码
     private String institutionId;
     //商户code
@@ -38,7 +40,17 @@ public class ApplicationConf implements ExternalApi {
     private String fyTradeKey;
     //发送消息开关
     private boolean openSendMessage;
+    //定时任务线程数
+    private Integer threadNum;
     private Kunlun kunlun;
+
+    public Integer getThreadNum() {
+        return threadNum;
+    }
+
+    public void setThreadNum(Integer threadNum) {
+        this.threadNum = threadNum;
+    }
 
     public String getInstitutionId() {
         return institutionId;
@@ -153,6 +165,22 @@ public class ApplicationConf implements ExternalApi {
 
     public void setFyTradeKey(String fyTradeKey) {
         this.fyTradeKey = fyTradeKey;
+    }
+
+    public String getAccountListenerTopic() {
+        return accountListenerTopic;
+    }
+
+    public void setAccountListenerTopic(String accountListenerTopic) {
+        this.accountListenerTopic = accountListenerTopic;
+    }
+
+    public String getAccountListenerTag() {
+        return accountListenerTag;
+    }
+
+    public void setAccountListenerTag(String accountListenerTag) {
+        this.accountListenerTag = accountListenerTag;
     }
 
     @Override

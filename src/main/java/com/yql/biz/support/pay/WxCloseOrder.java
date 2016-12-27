@@ -7,15 +7,13 @@ import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
-import com.yql.biz.vo.pay.wx.ResponseHandler;
 import com.yql.biz.vo.pay.wx.WxOrderQueryVo;
-import com.yql.biz.web.ResponseModel;
+import com.yql.core.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * <p> 微信关闭订单实现类 </p>

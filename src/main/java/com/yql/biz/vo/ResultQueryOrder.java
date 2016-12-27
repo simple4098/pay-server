@@ -1,5 +1,6 @@
 package com.yql.biz.vo;
 
+import com.yql.biz.enums.pay.AliTradeStatus;
 import com.yql.biz.enums.pay.WxTradeState;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
  * @auther simple
  * data 2016/11/23 0023.
  */
-public class ResultWxQueryOrder {
+public class ResultQueryOrder {
     //信息
     private String msg;
     //订单号
@@ -23,8 +24,18 @@ public class ResultWxQueryOrder {
     private BigDecimal payPrice;
     //支付通道标识 微信openid  快捷支付银行卡编码
     private String txCode;
-
+    //微信订单支付状态
     private WxTradeState wxTradeState;
+    //ali订单支付状态
+    private AliTradeStatus aliTradeStatus;
+
+    public AliTradeStatus getAliTradeStatus() {
+        return aliTradeStatus;
+    }
+
+    public void setAliTradeStatus(AliTradeStatus aliTradeStatus) {
+        this.aliTradeStatus = aliTradeStatus;
+    }
 
     public String getMsg() {
         return msg;

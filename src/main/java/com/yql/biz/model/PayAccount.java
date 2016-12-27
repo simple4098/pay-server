@@ -3,6 +3,7 @@ package com.yql.biz.model;
 import com.yql.biz.enums.IdentificationType;
 import com.yql.biz.enums.SmallPayMoney;
 import com.yql.biz.util.PayUtil;
+import com.yql.core.model.Domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "pay_account")
 @Cacheable
-public class PayAccount extends  Domain  {
+public class PayAccount extends Domain {
     //用户code
     @Column(name = "user_code")
     @NotNull(message = "{com.yql.validation.constraints.userCode.message}")
