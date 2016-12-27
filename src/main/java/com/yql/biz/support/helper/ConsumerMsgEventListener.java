@@ -37,7 +37,7 @@ public class ConsumerMsgEventListener implements IConsumerMsgEventListener {
             payAccount.setUserCode(message.getBodyAsText());
             payAccountService.savePayAccount(payAccount);
         //用户实名认证
-        }else if (message.getTag().equals(ListenerTagType.USER_CENTER_USER_REAL_NAME_AUTH.name())){
+        }else if (message.getTag().equals(ListenerTagType.USER_CENTER_AUTH_REAL_NAME.name())){
             logger.debug("用户实名认证userCode:"+message.getBodyAsText());
             payAccountServiceHelper.updatePayAccountRelName(message.getBodyAsText());
         }
