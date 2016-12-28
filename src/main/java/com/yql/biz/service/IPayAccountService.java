@@ -2,6 +2,7 @@ package com.yql.biz.service;
 
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.vo.PayAccountVo;
+import com.yql.biz.vo.ResetPayPasswordVo;
 import com.yql.biz.vo.ResultPayPassword;
 
 /**
@@ -59,4 +60,16 @@ public interface IPayAccountService {
      * @param payAccount
      */
     void setPayPassword(PayAccountVo payAccount);
+
+    /**
+     * 重置默认支付支付密码
+     * @param userCode 用户code
+     */
+    void resetDefaultPayPassword(String userCode);
+
+    /**
+     * 重置支付密码
+     * @param resetPayPasswordVo 修改支付密码必要参数
+     */
+    void resetPayPassword(ResetPayPasswordVo resetPayPasswordVo);
 }

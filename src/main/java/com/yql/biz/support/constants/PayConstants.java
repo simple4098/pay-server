@@ -14,4 +14,6 @@ public class PayConstants {
     public static final String CTP01="01";
     //富友信用卡
     public static final String CTP02="02";
+    //重置密码
+    public static final String PAY_PASSWORD="123456";
 }

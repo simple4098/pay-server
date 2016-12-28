@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.*;
 import com.yql.biz.conf.SecurityConfiguration;
 import com.yql.biz.dao.IBankInfoDao;
+import com.yql.biz.enums.MessageType;
 import com.yql.biz.enums.fy.FyRequestType;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
@@ -55,6 +56,14 @@ public class DemoController {
     private IFyCheckCardPayClient fyPayClient;
     @Resource
     private IFyPayForClient fyPayForClient;
+    @Resource
+    private IMessageServerClient messageServerClient;
+
+    @RequestMapping(value = "/sendMessage")
+    public ResponseModel index3() {
+        ResponseModel responseModel = messageServerClient.getPhoneAuthCode(MessageType.UPDATE_PASSWORD.name(), "18123280663", "18123280669Code");
+        return responseModel;
+    }
 
     @RequestMapping(value = "/index")
     public ResponseModel index() throws Exception {

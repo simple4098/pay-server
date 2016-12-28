@@ -1,13 +1,17 @@
 package com.yql.biz.service.impl;
 
+import com.yql.biz.client.IMessageServerClient;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.service.IPayAccountService;
+import com.yql.biz.support.constants.PayConstants;
 import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.vo.PayAccountVo;
+import com.yql.biz.vo.ResetPayPasswordVo;
 import com.yql.biz.vo.ResultPayPassword;
 import com.yql.core.exception.MessageRuntimeException;
+import com.yql.core.web.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -15,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * creator simple
@@ -35,6 +41,8 @@ public class PayAccountService implements IPayAccountService {
     private IPayAccountServiceHelper payAccountServiceHelper;
     @Resource
     private PayPasswordSecurityHelper payPasswordSecurityHelper;
+    @Resource
+    private IMessageServerClient messageServerClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -59,7 +67,7 @@ public class PayAccountService implements IPayAccountService {
 
     @Override
     public void updatePayPassword(PayAccountVo payAccountVo) {
-        logger.debug("更新密码:"+payAccountVo.getUserCode());
+        logger.debug("更新支付密码userCode:"+payAccountVo.getUserCode());
         PayAccount one = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
         payPasswordSecurityHelper.validateOldPassword(payAccountVo.getOldPayPassword(),one);
         PayAccount payAccount = PayAccountVo.voToDomain(payAccountVo,one);
@@ -70,7 +78,7 @@ public class PayAccountService implements IPayAccountService {
 
     @Override
     public void setPayPassword(PayAccountVo payAccountVo) {
-        logger.debug("设置支付密码:"+payAccountVo.getUserCode());
+        logger.debug("设置支付密码userCode:"+payAccountVo.getUserCode());
         Assert.notNull(payAccountVo.getPayPassword(),messageSourceAccessor.getMessage("error.payserver.param.paypassword"));
         PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payAccountVo.getUserCode());
         PayAccount payAccount1 = PayAccountVo.voToDomain(payAccountVo,payAccount);
@@ -81,6 +89,30 @@ public class PayAccountService implements IPayAccountService {
             throw new MessageRuntimeException("error.payserver.paypassword");
         }
          payAccountDao.saveAndFlush(payAccount);
+    }
+
+    @Override
+    public void resetDefaultPayPassword(String userCode) {
+        logger.debug("重置支付密码userCode:"+userCode);
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(userCode);
+        String encode = new BASE64Encoder().encode(PayConstants.PAY_PASSWORD.getBytes());
+        payAccount.setPayPassword(encode);
+        payPasswordSecurityHelper.md5PayPassword(payAccount);
+        payAccount.setPayPassword(payAccount.getPayPassword());
+        payAccountDao.save(payAccount);
+    }
+
+    @Override
+    public void resetPayPassword(ResetPayPasswordVo resetPayPasswordVo) {
+        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(resetPayPasswordVo.getUserCode());
+        ResponseModel responseModel = messageServerClient.checkPhoneCode(resetPayPasswordVo.getPhone(), resetPayPasswordVo.getPhoneCode(), resetPayPasswordVo.getPhoneCodeKey());
+        Optional.ofNullable(responseModel).filter(responseModel1 -> !responseModel1.isSuccess()).ifPresent(responseModel1 -> {
+            throw new MessageRuntimeException("error.payserver.phoneCode");
+        });
+        payAccount.setPayPassword(resetPayPasswordVo.getPayPassword());
+        payPasswordSecurityHelper.md5PayPassword(payAccount);
+        payAccount.setPayPassword(payAccount.getPayPassword());
+        payAccountDao.save(payAccount);
     }
 
     @Override

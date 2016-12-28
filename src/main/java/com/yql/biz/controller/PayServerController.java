@@ -128,6 +128,24 @@ public class PayServerController {
     }
 
     /**
+     * 重置支付密码
+     */
+    @RequestMapping(value = "/reset-pay-password",method = RequestMethod.GET)
+    public ResponseModel payPassword(@UserCode String userCode){
+        payAccountService.resetDefaultPayPassword(userCode);
+        return ResponseModel.SUCCESS("error.payserver.resetPayPassword");
+    }
+
+    /**
+     * <p>找回支付密码发送验证码,支付密码只发送到登录电话号码上</p>
+     */
+    @RequestMapping(value = "/reset/pay-password",method = RequestMethod.POST)
+    public ResponseModel senMessage(@Validated ResetPayPasswordVo resetPayPasswordVo){
+        payAccountService.resetPayPassword(resetPayPasswordVo);
+        return ResponseModel.SUCCESS();
+    }
+
+    /**
      * 添加支付银行卡
      */
     @RequestMapping(value = "/set/bank-card" ,method = RequestMethod.POST)
