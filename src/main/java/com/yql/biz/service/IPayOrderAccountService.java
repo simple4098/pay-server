@@ -1,9 +1,11 @@
 package com.yql.biz.service;
 
 import com.yql.biz.vo.*;
+import com.yql.biz.vo.pay.ali.AliPayBaseRequest;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -48,7 +50,7 @@ public interface IPayOrderAccountService {
      * @param orderNo par-server 订单号
      * @return
      */
-    ResultQueryOrder findWxOrderInfo(String orderNo);
+    ResultQueryOrder findPaymentPlatformOrderInfo(String orderNo);
 
     /**
      * 关闭订单
@@ -76,5 +78,36 @@ public interface IPayOrderAccountService {
      * 定时更新wx订单
      */
     void updateWxOrder();
+
+
+    /**
+     * 富友回调
+     *
+     * @param request
+     */
+    String callFyPayNotify(HttpServletRequest request);
+
+    /**
+     * ali pay app支付需要参数
+     * @param orderNo 订单号
+     */
+    AliPayBaseRequest aliAppPayOrder(String orderNo);
+
+    /**
+     * 支付宝支付 回调
+     */
+    void callAliPayNotify(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * ali pay 生成wap表单提交页面
+     * @param payOrderVo 订单信息
+     */
+    String aliWapFrom(PayOrderVo payOrderVo);
+
+    /**
+     * 订单退款
+     * @param orderNo 订单号
+     */
+    void refundOrder(String orderNo);
 
 }

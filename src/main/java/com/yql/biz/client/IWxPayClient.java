@@ -1,8 +1,10 @@
 package com.yql.biz.client;
 
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinQueryOrderResponse;
 import com.yql.biz.vo.pay.response.WeiXinResponse;
+import com.yql.biz.vo.pay.wx.WxRefundOrderResponse;
 import com.yql.core.web.ResponseModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,6 +33,12 @@ public interface IWxPayClient {
      * @param xml 请求xml
      */
     ResponseModel<WeiXinCloseOrderResponse>  closeOrder(@RequestParam String xml);
+
+    /**
+     * 微信退款
+     * @param payOrderAccount 支付订单信息
+     */
+    WxRefundOrderResponse refundOrder(PayOrderAccount payOrderAccount);
 
 
 }

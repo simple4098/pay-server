@@ -4,6 +4,7 @@ import com.yql.biz.model.PayBank;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.ali.AliPayBaseRequest;
 import com.yql.biz.vo.pay.request.DjPay;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
 import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
@@ -41,4 +42,17 @@ public interface IPayOrderParamHelper {
 
 
     WeiXinNotifyVo getWxCallBackParam(SortedMap allParameters);
+
+    /**
+     * 富友下单参数
+     * @param payOrderVo 订单信息
+     * @param payBank 绑定银行卡信息
+     */
+    String getFyOrderPayParam(PayOrderVo payOrderVo, PayBank payBank);
+
+    /**
+     * ali app pay param
+     * @param payOrderAccount 订单信息
+     */
+    AliPayBaseRequest getAliAppPayParam(PayOrderAccount payOrderAccount);
 }

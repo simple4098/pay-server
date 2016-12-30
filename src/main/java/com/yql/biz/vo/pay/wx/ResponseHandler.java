@@ -113,7 +113,7 @@ public class ResponseHandler {
 	 * @return boolean
 	 */
 	public boolean isTenpaySign() {
-		String str = PlatformPayUtil.sortParm( this.parameters);
+		String str = PlatformPayUtil.sortParam( this.parameters);
 		StringBuffer sb = new StringBuffer(str);
 		sb.append("key=" + this.getKey());
 		//算出摘要

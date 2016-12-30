@@ -1,6 +1,8 @@
 package com.yql.biz.util;
 
-import com.yql.biz.vo.pay.fy.FyPayRequest;
+import com.yql.biz.client.WxPayClient;
+import com.yql.biz.vo.pay.fy.FyH5PayRequest;
+import com.yql.biz.vo.pay.request.DjPay;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -8,14 +10,17 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -27,7 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.*;
-import java.security.Certificate;
 import java.security.cert.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,10 +81,10 @@ public class PayHttpClientUtil {
      * @param fyPayRequest 请求对象
      * @throws Exception
      */
-    public static String httpKvPost(String url, FyPayRequest fyPayRequest) throws Exception {
+    public static <T extends DjPay> String httpKvPost(String url, T fyPayRequest) throws Exception {
         HttpClient httpClient = obtHttpClient();
         HttpPost httpPost = new HttpPost(url);
-        Map<String, Object> param = PlatformPayUtil.obtObjParm(fyPayRequest);
+        Map<String, Object> param = PlatformPayUtil.obtObjParam(fyPayRequest);
         List<NameValuePair> nameValuePairs = commonParam(param);
         httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, Charset.defaultCharset()));
         HttpResponse response = httpClient.execute(httpPost);
@@ -394,5 +398,43 @@ public class PayHttpClientUtil {
      */
     public static String InputStreamTOString(InputStream in,String encoding) throws IOException{
         return new String(InputStreamTOByte(in),encoding);
+    }
+
+    public static <T extends DjPay> String httpKvPostUrl(String url, T fyPayRequest) throws Exception {
+        HttpClient httpClient = obtHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        Map<String, Object> param = PlatformPayUtil.obtObjParam(fyPayRequest);
+        List<NameValuePair> nameValuePairs = commonParam(param);
+        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, Charset.defaultCharset()));
+        HttpResponse response = httpClient.execute(httpPost);
+        String payUrl = PayUtil.h5PayUrl(response.toString());
+        return payUrl;
+    }
+
+    public static String postSSL(String url,String mchId,String payRequestXml) throws IOException {
+        File file = new File(WxPayClient.class.getClassLoader().getResource("apiclient_cert.p12").getFile());
+        FileInputStream instream = null;
+        try {
+            KeyStore keyStore  = KeyStore.getInstance("PKCS12");
+            instream = new FileInputStream(file);//放退款证书的路径
+            keyStore.load(instream, mchId.toCharArray());
+            SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore,mchId.toCharArray()).build();
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory( sslcontext,  new String[] { "TLSv1" }, null, SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+            HttpPost httpPost = new HttpPost(url);
+            StringEntity reqEntity  = new StringEntity(payRequestXml);
+            // 设置类型
+            reqEntity.setContentType("application/x-www-form-urlencoded");
+            httpPost.setEntity(reqEntity);
+            CloseableHttpResponse response = httpclient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            String value = EntityUtils.toString(entity, Charset.defaultCharset());
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            instream.close();
+        }
+        return null;
     }
 }

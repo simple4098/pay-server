@@ -75,7 +75,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.yql.ali</groupId>
+			<artifactId>alipay-java-sdk</artifactId>
+			<version>20161129201425</version>
+		</dependency>
+		<dependency>
+			<groupId>com.yql.ali</groupId>
+			<artifactId>alipay-java-sdk-source</artifactId>
+			<version>20161129201425</version>
+		</dependency>
 		<!--消息中心-->
 		<dependency>
 			<groupId>com.yql.framework</groupId>

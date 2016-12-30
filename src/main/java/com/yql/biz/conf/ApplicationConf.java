@@ -12,6 +12,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConf implements ExternalApi {
     private String passwordMd5Str;
+    //支付宝AppId
+    private String aliPayAppId;
+    private String aliPayGateway;
+    //支付宝SHA1
+    private String aliSha1;
+    //支付宝私秘
+    private String aliPrivateKey;
+    private String aliPubliceKey;
+    //阿里异步通知
+    private String aliNotifyUrl;
+    //alipay ali-pay-return
+    private String aliWapReturnUrl;
     //应用ID
     private String appid;
     //商户号
@@ -40,9 +52,95 @@ public class ApplicationConf implements ExternalApi {
     private String fyTradeKey;
     //发送消息开关
     private boolean openSendMessage;
+    //后台通知URL
+    private String fyPayNotifyUrl;
+    //页面跳转URL
+    private String pageNotifyUrl;
+    //hH5支付失败
+    private String h5reurl;
     //定时任务线程数
     private Integer threadNum;
     private Kunlun kunlun;
+
+    public String getAliPayAppId() {
+        return aliPayAppId;
+    }
+
+    public void setAliPayAppId(String aliPayAppId) {
+        this.aliPayAppId = aliPayAppId;
+    }
+
+    public String getAliPayGateway() {
+        return aliPayGateway;
+    }
+
+    public void setAliPayGateway(String aliPayGateway) {
+        this.aliPayGateway = aliPayGateway;
+    }
+
+    public String getAliSha1() {
+        return aliSha1;
+    }
+
+    public void setAliSha1(String aliSha1) {
+        this.aliSha1 = aliSha1;
+    }
+
+    public String getAliPrivateKey() {
+        return aliPrivateKey;
+    }
+
+    public void setAliPrivateKey(String aliPrivateKey) {
+        this.aliPrivateKey = aliPrivateKey;
+    }
+
+    public String getAliPubliceKey() {
+        return aliPubliceKey;
+    }
+
+    public void setAliPubliceKey(String aliPubliceKey) {
+        this.aliPubliceKey = aliPubliceKey;
+    }
+
+    public String getAliNotifyUrl() {
+        return aliNotifyUrl;
+    }
+
+    public void setAliNotifyUrl(String aliNotifyUrl) {
+        this.aliNotifyUrl = aliNotifyUrl;
+    }
+
+    public String getAliWapReturnUrl() {
+        return aliWapReturnUrl;
+    }
+
+    public void setAliWapReturnUrl(String aliWapReturnUrl) {
+        this.aliWapReturnUrl = aliWapReturnUrl;
+    }
+
+    public String getFyPayNotifyUrl() {
+        return fyPayNotifyUrl;
+    }
+
+    public void setFyPayNotifyUrl(String fyPayNotifyUrl) {
+        this.fyPayNotifyUrl = fyPayNotifyUrl;
+    }
+
+    public String getPageNotifyUrl() {
+        return pageNotifyUrl;
+    }
+
+    public void setPageNotifyUrl(String pageNotifyUrl) {
+        this.pageNotifyUrl = pageNotifyUrl;
+    }
+
+    public String getH5reurl() {
+        return h5reurl;
+    }
+
+    public void setH5reurl(String h5reurl) {
+        this.h5reurl = h5reurl;
+    }
 
     public Integer getThreadNum() {
         return threadNum;
@@ -218,6 +316,26 @@ public class ApplicationConf implements ExternalApi {
         return kunlun.getFyCheckHost()+kunlun.getCheckIdUri();
     }
 
+    @Override
+    public String getFyB2CPayUrl() {
+        return kunlun.getFyB2CPayHost() + kunlun.getFyPayUri();
+    }
+
+    @Override
+    public String getFyH5PayUrl() {
+        return kunlun.getFyCheckHost() + kunlun.getFyH5PayUri();
+    }
+
+    @Override
+    public String getFyCreateOrder() {
+        return kunlun.getFyCheckHost() + kunlun.getFyCreateOrderUri();
+    }
+
+    @Override
+    public String getWxRefundUrl() {
+        return kunlun.getWxHost()+kunlun.getWxRefundUri();
+    }
+
     public boolean getOpenSendMessage() {
         return openSendMessage;
     }
@@ -249,6 +367,56 @@ public class ApplicationConf implements ExternalApi {
         private String payForUri;
         //验证身份证uri
         private String checkIdUri;
+        //支付host
+        private String fyB2CPayHost;
+        //富友支付uri
+        private String fyPayUri;
+        //h5支付uri
+        private String fyH5PayUri;
+        //富友下单uri
+        private String fyCreateOrderUri;
+        //微信退款uri
+        private String wxRefundUri;
+
+        public String getFyB2CPayHost() {
+            return fyB2CPayHost;
+        }
+
+        public void setFyB2CPayHost(String fyB2CPayHost) {
+            this.fyB2CPayHost = fyB2CPayHost;
+        }
+
+        public String getFyPayUri() {
+            return fyPayUri;
+        }
+
+        public void setFyPayUri(String fyPayUri) {
+            this.fyPayUri = fyPayUri;
+        }
+
+        public String getFyH5PayUri() {
+            return fyH5PayUri;
+        }
+
+        public void setFyH5PayUri(String fyH5PayUri) {
+            this.fyH5PayUri = fyH5PayUri;
+        }
+
+        public String getFyCreateOrderUri() {
+            return fyCreateOrderUri;
+        }
+
+        public void setFyCreateOrderUri(String fyCreateOrderUri) {
+            this.fyCreateOrderUri = fyCreateOrderUri;
+        }
+
+        public String getWxRefundUri() {
+            return wxRefundUri;
+        }
+
+        public void setWxRefundUri(String wxRefundUri) {
+            this.wxRefundUri = wxRefundUri;
+        }
 
         public String getCheckIdUri() {
             return checkIdUri;
