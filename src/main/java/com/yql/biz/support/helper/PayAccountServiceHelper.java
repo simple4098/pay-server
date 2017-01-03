@@ -70,8 +70,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
      */
     private String checkBankCardXml(PayAccount payAccount,PayBankVo payBankVo){
         Integer value = payAccount.getIdentificationType().getValue();
-        String bankCard = payBankVo.getBankCard().replaceAll(" ", "");
-        CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),bankCard,payBankVo.getCardholder(),value.toString(),payAccount.getIdentificationNumber());
+        CheckCardRequest checkCardRequest = new CheckCardRequest(applicationConf.getFyMerid(),payBankVo.getBankCard(),payBankVo.getCardholder(),value.toString(),payAccount.getIdentificationNumber());
         String md5String = checkCardRequest.toMd5String(applicationConf.getFyCheckKey());
         checkCardRequest.setSign(md5String);
         return PlatformPayUtil.payRequestXml(checkCardRequest);

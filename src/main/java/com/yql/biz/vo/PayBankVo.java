@@ -6,6 +6,7 @@ import com.yql.biz.enums.CardType;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -68,7 +69,8 @@ public class PayBankVo {
     }
 
     public void setBankCard(String bankCard) {
-        this.bankCard = bankCard;
+        String bankCardNo = StringUtils.trimAllWhitespace(bankCard);
+        this.bankCard = bankCardNo;
     }
 
     public String getBankName() {
