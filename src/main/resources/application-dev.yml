@@ -5,6 +5,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://192.168.0.38:11111/eureka/
+    register_with_eureka: true
   instance:
        prefer-ip-address: true
 
@@ -76,16 +77,35 @@ yql:
   wxNotifyUrl: http://171.221.202.60:3838/pay-server/pay/wx
   #微信支付 body
   wxBody: 零享购-消费
+  aliPayAppId: 2016102100731196
+  aliSha1: ue/MryFxGn9S79lxgim/MQ==
+  aliAES: ue/MryFxGn9S79lxgim/MQ==
+  aliPrivateKey: MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAK/mkjPRc/IhXS+yeNlDv27e7rM/WBUQbsAqBysG24uK6L3hrPTaSzveG82Yvq3KkDDNNECxcYolzS9Ny0KoiGC/ms7eRJkdrG5HXSZd9uE0GpieWgjOKD7WKe0TulbtoqdFbNqOn+uF2xcU37/QfE5zv0e/AoM2vfVAA8WEGLYJAgMBAAECgYAdz6Lpm07eM19arRGkKMIx5SBpSowADefnM3hBh4j/zkwBmlS4rqJfhBYMMx3l0FW9n5mCeVA3zI5IvRN8uZlbHEKLYjIyQiZFi6N/4bk4Y6OfU909ofz0JXHy/GqtlSVcnyb3silK1T7Nhbl473iuziiHlNCSqtlNiwA5WqdecQJBANyR/RvRFwvQ8oPOK23hqQ4e6Py8g6jX9aBjZm2N544MeBBHjzqZaZ5DTA7wUAe/fhA5e4CZE+LHZXivGHSV49UCQQDMJ7xUlqtvE5FLFTPug2OBgjKyc2A9YsSOfLEMyxnj9KSDREB+EPLUfn26tHyCGkT4zNzI4kRm4vwB7O0pTwdlAkAsf++WuxpxMdibqu6sHoji5m2O/+F4IQnXL/asR6Ldz7oxXp6Q7f6XBXDE2srqpUGjuFUoXrnaWOwp6vl+G/d5AkBIvOeW48/U1Y3wyG8mTd3IKNFTT1Q8ytHpSnfybPKei22J72ljATrjhuXY/bFW0XE9jBAl6qggWEMdlIKzMxsZAkAczbrwozMZaeR5fuaFTSuJC7hKbxAta+RYUSi0o0RnTYy5/tsfYP2cCjFz+jUiRZR1q6W9txtSMYTJjIAcD1AF
+  aliPubliceKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIgHnOn7LLILlKETd6BFRJ0GqgS2Y3mn1wMQmyh9zEyWlz5p1zrahRahbXAfCfSqshSNfqOmAQzSHRVjCqjsAw1jyqrXaPdKBmr90DIpIxmIyKXv4GGAkPyJ/6FTFY99uhpiq0qadD/uSzQsefWo0aTvP/65zi3eof7TcZ32oWpwIDAQAB
+  aliPayGateway: https://openapi.alipaydev.com/gateway.do
   #阿里异步通知
-  aliPayNotifyUrl:
+  aliNotifyUrl: http://171.221.202.60:3838/pay-server/pay/ali-pay
+  #阿里return url
+  aliWapReturnUrl: http://171.221.202.60:3838/pay-server/pay/ali-pay-return
+  #富友支付异步通知
+  fyPayNotifyUrl: http://171.221.202.60:3838/pay-server/pay/fy
+  #页面跳转URL
+  pageNotifyUrl: http://171.221.202.60:3838/pay-server/pay/fy/page-notify-url
+  #支付失败URL
+  h5reurl: http://171.221.202.60:3838/pay-server/pay/fy/h5reurl
   institution-id: 158974554
   #商户编码
-  fyMerid: 0002900F0345178
-  #商户密钥
-  fyKey: 123456
+  fyMerid: 0002900F0096235
+  #商户B2C/B2B网关支付交易密钥
+  fyTradeKey: lcdri7e5j5itaqt41ckbixjgkkri6gay
+  #手机快捷支付/银行卡验证/身份认证/企业认证交易密钥
+  fyCheckKey: 5old71wihg2tqjug9kkpxnhx9hiujoqj
   listenerTopic: TEST_USER_REGISTER
   sendMsgTopic: TEST_PAY_SERVER
   openSendMessage: true
+  accountListenerTopic: YQL-ORDER-CENTER
+  accountListenerTag: PAY-ORDER-RETURN-STATUS
+  threadNum: 1
   kunlun:
       host: http://localhost:8080
       pay-uri: /test?id={id}
@@ -97,6 +117,7 @@ yql:
       wxQuneryUri: /pay/orderquery
       #微信关闭订单uri
       wxCloseUri: /pay/closeorder
+      wxRefundUri: /secapi/pay/refund
       #富友检验银行卡host
       fyCheckHost: http://www-1.fuiou.com:18670/mobile_pay
       #富友代付host
@@ -107,6 +128,9 @@ yql:
       checkCardUri: /checkCard/checkCardFour.pay
       #验证身份证rui
       checkIdUri: /checkInfo/checkIdentity.pay
+      fyPayUri: /smpGate.do
+      fyH5PayUri: /h5pay/payAction.pay
+      fyCreateOrderUri: /findPay/createOrder.pay
   mq:
     AccessKey: LTAIukPGqYkArvKd
     SecretKey: uySPaK3rIxN5EuIjF8Rsbdbvxlkvvf
@@ -116,4 +140,13 @@ yql:
     consumer:
       ConsumerId: CID_YQL_PAY_SERVER
 
-
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000
