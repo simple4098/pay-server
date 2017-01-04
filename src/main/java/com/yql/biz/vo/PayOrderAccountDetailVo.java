@@ -7,6 +7,7 @@ import com.yql.biz.model.PayOrderAccountDetail;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * creator simple
@@ -154,6 +155,8 @@ public class PayOrderAccountDetailVo {
     public static PayOrderAccountDetail toDomain(PayOrderAccount payOrderAccount) {
         PayOrderAccountDetail payOrderAccountDetail = new PayOrderAccountDetail();
         BeanUtils.copyProperties(payOrderAccount,payOrderAccountDetail);
+        payOrderAccountDetail.setUpdatedTime(new Date());
+        payOrderAccountDetail.setCreatedTime(new Date());
         return payOrderAccountDetail;
     }
 }
