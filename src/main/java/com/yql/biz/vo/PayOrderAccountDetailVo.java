@@ -155,6 +155,7 @@ public class PayOrderAccountDetailVo {
     public static PayOrderAccountDetail toDomain(PayOrderAccount payOrderAccount) {
         PayOrderAccountDetail payOrderAccountDetail = new PayOrderAccountDetail();
         BeanUtils.copyProperties(payOrderAccount,payOrderAccountDetail);
+        payOrderAccountDetail.setId(0);
         payOrderAccountDetail.setUpdatedTime(new Date());
         payOrderAccountDetail.setCreatedTime(new Date());
         return payOrderAccountDetail;
