@@ -3,7 +3,7 @@ package com.yql.biz;
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayOrderAccountDao;
-import com.yql.biz.enums.SamllPayMoney;
+import com.yql.biz.enums.SmallPayMoney;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.service.IPayAccountService;
@@ -49,7 +49,7 @@ public class PayServerApplicationTests {
         PayAccount byUserCode = new PayAccount();
         byUserCode.setPayPassword("1245454");
         byUserCode.setRandomCode("1212");
-        byUserCode.setSamllPayMoney(SamllPayMoney.MONEY_500);
+        byUserCode.setSmallPayMoney(SmallPayMoney.MONEY_500);
         byUserCode.setSystemPaySeq(false);
         byUserCode.setUserCode("878");
         byUserCode.setCreatedTime(new Date());
