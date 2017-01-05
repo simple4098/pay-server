@@ -8,9 +8,9 @@ package com.yql.biz.vo;
 public class PayBankNumVo {
 
     private String userCode;
-    private int num;
+    private long num;
 
-    public PayBankNumVo(String userCode, int num) {
+    public PayBankNumVo(String userCode, long num) {
         this.userCode = userCode;
         this.num = num;
     }
@@ -23,11 +23,11 @@ public class PayBankNumVo {
         this.userCode = userCode;
     }
 
-    public int getNum() {
+    public long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(long num) {
         this.num = num;
     }
 }

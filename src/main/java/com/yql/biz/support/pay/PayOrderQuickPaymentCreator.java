@@ -1,19 +1,8 @@
 package com.yql.biz.support.pay;
 
-import com.yql.biz.client.PayClient;
-import com.yql.biz.conf.ApplicationConf;
-import com.yql.biz.dao.IPayAccountDao;
-import com.yql.biz.dao.IPayBankDao;
 import com.yql.biz.enums.PayType;
-import com.yql.biz.support.helper.IPayOrderParamHelper;
-import com.yql.biz.support.helper.PayPasswordSecurityHelper;
-import com.yql.biz.support.helper.SendMessageHelper;
 import com.yql.biz.vo.PayOrderVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * <p>银行卡支付</p>
@@ -22,21 +11,6 @@ import javax.annotation.Resource;
  */
 @Component
 public class PayOrderQuickPaymentCreator implements IPayOrderCreator {
-    private static final Logger log = LoggerFactory.getLogger(PayOrderQuickPaymentCreator.class);
-    @Resource
-    private PayClient payClient;
-    @Resource
-    private IPayOrderParamHelper payOrderCardParamHelper;
-    @Resource
-    private SendMessageHelper sendMessageHelper;
-    @Resource
-    private IPayBankDao payBankDao;
-    @Resource
-    private ApplicationConf applicationConf;
-    @Resource
-    private PayPasswordSecurityHelper payPasswordSecurityHelper;
-    @Resource
-    private IPayAccountDao payAccountDao;
 
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {

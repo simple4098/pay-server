@@ -9,8 +9,6 @@ import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.vo.*;
 import com.yql.core.exception.MessageRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +24,6 @@ import java.util.List;
 @Service
 @Transactional
 public class PayBankService implements IPayBankService {
-    private static final Logger logger = LoggerFactory.getLogger(PayBankService.class);
     @Resource
     private IPayBankDao payBankDao;
     @Resource
@@ -62,29 +59,12 @@ public class PayBankService implements IPayBankService {
         if (payBank == null) throw new MessageRuntimeException("error.payserver.payServer.bank.isnull");
         payBank.setDeleted(true);
         payBankDao.save(payBank);
-        /* //解绑银行卡调用支付平台接口
-        Param param = payAccountServiceHelper.crateUnBangBankParam(payBank);
-        UninstallBangResponse response = payClient.uninstallBangBank(param.getMessage(),param.getSignature());
-        if (PlatformPayUtil.isSuccess(response)){
-            UninstallBangResponseBody responseBody = response.getUninstallBangResponseBody();
-            logger.debug("解银行卡绑定返回:"+ JSON.toJSONString(response));
-            payAccountServiceHelper.createDelBankParam(payBank,responseBody);
-            payBankDao.save(payBank);
-            BeanUtils.copyProperties(responseBody,resultUnBangBank);
-            return resultUnBangBank;
-        }else {
-            throw new RuntimeException(response.getHead().getMessage());
-        }*/
         return resultUnBangBank;
     }
 
     @Override
     public PayBankNumVo findBankNumByUserCode(String userCode) {
-        List<PayBank> list = payBankDao.findByUserCodeAndDeleted(userCode,false);
-        int num = 0;
-        if (!CollectionUtils.isEmpty(list)){
-            num = list.size();
-        }
-        return new PayBankNumVo(userCode,num);
+        long count = payBankDao.countByUserCodeAndDeleted(userCode,false);
+        return new PayBankNumVo(userCode,count);
     }
 }

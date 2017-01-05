@@ -28,7 +28,6 @@ public class FyBankCityCodeService implements IFyBankCityCodeService {
     public List<FyBankCityCodeVo> findAllCityCode() {
         List<FyBankCityCodeVo> list = new ArrayList<>();
         List<FyBankCityCode> all = cityCodeDao.findAll();
-        //province
         Map<String, List<FyBankCityCode>> provinceList = all.stream().collect(groupingBy(FyBankCityCode::getProvinceId));
         Optional.ofNullable(provinceList).ifPresent(stringListMap -> stringListMap.forEach((provinceId, fyBankCityCodes) -> {
             FyBankCityCodeVo fyBankCityCodeVo = new FyBankCityCodeVo();

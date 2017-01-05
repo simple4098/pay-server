@@ -21,19 +21,18 @@ public interface IPayBankDao extends JpaRepository<PayBank,Integer>{
     List<PayBank> findByPayAccountIdOrderBySort(int payAccountId);
 
     /**
-     * 根据acountId 和 bankCard查询支付银行卡的信息
-     * @param payAccountId accountId
-     * @param bankCard
-     * @return
-     */
-    //PayBank findByPayAccountIdAndBankCard(int payAccountId, String bankCard);
-
-    /**
      * 根据用户code查询是否删除的银行卡列表
      * @param userCode 用户code
      * @param deleted 是否删除
      */
     List<PayBank> findByUserCodeAndDeleted(String userCode,boolean deleted);
+
+    /**
+     * 根据条件计数
+     * @param userCode 用户code
+     * @param deleted 是否删除
+     */
+    long  countByUserCodeAndDeleted(String userCode,boolean deleted);
 
     /**
      * 查询此用户绑定银行卡信息

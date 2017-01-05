@@ -24,11 +24,10 @@ public interface IMessageServerClient {
                                                   @RequestParam(name = "phoneCodeKey") String phoneCodeKey);
 
     /**
-     *
+     * 获取手机验证码
      * @param messageType 消息类型
      * @param phone 电话号码
      * @param phoneCodeKey redis对应的业务key
-     * @return
      */
     @RequestMapping(value = "/get-phone-auth-code", method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
     ResponseModel getPhoneAuthCode(@RequestParam(name = "messageType") String messageType,@RequestParam(name = "phone") String phone,@RequestParam(name = "phoneCodeKey") String phoneCodeKey);

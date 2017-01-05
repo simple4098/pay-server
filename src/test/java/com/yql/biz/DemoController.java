@@ -1,4 +1,4 @@
-package com.yql.biz.controller;
+package com.yql.biz;
 
 import com.alibaba.fastjson.JSON;
 import com.yql.biz.client.*;
@@ -60,8 +60,8 @@ public class DemoController {
     private IMessageServerClient messageServerClient;
 
     @RequestMapping(value = "/sendMessage")
-    public ResponseModel index3() {
-        ResponseModel responseModel = messageServerClient.getPhoneAuthCode(MessageType.UPDATE_PASSWORD.name(), "18123280663", "18123280669Code");
+    public ResponseModel index3(String phone) {
+        ResponseModel responseModel = messageServerClient.getPhoneAuthCode(MessageType.UPDATE_PASSWORD.name(), phone, phone+"key");
         return responseModel;
     }
 

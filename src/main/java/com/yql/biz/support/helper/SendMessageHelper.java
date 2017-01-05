@@ -7,7 +7,6 @@ import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
 import com.yql.biz.enums.pay.WxTradeState;
 import com.yql.biz.model.PayOrderAccount;
-import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.support.pay.QueryOrderComposition;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.vo.PayOrderVo;
@@ -29,7 +28,7 @@ import java.util.concurrent.*;
 
 /**
  * <p> 发消息 </p>
- * @auther simple
+ * @author  simple
  * data 2016/11/30 0030.
  */
 @Component
@@ -41,8 +40,6 @@ public class SendMessageHelper {
     private MessagePublisher messagePublisher;
     @Resource(name = "queryOrderComposition")
     private QueryOrderComposition queryOrderComposition;
-    @Resource
-    private IPayOrderAccountService payOrderAccountService;
     @Resource
     private IPayOrderAccountHelper payOrderAccountHelper;
 
@@ -64,7 +61,7 @@ public class SendMessageHelper {
      *  微信异步通知发消息
      * @param resultPayOrder 订单基本数据
      */
-    public void sendWxNotify(ResultPayOrder resultPayOrder) {
+    private void sendWxNotify(ResultPayOrder resultPayOrder) {
         TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),resultPayOrder.getOrderNo(),resultPayOrder);
         sendMessage(textMessage);
     }
@@ -76,7 +73,7 @@ public class SendMessageHelper {
      * @param weiXinNotifyVo 微信异步通知的参数值
      */
     public void sendWxNotifyResult(WeiXinResponseResult weiXinResponse, ResultPayOrder resultPayOrder, WeiXinNotifyVo weiXinNotifyVo) {
-        TextMessage textMessage = null;
+        TextMessage textMessage ;
         if (weiXinNotifyVo.getResultCode().equals(WxPayResult.SUCCESS.name())){
             weiXinResponse.setReturnCode(WxPayResult.SUCCESS);
             BigDecimal totalFee = PayUtil.centToPrice(Integer.valueOf(weiXinNotifyVo.getTotalFee()));
@@ -122,7 +119,7 @@ public class SendMessageHelper {
     }
 
     private Callable getTask(PayOrderAccount orderAccount) {
-        return (Callable) () -> {
+        return () -> {
             ResultQueryOrder wxQueryOrder = queryOrderComposition.transform(orderAccount);
             log.debug("第三方支付平台订单信息:"+JSON.toJSONString(wxQueryOrder));
             if (wxQueryOrder!=null && wxQueryOrder.getWxTradeState()!=null){

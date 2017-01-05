@@ -1,28 +1,24 @@
 package com.yql.biz;
 
-import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.request.*;
 import com.yql.biz.vo.pay.response.*;
 import com.yql.biz.vo.pay.wx.WeiXinNotifyVo;
-import com.yql.biz.vo.pay.wx.WeiXinOrderVo;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import javax.xml.bind.annotation.XmlElement;
-import java.beans.IntrospectionException;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Date;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /*@RunWith(SpringRunner.class)*/
 public class PayServerUtilTests {
@@ -219,7 +215,7 @@ public class PayServerUtilTests {
 
     public void test4() throws IOException {
         //MTIzNDU2111
-        String s = "1234561";
+        String s = "123456";
         byte[] b = s.getBytes();
         String encode = new BASE64Encoder().encode(b);
         logger.debug(encode);

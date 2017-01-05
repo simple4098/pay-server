@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
  * data 2016/11/7 0007.
  */
 @Repository
-/*@CacheConfig(cacheNames = "pay_account")*/
 public interface IPayAccountDao  extends JpaRepository<PayAccount, Integer> {
 
     /**
@@ -19,7 +18,6 @@ public interface IPayAccountDao  extends JpaRepository<PayAccount, Integer> {
      * @param userCode
      * @return
      */
-    /*@Cacheable(value = "payAccount",key = "#p0")*/
     PayAccount findByUserCode(String userCode);
 
 

@@ -98,7 +98,6 @@ public class PayAccountService implements IPayAccountService {
         String encode = new BASE64Encoder().encode(PayConstants.PAY_PASSWORD.getBytes());
         payAccount.setPayPassword(encode);
         payPasswordSecurityHelper.md5PayPassword(payAccount);
-        payAccount.setPayPassword(payAccount.getPayPassword());
         payAccountDao.save(payAccount);
     }
 
@@ -111,7 +110,6 @@ public class PayAccountService implements IPayAccountService {
         });
         payAccount.setPayPassword(resetPayPasswordVo.getPayPassword());
         payPasswordSecurityHelper.md5PayPassword(payAccount);
-        payAccount.setPayPassword(payAccount.getPayPassword());
         payAccountDao.save(payAccount);
     }
 

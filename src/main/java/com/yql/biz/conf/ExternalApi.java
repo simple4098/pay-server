@@ -8,19 +8,16 @@ package com.yql.biz.conf;
 public interface ExternalApi {
     /**
      * 快捷支付 url
-     * @return
      */
     String getPayUrl();
 
     /**
      * 微信预付订单url
-     * @return
      */
     String getWxPrepayUrl();
 
     /**
      * 微信查询订单url
-     * @return
      */
     String getWxQueryOrder();
 
@@ -31,19 +28,16 @@ public interface ExternalApi {
 
     /**
      * 获取富友验证银行卡信息
-     * @return
      */
     String getFyCheckCardUrl();
 
     /**
      * 代付url
-     * @return
      */
     String getFyPayForUrl();
 
     /**
      * 验证身份证接口
-     * @return
      */
     String getFyCheckIdUrl();
 }
