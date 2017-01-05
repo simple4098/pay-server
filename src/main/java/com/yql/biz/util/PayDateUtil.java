@@ -64,7 +64,7 @@ public class PayDateUtil {
      */
     public static Date getWxEndTime(){
         Date formatDate = getFormatDate(FORMAT_TIME);
-        return DateUtils.addHours(formatDate, -1);
+        return DateUtils.addHours(formatDate, -2);
     }
 
     public static Date formatDate(String date,String pattern){
