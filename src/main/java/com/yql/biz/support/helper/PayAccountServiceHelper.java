@@ -159,6 +159,7 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
             payAccount.setUserCode(userCode);
             relNameInfo(payAccount,baseUserInfoData);
         }else {
+            logger.debug("userCode有误,查询不到支付账户:"+userCode);
             throw  new MessageRuntimeException("error.payserver.saveySecurity.userCode");
         }
     }
