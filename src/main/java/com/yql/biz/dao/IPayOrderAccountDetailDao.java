@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IPayOrderAccountDetailDao extends JpaRepository<PayOrderAccountDetail,Integer> {
+    PayOrderAccountDetail findByOrderNoAndPayStatus(String orderNo, Integer payStatus);
 }

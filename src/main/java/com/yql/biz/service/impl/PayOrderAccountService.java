@@ -10,12 +10,10 @@ import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.fy.FyRequestType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.enums.pay.WxPayResult;
-import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.support.constants.PayConstants;
-import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
@@ -60,8 +58,6 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     @Resource
     private IPayOrderAccountDao payOrderAccountDao;
     @Resource
-    private IPayAccountServiceHelper payAccountServiceHelper;
-    @Resource
     private ApplicationConf applicationConf;
     @Resource(name ="payOrderCreatorComposition")
     private PayOrderCreatorComposition payOrderCreator;
@@ -85,18 +81,12 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     @Override
     public ResultPayOrder order(PayOrderVo payOrderVo) {
         log.info("pay-server param:" + JSON.toJSONString(payOrderVo));
-        PayAccount payAccount = payAccountServiceHelper.findOrCratePayAccount(payOrderVo.getUserCode());
-        PayOrderAccount orderAccount = payOrderAccountDao.findByOrderNo(payOrderVo.getOrderNo());
         PayOrderVo orderVo = payOrderCreator.transform(payOrderVo);
-        PayOrderAccount payOrderAccount = PayOrderVo.toDomain(orderVo);
-        if (orderAccount != null) {
-            payOrderAccount.setId(orderAccount.getId());
-            payOrderAccount.setVersion(orderAccount.getVersion());
-        }
-        payOrderAccount.setPayAccountId(payAccount.getId());
-        payOrderAccountHelper.saveOrder(payOrderAccount);
-        ResultPayOrder payOrder = PayOrderVo.toResultOrder(payOrderVo);
+        ResultPayOrder payOrder = PayOrderVo.toResultOrder(orderVo);
         log.debug("支付下单返回data:"+JSON.toJSONString(payOrder));
+        if (PayStatus.PAY_UNSUCCESS.getValue().equals(payOrder.getPayStatus())){
+            throw new RuntimeException(payOrder.getMsg());
+        }
         return payOrder;
     }
 

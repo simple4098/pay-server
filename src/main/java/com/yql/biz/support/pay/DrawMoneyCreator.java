@@ -6,7 +6,9 @@ import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.enums.PayType;
 import com.yql.biz.enums.pay.PayStatus;
 import com.yql.biz.model.PayAccount;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.support.OrderNoGenerator;
+import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.support.helper.PayPasswordSecurityHelper;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.core.exception.MessageRuntimeException;
@@ -36,8 +38,11 @@ public class DrawMoneyCreator implements IPayOrderCreator{
     private PayPasswordSecurityHelper payPasswordSecurityHelper;
     @Resource
     private IPayAccountDao payAccountDao;
+    @Resource
+    private IPayOrderAccountHelper payOrderAccountHelper;
 
     @Override
+    @Transactional
     public PayOrderVo transform(PayOrderVo payOrderVo) {
         log.debug("提现申请json:"+JSON.toJSONString(payOrderVo));
         if (StringUtils.isEmpty(payOrderVo.getTxCode())) throw new MessageRuntimeException("com.yql.validation.constraints.txCode.notnull");
@@ -47,10 +52,10 @@ public class DrawMoneyCreator implements IPayOrderCreator{
         String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
         payOrderVo.setPayNo(payNo);
         payOrderVo.setPayStatus(PayStatus.HANDLING.getValue());
-        ResponseModel requestMethod = accountClient.payment(payOrderVo.getTotalPrice(),  payOrderVo.getOrderNo(),payOrderVo.getPayeeCode(),payOrderVo.getPayerCode(), payOrderVo.getTxCode());
-        if (!requestMethod.isSuccess()) {
-            throw new RuntimeException(requestMethod.getMessage());
-        }
+        PayOrderAccount payOrderAccount = PayOrderVo.toDomain(payOrderVo);
+        payOrderAccountHelper.saveOrderTransform(payOrderAccount,payOrderVo.getUserCode());
+        ResponseModel responseModel = accountClient.payment(payOrderVo.getTotalPrice(),  payOrderVo.getOrderNo(),payOrderVo.getPayeeCode(),payOrderVo.getPayerCode(), payOrderVo.getTxCode());
+        payOrderAccountHelper.paymentResponse(responseModel,payOrderVo,payOrderAccount);
         return payOrderVo;
     }
 
