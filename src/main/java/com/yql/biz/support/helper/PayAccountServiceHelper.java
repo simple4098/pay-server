@@ -8,6 +8,7 @@ import com.yql.biz.conf.ApplicationConf;
 import com.yql.biz.dao.IBankInfoDao;
 import com.yql.biz.dao.IPayAccountDao;
 import com.yql.biz.dao.IPayBankDao;
+import com.yql.biz.dao.IPayOrderAccountDao;
 import com.yql.biz.enums.BankCodeType;
 import com.yql.biz.enums.CardType;
 import com.yql.biz.enums.IdentificationType;
@@ -15,8 +16,10 @@ import com.yql.biz.enums.RealNameAuthType;
 import com.yql.biz.model.BankInfo;
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.support.constants.PayConstants;
+import com.yql.biz.util.PayDateUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.*;
 import com.yql.biz.vo.pay.Param;
@@ -37,6 +40,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>payServiceHelper具体实现</p>
@@ -62,6 +66,8 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
     private IFyCheckCardPayClient fyCheckCardPayClient;
     @Resource
     private IBankInfoDao bankInfoDao;
+    @Resource
+    private IPayOrderAccountDao payOrderAccountDao;
 
     /**
      * 组装验证银行卡 请求的xml数据
@@ -254,5 +260,20 @@ public class PayAccountServiceHelper implements IPayAccountServiceHelper{
         }
     }
 
+    @Override
+    public PayOrderAccount getAliNotify(Map<String, String> paramMap) {
+        //原支付请求的商户订单号
+        String outTradeNo = paramMap.get("out_trade_no");
+        //支付宝交易号
+        String tradeNo = paramMap.get("trade_no");
+        String buyerLogonId = paramMap.get("buyer_logon_id");
+        String gmtPayment = paramMap.get("gmt_payment");
+        PayOrderAccount payNo = payOrderAccountDao.findByPayNo(outTradeNo);
+        if (payNo==null)throw new MessageRuntimeException("error.payserver.param.order.notnull");
+        payNo.setPayOrder(tradeNo);
+        payNo.setTxCode(buyerLogonId);
+        payNo.setBankTxTime(PayDateUtil.formatDate(gmtPayment,null));
+        return payNo;
+    }
 
 }

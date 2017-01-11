@@ -131,7 +131,7 @@ public class PlatformPayUtil<T extends DjPay> {
      * @param t 微信相关对象（微信下预付订单对象、APP 请求支付对象）
      * @return 把一个对象的 属性-值 以key-value的形式存起来
      */
-    public static <T extends DjPay> Map<String,Object> obtObjParm( T t) {
+    public static <T extends DjPay> Map<String,Object> obtObjParam(T t) {
         Method[] methods = t.getClass().getMethods();
         SortedMap<String,Object> param = new TreeMap();
         //Map<String,Object> param = new HashMap<>();
@@ -141,6 +141,31 @@ public class PlatformPayUtil<T extends DjPay> {
                 Object invoke = null;
                 try {
                     invoke = m.invoke(t);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String name = annotation.name();
+                if (!StringUtils.isEmpty(invoke)){
+                    param.put(name,invoke);
+                }
+            }
+        }
+        return param;
+    }
+    /**
+     * @param t 微信相关对象（微信下预付订单对象、APP 请求支付对象）
+     * @return 把一个对象的 属性-值 以key-value的形式存起来
+     */
+    public static <T extends DjPay> Map<String,String> obtAliPayObjParam(T t) {
+        Method[] methods = t.getClass().getMethods();
+        SortedMap<String,String> param = new TreeMap();
+        //Map<String,Object> param = new HashMap<>();
+        for (Method m:methods){
+            XmlElement annotation = m.getAnnotation(XmlElement.class);
+            if (annotation!=null){
+                String invoke = null;
+                try {
+                    invoke = (String) m.invoke(t);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,7 +222,7 @@ public class PlatformPayUtil<T extends DjPay> {
         return sb.toString();
     }
 
-    public static String sortParm(Map parameters) {
+    public static String sortParam(Map parameters) {
         StringBuffer sb = new StringBuffer();
         Set es = parameters.entrySet();
         Iterator it = es.iterator();

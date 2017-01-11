@@ -3,6 +3,7 @@ package com.yql.biz.controller;
 import com.yql.biz.constraint.OrderNo;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.vo.*;
+import com.yql.biz.vo.pay.ali.AliPayBaseRequest;
 import com.yql.biz.vo.pay.response.Response;
 import com.yql.biz.vo.pay.response.WeiXinCloseOrderResponse;
 import com.yql.core.web.ResponseModel;
@@ -90,7 +91,7 @@ public class PayOrderController {
      */
     @RequestMapping("/query-order")
     public ResponseModel queryWxOrder(@OrderNo String orderNo){
-        ResultQueryOrder resultQueryOrder =   payOrderAccountService.findWxOrderInfo(orderNo);
+        ResultQueryOrder resultQueryOrder =   payOrderAccountService.findPaymentPlatformOrderInfo(orderNo);
         return ResponseModel.SUCCESS(resultQueryOrder);
     }
 
@@ -113,6 +114,16 @@ public class PayOrderController {
     public ResponseModel prepay(@OrderNo String orderNo, String spbillCreateIp){
         AppPrepayInfo appPrepayInfo =   payOrderAccountService.prepay(orderNo,spbillCreateIp);
         return ResponseModel.SUCCESS(appPrepayInfo);
+    }
+
+    /**
+     * 移动端获取微信预支护信息
+     * @param orderNo 订单号
+     */
+    @RequestMapping("/ali-prepay")
+    public ResponseModel aliPrepay(@OrderNo String orderNo){
+        AliPayBaseRequest aliPayBaseRequest = payOrderAccountService.aliAppPayOrder(orderNo);
+        return ResponseModel.SUCCESS(aliPayBaseRequest);
     }
 
     /**

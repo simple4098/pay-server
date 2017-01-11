@@ -52,6 +52,16 @@ public class PayOrderAccount extends Domain {
     private String payeeCode;
     //付款人账户code
     private String payerCode;
+    //退款请求号
+    private String refundNo;
+
+    public String getRefundNo() {
+        return refundNo;
+    }
+
+    public void setRefundNo(String refundNo) {
+        this.refundNo = refundNo;
+    }
 
     public String getPayeeCode() {
         return payeeCode;

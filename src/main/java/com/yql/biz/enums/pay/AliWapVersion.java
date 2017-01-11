@@ -1,15 +1,18 @@
-package com.yql.biz.enums.fy;
+package com.yql.biz.enums.pay;
 
 /**
- * <p> 富友版本号 </p>
+ * <p> 描述 </p>
+ *
  * @auther simple
- * data 2016/12/6 0006.
+ * data 2016/12/20 0020.
  */
-public enum FyVersion {
-    VERSION_130("1.30"),VERSION_100("1.00"),B2C_PAY_VERSION("1.0.1"), H5_PAY("2.0");
+public enum  AliWapVersion {
+
+    ALI_VERSION("1.0");
+
     private String value;
 
-    FyVersion(String value) {
+    AliWapVersion(String value) {
         this.value = value;
     }
 
@@ -20,6 +23,4 @@ public enum FyVersion {
     public void setValue(String value) {
         this.value = value;
     }
-
-
 }

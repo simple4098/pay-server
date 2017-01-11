@@ -1,14 +1,23 @@
 package com.yql.biz.support.helper;
 
+import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.internal.util.AlipayHashMap;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.internal.util.RequestParametersHolder;
 import com.yql.biz.conf.ApplicationConf;
+import com.yql.biz.enums.pay.AliMethod;
 import com.yql.biz.enums.pay.WxPayType;
 import com.yql.biz.model.PayBank;
 import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.support.OrderNoGenerator;
+import com.yql.biz.support.constants.PayConstants;
 import com.yql.biz.util.PayUtil;
 import com.yql.biz.util.PlatformPayUtil;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.pay.Param;
+import com.yql.biz.vo.pay.ali.AliPayBaseRequest;
+import com.yql.biz.vo.pay.ali.AliPayBizRequest;
 import com.yql.biz.vo.pay.request.DjPay;
 import com.yql.biz.vo.pay.request.Head;
 import com.yql.biz.vo.pay.request.PayBody;
@@ -120,8 +129,8 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
     @Override
     public String getSign(DjPay djPay) {
         String wxKey = applicationConf.getWxKey();
-        Map<String, Object> param = PlatformPayUtil.obtObjParm(djPay);
-        String str = PlatformPayUtil.sortParm(param);
+        Map<String, Object> param = PlatformPayUtil.obtObjParam(djPay);
+        String str = PlatformPayUtil.sortParam(param);
         StringBuffer stringBuffer = new StringBuffer(str);
         log.debug("并按照参数名ASCII字典序排序生成字符串:\n"+stringBuffer.toString());
         stringBuffer.append("key=").append(wxKey);
@@ -131,5 +140,39 @@ public class PayOrderParamHelper implements IPayOrderParamHelper {
         return md5Key;
     }
 
+    @Override
+    public String getFyOrderPayParam(PayOrderVo payOrderVo, PayBank payBank) {
+       /* String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+        payOrderVo.setPayNo(payNo);
+        Integer amount = PayUtil.priceToCent(payOrderVo.getTotalPrice());
+        FyCreatedOrderRequest fyCreatedOrderRequest = new FyCreatedOrderRequest("0002900F0096235", amount.toString(),"5old71wihg2tqjug9kkpxnhx9hiujoqj");
+        fyCreatedOrderRequest.toMd5();
+        return  PlatformPayUtil.payRequestXml(fyCreatedOrderRequest);*/
+       return null;
+    }
+
+    @Override
+    public AliPayBaseRequest getAliAppPayParam(PayOrderAccount payOrderAccount) {
+        AliPayBaseRequest aliPayBaseRequest = new AliPayBaseRequest(applicationConf.getAliPayAppId(), AliMethod.ALI_APP_PAY.getMethodName(),applicationConf.getAliNotifyUrl());
+        AliPayBizRequest bizRequest = new AliPayBizRequest();
+        bizRequest.setTotal_amount(payOrderAccount.getTotalPrice().toString());
+        bizRequest.setProduct_code(PayConstants.ALI_APP_PRODUCT_CODE);
+        bizRequest.setOut_trade_no(payOrderAccount.getPayNo());
+        bizRequest.setSubject(applicationConf.getWxBody());
+        aliPayBaseRequest.setBizContent(JSON.toJSONString(bizRequest));
+        Map<String, String> paramMap = PlatformPayUtil.obtAliPayObjParam(aliPayBaseRequest);
+        AlipayHashMap appParams = new AlipayHashMap(paramMap);
+        RequestParametersHolder requestHolder = new RequestParametersHolder();
+        requestHolder.setApplicationParams(appParams);
+        String signContent = AlipaySignature.getSignatureContent(requestHolder);
+        try {
+            String rsaSign = AlipaySignature.rsaSign(signContent, applicationConf.getAliPrivateKey(), aliPayBaseRequest.getCharset(), aliPayBaseRequest.getSignType());
+            aliPayBaseRequest.setSign(rsaSign);
+        } catch (AlipayApiException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return aliPayBaseRequest;
+    }
 
 }

@@ -2,6 +2,7 @@ package com.yql.biz.support.helper;
 
 import com.yql.biz.model.PayAccount;
 import com.yql.biz.model.PayBank;
+import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.vo.PayBankVo;
 import com.yql.biz.vo.PayOrderVo;
 import com.yql.biz.vo.ProblemAnswerVo;
@@ -10,6 +11,7 @@ import com.yql.biz.vo.pay.Param;
 import com.yql.biz.vo.pay.response.UninstallBangResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>支付账户helper</p>
@@ -68,6 +70,12 @@ public interface IPayAccountServiceHelper {
      * @param payOrderVo 提现订单对象
      */
     void validateDrawMoney(PayOrderVo payOrderVo);
+
+    /**
+     * 异步通知参数 转化成 PayOrderAccount
+     * @param paramMap ali pay 异步通知map
+     */
+    PayOrderAccount getAliNotify(Map<String, String> paramMap);
 
 
 }

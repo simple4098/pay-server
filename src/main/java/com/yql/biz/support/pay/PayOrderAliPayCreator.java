@@ -1,8 +1,15 @@
 package com.yql.biz.support.pay;
 
+import com.alibaba.fastjson.JSON;
 import com.yql.biz.enums.PayType;
+import com.yql.biz.enums.pay.PayStatus;
+import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.vo.PayOrderVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p> 支付宝支付 </p>
@@ -12,9 +19,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PayOrderAliPayCreator implements IPayOrderCreator {
+    private static final Logger logger = LoggerFactory.getLogger(PayOrderAliPayCreator.class);
+    @Resource
+    private OrderNoGenerator orderNoGenerator;
     @Override
     public PayOrderVo transform(PayOrderVo payOrderVo) {
-        return null;
+        logger.debug("ali apy订单支付:"+ JSON.toJSONString(payOrderVo));
+        String payNo = orderNoGenerator.generate(payOrderVo.getPayType());
+        payOrderVo.setPayNo(payNo);
+        payOrderVo.setPayStatus(PayStatus.HANDLING.getValue());
+        return payOrderVo;
     }
 
     @Override

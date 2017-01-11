@@ -40,4 +40,26 @@ public interface ExternalApi {
      * 验证身份证接口
      */
     String getFyCheckIdUrl();
+
+    /**
+     * 富友支付url
+     *
+     * @return
+     */
+    String getFyB2CPayUrl();
+
+    /**
+     * 富友H5支付
+     */
+    String getFyH5PayUrl();
+
+    /**
+     * 富友下单接口
+     */
+    String getFyCreateOrder();
+
+    /**
+     * 微信退款地址
+     */
+    String getWxRefundUrl();
 }
