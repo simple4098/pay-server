@@ -19,6 +19,7 @@ import com.yql.biz.model.PayOrderAccount;
 import com.yql.biz.service.IPayOrderAccountService;
 import com.yql.biz.support.OrderNoGenerator;
 import com.yql.biz.support.constants.PayConstants;
+import com.yql.biz.support.helper.IPayAccountServiceHelper;
 import com.yql.biz.support.helper.IPayOrderAccountHelper;
 import com.yql.biz.support.helper.IPayOrderParamHelper;
 import com.yql.biz.support.helper.SendMessageHelper;
@@ -65,6 +66,8 @@ public class PayOrderAccountService implements IPayOrderAccountService {
     private static final Logger log = LoggerFactory.getLogger(PayOrderAccountService.class);
     @Resource
     private IPayOrderAccountDao payOrderAccountDao;
+    @Resource
+    private IPayAccountServiceHelper payAccountServiceHelper;
     @Resource
     private ApplicationConf applicationConf;
     @Resource(name ="payOrderCreatorComposition")

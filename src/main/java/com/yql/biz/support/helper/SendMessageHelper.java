@@ -61,7 +61,7 @@ public class SendMessageHelper {
      *  微信异步通知发消息
      * @param resultPayOrder 订单基本数据
      */
-    private void sendWxNotify(ResultPayOrder resultPayOrder) {
+    public void sendWxNotify(ResultPayOrder resultPayOrder) {
         TextMessage textMessage =  new TextMessage(applicationConf.getSendMsgTopic(),  SendMsgTag.PAY_SERVER_STATUS.name(),resultPayOrder.getOrderNo(),resultPayOrder);
         sendMessage(textMessage);
     }
