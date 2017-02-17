@@ -68,11 +68,11 @@ yql:
   password-md5-str: yql-payserver-1221
   order-num-key: order_center:order:number
   #微信appId
-  appid: wxd36dd408cb79ea6b
+  appid: ***
   #商户号
-  mchid: 1418256002
+  mchid: ***
   #微信key
-  wxKey: wOdzXgWwbwjPEEZoMXWKudytfYvq6iLo
+  wxKey: ***
   #微信异步通知
   wxNotifyUrl: http://171.221.202.60:3838/pay-server/pay/wx
   #微信支付 body
